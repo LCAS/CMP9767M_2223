@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<launch>
+  <include file="$(find thorvald_base)/launch/base_bringup.launch">
+    <arg name="robot_model" value="thorvald_ii_4wd4ws_slim" />
+    <arg name="simple_sim" value="true" />
+  </include>
+</launch>
