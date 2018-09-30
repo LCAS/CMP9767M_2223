@@ -27,7 +27,7 @@
     </inertial>
   </link>
 
-   <joint name="base_link_hokuyo" type="fixed">
+  <joint name="$(arg robot_name)_base_link_hokuyo" type="fixed">
     <parent link="$(arg tf_prefix)/base_link"/>
     <child link="$(arg tf_prefix)/hokuyo"/>
     <axis xyz="0 1 0" />
@@ -36,7 +36,7 @@
 
   <!--hokuyo-->
   <gazebo reference="$(arg tf_prefix)/hokuyo">
-    <sensor name="$(arg robot_name)_head_hokuyo_sensor" type="ray">
+    <sensor name="$(arg robot_name)hokuyo_sensor" type="ray">
       <pose>0 0 0 0 0 0</pose>
       <visualize>true</visualize>
       <update_rate>40</update_rate>
@@ -65,8 +65,8 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <plugin name="$(arg robot_name)_hokuyo_node" filename="libgazebo_ros_laser.so">
-        <topicName>hokuyo_scan</topicName>
+      <plugin name="$(arg robot_name)hokuyo_node" filename="libgazebo_ros_laser.so">
+        <topicName>scan</topicName>
         <frameName>hokuyo</frameName>
       </plugin>
     </sensor>
@@ -74,7 +74,7 @@
 
   <!-- Velodyne VLP16 -->
   <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
-  <VLP-16 parent="/base_link" name="/velodyne" topic="/velodyne_points" hz="10" samples="440" min_range="0.9"  max_range="130.0" noise="0.008">
+  <VLP-16 parent="$(arg tf_prefix)/base_link" name="$(arg tf_prefix)/velodyne" topic="$(arg robot_name)/velodyne_points" hz="10" samples="440" min_range="0.9"  max_range="130.0" noise="0.008">
     <origin xyz="0 0 1.56" rpy="0 0 0" />
   </VLP-16>
 
