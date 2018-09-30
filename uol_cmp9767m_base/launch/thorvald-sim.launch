@@ -6,13 +6,14 @@
     <arg name="robot_name" value="" />
     <arg name="tf_prefix" value="" />
     <arg name="robot_model" value="$(find thorvald_model)/config/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim.yaml" />
-    <arg name="model_extras" value="$(find thorvald_model)/urdf/sensor_modules/sensor_frames_example.xacro" />
+    <arg name="model_extras" value="$(find uol_cmp9767m_base)/urdf/sensors.xacro" />
   </include>
 
   <!-- base bringup-->
   <include file="$(find thorvald_base)/launch/base_bringup.launch">
     <arg name="robot_model" value="$(find thorvald_model)/config/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim.yaml" />
     <arg name="simple_sim" value="true" />
+    <arg name="enable_odom_tf" value="false" />
   </include>
 
   <!-- twist mux bringup -->

@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  thorvald_twist_mux
+  velodyne_simulator8
 )
 
 ## System dependencies are found with CMake's conventions
