@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 
 <launch>
+
+  <!-- Launch the Gazebo world.  -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+
+  <group>
   <!-- model bringup -->
   <include file="$(find thorvald_model)/launch/model.launch">
     <arg name="robot_name" value="" />
@@ -19,10 +24,8 @@
   <!-- twist mux bringup -->
   <include file="$(find thorvald_twist_mux)/launch/twist_mux.launch" />
 
-  <!-- Launch the Gazebo world.  -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
-
   <!-- spawn robot in gazebo -->
-  <node pkg="gazebo_ros" type="spawn_model" name="spawner" args="-urdf -param /robot_description -model thorvald_ii" />
+  <node pkg="gazebo_ros" type="spawn_model" name="spawner" args="-urdf -param robot_description -model thorvald_ii" />
+  </group>
 
 </launch>
