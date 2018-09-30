@@ -74,7 +74,7 @@
 
   <!-- Velodyne VLP16 -->
   <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
-  <VLP-16 parent="$(arg tf_prefix)/base_link" name="$(arg robot_name)_velodyne" topic="/$(arg robot_name)/velodyne_points" hz="10" samples="440" min_range="0.9"  max_range="130.0" noise="0.008">
+  <VLP-16 parent="/base_link" name="/velodyne" topic="/velodyne_points" hz="10" samples="440" min_range="0.9"  max_range="130.0" noise="0.008">
     <origin xyz="0 0 1.56" rpy="0 0 0" />
   </VLP-16>
 
