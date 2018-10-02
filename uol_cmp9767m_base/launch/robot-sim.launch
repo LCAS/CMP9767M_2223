@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!-- 
+  This 
+
+ -->
+
+
+<launch>
+
+    <!-- Robot pose -->
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0"/>
+    <arg name="roll" default="0"/>
+    <arg name="pitch" default="0"/>
+    <arg name="yaw" default="0"/>
+
+    <group ns="robot1">
+        <!-- model bringup -->
+        <include file="$(find thorvald_model)/launch/model.launch">
+              <arg name="robot_name" value="robot1" />
+              <arg name="tf_prefix" value="" />
+              <arg name="robot_model" value="$(find thorvald_model)/config/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim.yaml" />
+              <arg name="model_extras" value="$(find thorvald_model)/urdf/sensor_modules/sensor_frames_example.xacro" />
+        </include>
+
+        <!-- base bringup-->
+        <include file="$(find thorvald_base)/launch/base_bringup.launch">
+              <arg name="robot_model" value="$(find thorvald_model)/config/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim.yaml" />
+              <arg name="simple_sim" value="true" />
+              <arg name="tf_prefix" value=""/>
+        </include>
+
+        <!-- twist mux bringup -->
+        <include file="$(find thorvald_twist_mux)/launch/twist_mux.launch" />
+
+        <!-- spawn robot in gazebo -->
+        <node pkg="gazebo_ros" type="spawn_model" name="spawner" args="-urdf -param /robot1/robot_description -model robot1-thorvald_ii 
+          -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)" />
+    </group>
+
+</launch>
