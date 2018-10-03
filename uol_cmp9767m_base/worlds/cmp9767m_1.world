@@ -1,0 +1,10 @@
+<sdf version='1.6'>
+  <world name='default'>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://cmp9767m_ground_1</uri>
+    </include>
+  </world>
+</sdf>

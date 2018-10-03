@@ -18,6 +18,12 @@ find_package(catkin REQUIRED COMPONENTS
   kinect2_description
 )
 
+if(CMAKE_HOST_UNIX)
+  catkin_add_env_hooks(90-uol_cmp9767m_base SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env_hooks)
+else()
+  message(FATAL_ERROR "Only UNIX builds supported.")
+endif()
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -190,7 +196,7 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
-foreach (dir launch)
+foreach (dir launch models worlds)
     install(DIRECTORY ${dir}/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
 endforeach(dir)

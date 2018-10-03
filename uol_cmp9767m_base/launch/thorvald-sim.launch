@@ -3,7 +3,9 @@
 <launch>
 
   <!-- Launch the Gazebo world.  -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find uol_cmp9767m_base)/worlds/cmp9767m_1.world"/>
+  </include>
 
   <group>
   <!-- model bringup -->
