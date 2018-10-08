@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="sensor_frames">
+
+  <xacro:arg name="robot_name" default=""/>
+  <xacro:arg name="tf_prefix" default=""/>
+
+  <!-- Hokuyo Laser -->
+  <link name="$(arg tf_prefix)/hokuyo">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://thorvald_model/meshes/hokuyo/hokuyo.dae"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+  <joint name="$(arg robot_name)_base_link_hokuyo" type="fixed">
+    <parent link="$(arg tf_prefix)/base_link"/>
+    <child link="$(arg tf_prefix)/hokuyo"/>
+    <axis xyz="0 1 0" />
+    <origin xyz="0.7025 0.005 0.66" rpy="0 0 0"/>
+  </joint>
+
+  <!--hokuyo-->
+  <gazebo reference="$(arg tf_prefix)/hokuyo">
+    <sensor name="$(arg robot_name)hokuyo_sensor" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>40</update_rate>
+      <always_on>1</always_on>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.570796</min_angle>
+            <max_angle>1.570796</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>30.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="$(arg robot_name)hokuyo_node" filename="libgazebo_ros_laser.so">
+        <topicName>scan</topicName>
+        <frameName>hokuyo</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- Velodyne VLP16 -->
+  <xacro:include filename="$(find velodyne_description8)/urdf/VLP-16.urdf.xacro"/>
+  <VLP-16 parent="$(arg tf_prefix)/base_link" name="$(arg robot_name)_velodyne" topic="velodyne_points" hz="10" samples="440" min_range="0.9"  max_range="130.0" noise="0.008">
+    <origin xyz="0 0 1.56" rpy="0 0 0" />
+  </VLP-16>
+
+</robot>
+
