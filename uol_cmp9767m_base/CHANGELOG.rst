@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.3 (2018-10-09)
+------------------
 * Merge pull request `#4 <https://github.com/LCAS/CMP9767M/issues/4>`_ from gpdas/master
   Adding sensors to the simulated robot
 * Initial world file for uol_cmp9767m_base
