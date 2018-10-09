@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sdf version="1.4">
-<model name="cmp9767m_ground_1">
+<model name="cmp9767m_ground_2">
   <static>true</static>
     <link name="link">
       <collision name="collision">
@@ -29,9 +29,9 @@
         </geometry>
         <material>
           <script>
-            <uri>model://cmp9767m_ground_1/materials/scripts</uri>
-            <uri>model://cmp9767m_ground_1/materials/textures</uri>
-            <name>cmp9767m_ground_1/image</name>
+            <uri>model://cmp9767m_ground_2/materials/scripts</uri>
+            <uri>model://cmp9767m_ground_2/materials/textures</uri>
+            <name>cmp9767m_ground_2/image</name>
           </script>
         </material>
       </visual>
