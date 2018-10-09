@@ -2,6 +2,19 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#5 <https://github.com/LCAS/CMP9767M/issues/5>`_ from gpdas/master
+  Updated ground textures
+* Cleanup
+* Merge branch 'master' of github.com:LCAS/CMP9767M
+* 1. New ground textures and enclosure are added
+  2. Fixed missing install targets in CMakeLists
+  3. World file updated with models with new textures
+  4. New wider robot configuration within the package
+  5. Hokuyo laser ray visibility in gazebo is disabled
+* Contributors: Marc Hanheide, gpdas
+
 0.0.3 (2018-10-09)
 ------------------
 * Merge pull request `#4 <https://github.com/LCAS/CMP9767M/issues/4>`_ from gpdas/master
