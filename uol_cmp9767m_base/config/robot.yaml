@@ -1,0 +1,72 @@
+ 
+
+# Base calculator is used for calculating joint commands from velocity commands goven in the base_link frame, and for calculating odometry from actual joint states
+base_calculator: "pltf_clc_std::PltfClcStd"
+#base_calculator: "pltf_clc_2wdiff::PltfClc2WDiff"
+
+# Motor drives
+# type 0: propulsion/steering (default module)
+# type 1: propulsion/propulsion (used for some diff. drive robots)
+motor_drives:
+  {
+    drive0: {node: 1,
+             x: -0.549, y: -0.449,
+             type: 0,
+             leg_mesh: 0,
+             r_wheel: 0.2, prp_gr_rt: 42, prp_enc_ppr: 1024, prp_max_rpm: 3000, prp_sim_a: 1.5,
+             str_gr_rt: 42.8571429, str_enc_ppr: 1024, str_lim: 3.078027759, str_sim_v: 4},
+  
+    drive1: {node: 2,
+             x:  0.549, y: -0.449,
+             type: 0,
+             leg_mesh: 1,
+             r_wheel: 0.2, prp_gr_rt: 42, prp_enc_ppr: 1024, prp_max_rpm: 3000, prp_sim_a: 1.5,
+             str_gr_rt: 42.8571429, str_enc_ppr: 1024, str_lim: 3.078027759, str_sim_v: 4},
+  
+    drive2: {node: 3,
+             x:  0.549, y:  0.449,
+             type: 0,
+             leg_mesh: 2,
+             r_wheel: 0.2, prp_gr_rt: 42, prp_enc_ppr: 1024, prp_max_rpm: 3000, prp_sim_a: 1.5,
+             str_gr_rt: 42.8571429, str_enc_ppr: 1024, str_lim: 3.078027759, str_sim_v: 4},
+  
+    drive3: {node: 4,
+             x: -0.549, y:  0.449,
+             type: 0,
+             leg_mesh: 3,
+             r_wheel: 0.2, prp_gr_rt: 42, prp_enc_ppr: 1024, prp_max_rpm: 3000, prp_sim_a: 1.5,
+             str_gr_rt: 42.8571429, str_enc_ppr: 1024, str_lim: 3.078027759, str_sim_v: 4},
+  }
+
+
+# Battery enclosure modules. Set node to -1 if battery is not included in module.
+batteries:
+  {
+    bat0: {node:  345, type: 1, x:  0.0, y:  0.445, z: 0.72, yaw: 0, bat_mesh: 0} ,
+    bat1: {node: -1, type: 0, x:  0.0, y: -0.445, yaw: 0, z: 0.72, bat_mesh: 1},
+  }
+
+pipes:
+  {
+    pipe0: {x1: "-0.425", y1: "-0.445", x2: "0.425", y2: -0.445, height: 0.65, space: 0.15},
+    pipe1: {x1: "0.425",  y1: "-0.445", x2: "0.425", y2: 0.445, height: 0.65, space: 0.15},
+    pipe2: {x1: "0.425", y1: "0.445", x2: "-0.425", y2: 0.445, height: 0.65, space: 0.15},
+    pipe3: {x1: "-0.425",  y1: "0.445", x2: "-0.425", y2: -0.445, height: 0.65, space: 0.15},
+  }
+
+corners:
+  {
+    corner0: {type: 0, corner_mesh: 0, x: "-0.425", y: "-0.445", z: 0.65, space: 0.15},
+    corner1: {type: 1, corner_mesh: 0, x: "0.425", y: "-0.445", z: 0.65, space: 0.15},
+    corner2: {type: 2, corner_mesh: 0, x: "0.425", y: "0.445", z: 0.65, space: 0.15},
+    corner3: {type: 3, corner_mesh: 0, x: "-0.425", y: "0.445", z: 0.65, space: 0.15},
+  }
+
+# Beams connecting drive modules
+beams:
+  {
+    #beam0: {start: "drive0", end: "drive1"},
+    #beam1: {start: "drive1", end: "drive2"},
+    #beam2: {start: "drive3", end: "drive2"},
+    #beam3: {start: "drive0", end: "drive3"},
+  }

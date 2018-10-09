@@ -38,7 +38,7 @@
   <gazebo reference="$(arg tf_prefix)/hokuyo">
     <sensor name="$(arg robot_name)hokuyo_sensor" type="ray">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
       <update_rate>40</update_rate>
       <always_on>1</always_on>
       <ray>

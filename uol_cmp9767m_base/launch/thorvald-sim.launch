@@ -12,7 +12,7 @@
   <include file="$(find thorvald_model)/launch/model.launch">
     <arg name="robot_name" value="" />
     <arg name="tf_prefix" value="" />
-    <arg name="robot_model" value="$(find thorvald_model)/config/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim.yaml" />
+    <arg name="robot_model" value="$(find uol_cmp9767m_base)/config/robot.yaml" />
     <arg name="model_extras" value="$(find uol_cmp9767m_base)/urdf/sensors.xacro" />
   </include>
 
