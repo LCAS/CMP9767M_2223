@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.4 (2018-10-09)
+------------------
 * Merge pull request `#5 <https://github.com/LCAS/CMP9767M/issues/5>`_ from gpdas/master
   Updated ground textures
 * Cleanup
