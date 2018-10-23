@@ -73,10 +73,303 @@
   </gazebo>
 
   <!-- Velodyne VLP16 -->
-  <xacro:include filename="$(find velodyne_description8)/urdf/VLP-16.urdf.xacro"/>
-  <VLP-16 parent="$(arg tf_prefix)/base_link" name="$(arg robot_name)_velodyne" topic="velodyne_points" hz="10" samples="440" min_range="0.9"  max_range="130.0" noise="0.008">
+  <xacro:property name="velodyne_origin">
     <origin xyz="0 0 1.56" rpy="0 0 0" />
-  </VLP-16>
+  </xacro:property>
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="velodyne_parent" value="base_link" />
+  <xacro:property name="velodyne_name" value="velodyne" />
+  <xacro:property name="velodyne_topic" value="velodyne_points" />
+  <xacro:property name="velodyne_hz" value="10" />
+  <xacro:property name="velodyne_lasers" value="16" />
+  <xacro:property name="velodyne_samples" value="440" />
+  <xacro:property name="velodyne_collision_range" value="0.3" />
+  <xacro:property name="velodyne_min_range" value="0.9" />
+  <xacro:property name="velodyne_max_range" value="130.0" />
+  <xacro:property name="velodyne_noise" value="0.008" />
+  <xacro:property name="velodyne_min_angle" value="-${M_PI}" />
+  <xacro:property name="velodyne_max_angle" value="${M_PI}" />
+  <xacro:property name="velodyne_gpu" value="false"/>
+
+  <joint name="$(arg robot_name)_${velodyne_name}_base_mount_joint" type="fixed">
+    <xacro:insert_block name="velodyne_origin" /> 
+    <parent link="$(arg tf_prefix)/${velodyne_parent}"/>
+    <child link="$(arg tf_prefix)/${velodyne_name}_link"/>
+  </joint>
+
+  <link name="$(arg tf_prefix)/${velodyne_name}_link">
+    <inertial>
+      <mass value="0.83"/>
+      <origin xyz="0 0 0.03585"/>
+      <inertia ixx="${(0.83 * (3.0*0.0516*0.0516 + 0.0717*0.0717)) / 12.0}" ixy="0" ixz="0"
+        iyy="${(0.83 * (3.0*0.0516*0.0516 + 0.0717*0.0717)) / 12.0}" iyz="0"
+        izz="${0.5 * 0.83 * (0.0516*0.0516)}"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://velodyne_description8/meshes/VLP16_base_1.dae" />
+      </geometry>
+    </visual>
+    <visual>
+      <geometry>
+        <mesh filename="package://velodyne_description8/meshes/VLP16_base_2.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.03585"/>
+      <geometry>
+        <cylinder radius="0.0516" length="0.0717"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="$(arg robot_name)_${velodyne_name}_base_scan_joint" type="fixed" >
+    <origin xyz="0 0 0.0377" rpy="0 0 0" />
+    <parent link="$(arg tf_prefix)/${velodyne_name}_link" />
+    <child link="$(arg tf_prefix)/${velodyne_name}"/>
+  </joint>
+
+  <link name="$(arg tf_prefix)/${velodyne_name}">
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-7" ixy="0" ixz="0" iyy="1e-7" iyz="0" izz="1e-7"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 -0.0377" />
+      <geometry>
+        <mesh filename="package://velodyne_description8/meshes/VLP16_scan.dae" />
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- Gazebo requires the velodyne_gazebo_plugins package -->
+  <gazebo reference="$(arg tf_prefix)/${velodyne_name}">
+    <xacro:if value="${velodyne_gpu}">
+      <sensor type="gpu_ray" name="$(arg robot_name)_${velodyne_name}-VLP16">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <update_rate>${velodyne_hz}</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>${velodyne_samples}</samples>
+              <resolution>1</resolution>
+              <min_angle>${velodyne_min_angle}</min_angle>
+              <max_angle>${velodyne_max_angle}</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>${velodyne_lasers}</samples>
+              <resolution>1</resolution>
+              <min_angle>-${15.0*M_PI/180.0}</min_angle>
+              <max_angle> ${15.0*M_PI/180.0}</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>${velodyne_collision_range}</min>
+            <max>${velodyne_max_range+1}</max>
+            <resolution>0.001</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.0</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_laser_controller"  filename="libgazebo_ros_velodyne_gpu_laser.so">
+          <topicName>${velodyne_topic}</topicName>
+          <frameName>${velodyne_name}</frameName>
+          <min_range>${velodyne_min_range}</min_range>
+          <max_range>${velodyne_max_range}</max_range>
+          <gaussianNoise>${velodyne_noise}</gaussianNoise>
+        </plugin>
+      </sensor>
+    </xacro:if>
+
+    <xacro:unless value="${velodyne_gpu}">
+      <sensor type="ray" name="$(arg robot_name)_${velodyne_name}-VLP16">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <update_rate>${velodyne_hz}</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>${velodyne_samples}</samples>
+              <resolution>1</resolution>
+              <min_angle>${velodyne_min_angle}</min_angle>
+              <max_angle>${velodyne_max_angle}</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>${velodyne_lasers}</samples>
+              <resolution>1</resolution>
+              <min_angle>-${15.0*M_PI/180.0}</min_angle>
+              <max_angle> ${15.0*M_PI/180.0}</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>${velodyne_collision_range}</min>
+            <max>${velodyne_max_range+1}</max>
+            <resolution>0.001</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.0</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_laser_controller"  filename="libgazebo_ros_velodyne_laser.so">
+          <topicName>${velodyne_topic}</topicName>
+          <frameName>${velodyne_name}</frameName>
+          <min_range>${velodyne_min_range}</min_range>
+          <max_range>${velodyne_max_range}</max_range>
+          <gaussianNoise>${velodyne_noise}</gaussianNoise>
+        </plugin>
+      </sensor>
+    </xacro:unless>
+  </gazebo>
+
+  <!-- Kinect v2 -->
+  <xacro:property name="kinect2_parent" value="base_link" />
+  <xacro:property name="kinect2_name" value="kinect2" />
+  <xacro:property name="kinect2_cam_px" value="0.0" />
+  <xacro:property name="kinect2_cam_py" value="0.0" />
+  <xacro:property name="kinect2_cam_pz" value="0.5" />
+  <xacro:property name="kinect2_cam_or" value="0.0" />
+  <xacro:property name="kinect2_cam_op" value="${M_PI/2}" />
+  <xacro:property name="kinect2_cam_oy" value="-${M_PI/2}" />
+
+  <link name="$(arg tf_prefix)/${kinect2_name}_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://kinect2_description/meshes/sensors/kinect2.dae"/>
+      </geometry>
+      <origin xyz="0.02 0 0" rpy="0 0 3.141592"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size=".1 .25 .06"/>
+      </geometry>
+      <contact_coefficients mu="0" kp="1000.0" kd="1.0"/>
+    </collision>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+  <joint name="$(arg robot_name)_${kinect2_name}_joint" type="fixed">
+    <parent link="$(arg tf_prefix)/${kinect2_parent}"/>
+    <child link="$(arg tf_prefix)/${kinect2_name}_link"/>
+    <origin xyz="${kinect2_cam_px} ${kinect2_cam_py} ${kinect2_cam_pz}" rpy="${kinect2_cam_or} ${kinect2_cam_op} ${kinect2_cam_oy}"/>
+  </joint>
+
+  <link name="$(arg tf_prefix)/${kinect2_name}_rgb_optical_frame"/>
+
+  <joint name="$(arg robot_name)_${kinect2_name}_rgb_joint" type="fixed">
+    <parent link="$(arg tf_prefix)/${kinect2_name}_link"/>
+    <child link="$(arg tf_prefix)/${kinect2_name}_rgb_optical_frame"/>
+    <origin xyz="0 0.0125 0.016" rpy="-1.57 0 -1.57"/>
+  </joint>
+
+  <link name="$(arg tf_prefix)/${kinect2_name}_depth_optical_frame"/>
+
+  <joint name="$(arg robot_name)_${kinect2_name}_depth_joint" type="fixed">
+    <parent link="$(arg tf_prefix)/${kinect2_name}_link"/>
+    <child link="$(arg tf_prefix)/${kinect2_name}_depth_optical_frame"/>
+    <origin xyz="0 -0.0125 0.016" rpy="-1.57 0 -1.57"/>
+  </joint>
+
+  <gazebo reference="$(arg tf_prefix)/${kinect2_name}_link">
+    <sensor name="$(arg robot_name)_${kinect2_name}_sensor" type="depth">
+      <always_on>true</always_on>
+      <update_rate>30.0</update_rate>
+      <camera>
+        <horizontal_fov>${70.0*3.14/180.0}</horizontal_fov>
+        <image>
+          <width>512</width>
+          <height>424</height>
+          <format>L8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>8.0</far>
+        </clip>
+        <noise>
+          <!-- Noise is sampled independently per pixel on each frame.
+          That pixel's noise value is added to each of its color
+          channels, which at that point lie in the range [0,1]. -->
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.001</stddev>
+        </noise>
+      </camera>
+      <plugin name="$(arg robot_name)_${kinect2_name}_sensor_controller" filename="libgazebo_ros_openni_kinect.so">
+        <cameraName>${kinect2_name}_sensor</cameraName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>30.0</updateRate>
+        <imageTopicName>sd/image_ir_rect</imageTopicName>
+        <depthImageTopicName>sd/image_depth_rect</depthImageTopicName>
+        <pointCloudTopicName>sd/points</pointCloudTopicName>
+        <cameraInfoTopicName>sd/camera_info</cameraInfoTopicName>
+        <!--<depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>-->
+        <frameName>${kinect2_name}_depth_optical_frame</frameName>
+        <pointCloudCutoff>0.5</pointCloudCutoff>
+        <pointCloudCutoffMax>8.0</pointCloudCutoffMax>
+        <baseline>0.1</baseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+        <robotNamespace>$(arg tf_prefix)</robotNamespace>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="$(arg tf_prefix)/${kinect2_name}_link">
+    <sensor name="$(arg robot_name)_${kinect2_name}_camera" type="camera">
+      <always_on>true</always_on>
+      <update_rate>30.0</update_rate>
+      <camera name="${kinect2_name}_camera">
+        <horizontal_fov>${84.1*3.14/180.0}</horizontal_fov>
+        <image>
+          <width>1920</width>
+          <height>1080</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>10.0</far>
+        </clip>
+        <noise>
+          <!-- Noise is sampled independently per pixel on each frame.
+          That pixel's noise value is added to each of its color
+          channels, which at that point lie in the range [0,1]. -->
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="$(arg robot_name)_${kinect2_name}_camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>30.0</updateRate>
+        <cameraName>${kinect2_name}_camera</cameraName>
+        <imageTopicName>hd/image_color_rect</imageTopicName>
+        <cameraInfoTopicName>hd/camera_info</cameraInfoTopicName>
+        <frameName>${kinect2_name}_rgb_optical_frame</frameName>
+        <baseline>0.1</baseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+        <robotNamespace>$(arg tf_prefix)</robotNamespace>
+      </plugin>
+    </sensor>
+  </gazebo>
 
 </robot>
 
