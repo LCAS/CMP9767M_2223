@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2018-10-23)
+------------------
 * Merge branch 'master' into master
 * Merge pull request `#12 <https://github.com/LCAS/CMP9767M/issues/12>`_ from LCAS/rostest_marc
   added more meaningful rostests

@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2018-10-23)
+------------------
 * fixed test
 * Merge pull request `#13 <https://github.com/LCAS/CMP9767M/issues/13>`_ from gpdas/master
   sensor.xacro updated with working velodyne and kinect2.
