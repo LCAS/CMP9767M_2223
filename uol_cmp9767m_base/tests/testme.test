@@ -22,10 +22,10 @@
         - name: /tf
           timeout: 10
           negative: False
-        - name: /velodyne_points
+        - name: /thorvald_001/velodyne_points
           timeout: 10
           negative: False
-        - name: /scan
+        - name: /thorvald_001/scan
           timeout: 10
           negative: False
     </rosparam>
@@ -33,7 +33,7 @@
 
   <!-- check that odometry is published at around 20Hz -->
   <test test-name="hztest_odom" pkg="rostest" type="hztest" name="hztest_odom">
-	<param name="topic" value="/odometry/gazebo" />
+	<param name="topic" value="/thorvald_001/odometry/gazebo" />
 	<param name="hz" value="20.0" />
 	<param name="hzerror" value="2" />
 	<param name="test_duration" value="10.0" />
