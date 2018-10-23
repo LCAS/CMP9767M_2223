@@ -81,7 +81,7 @@
   <exec_depend>kinect2_description</exec_depend>
   <exec_depend>thorvald_base</exec_depend>
   <exec_depend>thorvald_model</exec_depend>
-  <exec_depend>gazebo_ros</exec_depend>
+  
   <exec_depend>map_server</exec_depend>
 
 
