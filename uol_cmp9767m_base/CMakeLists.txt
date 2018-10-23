@@ -196,7 +196,7 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
-foreach (dir config launch models urdf worlds)
+foreach (dir tests config launch models urdf worlds)
     install(DIRECTORY ${dir}/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
 endforeach(dir)
@@ -214,3 +214,8 @@ endforeach(dir)
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
+
+if(CATKIN_ENABLE_TESTING)
+  find_package(rostest REQUIRED)
+  add_rostest(tests/testme.test)
+endif()
