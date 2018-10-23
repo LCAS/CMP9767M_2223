@@ -1,0 +1,41 @@
+<launch>
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch">
+    <env name="DISPLAY" value="" />
+  	<arg name="gui" value="false" />
+  </include>
+
+  <!-- launch a map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find uol_cmp9767m_base)/maps/cropped.yaml" />
+
+  <!-- a very basic Python unittest -->
+  <test pkg="uol_cmp9767m_base" type="simple_test.py" test-name="simpletest" />
+
+  <!-- run a test to check that some basic topics are available -->
+  <test name="publishtest"
+        test-name="publishtest"
+        pkg="rostest" type="publishtest">
+    <rosparam>
+      topics:
+        - name: /map
+          timeout: 10
+          negative: False
+        - name: /tf
+          timeout: 10
+          negative: False
+        - name: /velodyne_points
+          timeout: 10
+          negative: False
+        - name: /scan
+          timeout: 10
+          negative: False
+    </rosparam>
+  </test>
+
+  <!-- check that odometry is published at around 20Hz -->
+  <test test-name="hztest_odom" pkg="rostest" type="hztest" name="hztest_odom">
+	<param name="topic" value="/odometry/gazebo" />
+	<param name="hz" value="20.0" />
+	<param name="hzerror" value="2" />
+	<param name="test_duration" value="10.0" />
+  </test>
+</launch>
