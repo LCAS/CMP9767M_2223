@@ -2,6 +2,25 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fixed test
+* Merge pull request `#13 <https://github.com/LCAS/CMP9767M/issues/13>`_ from gpdas/master
+  sensor.xacro updated with working velodyne and kinect2.
+* fixed `gui` conflict
+* Merge branch 'master' into master
+* sensor.xacro updated with velodyne and kinect2.
+  raw urdf from the <sensor>_description added to sensors.xacro to avoid problems with tf_prefix and topic_names
+* Merge pull request `#12 <https://github.com/LCAS/CMP9767M/issues/12>`_ from LCAS/rostest_marc
+  added more meaningful rostests
+* fixed install
+* moved tests
+* added more meaningful rostests
+* Merge pull request `#7 <https://github.com/LCAS/CMP9767M/issues/7>`_ from LCAS/initial_map
+  added cropped map
+* added cropped map
+* Contributors: Marc Hanheide, gpdas
+
 0.0.4 (2018-10-09)
 ------------------
 * Merge pull request `#5 <https://github.com/LCAS/CMP9767M/issues/5>`_ from gpdas/master
