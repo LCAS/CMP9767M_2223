@@ -1,33 +1,42 @@
 <?xml version="1.0"?>
 
 <launch>
-
+  <arg name="gui" default="true"/>
   <!-- Launch the Gazebo world.  -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="use_sim_time" default="true"/>
     <arg name="world_name" value="$(find uol_cmp9767m_base)/worlds/cmp9767m_1.world"/>
+    <arg name="gui" value="$(arg gui)" />
   </include>
 
-  <group>
-  <!-- model bringup -->
-  <include file="$(find thorvald_model)/launch/model.launch">
-    <arg name="robot_name" value="" />
-    <arg name="tf_prefix" value="" />
-    <arg name="robot_model" value="$(find uol_cmp9767m_base)/config/robot.yaml" />
-    <arg name="model_extras" value="$(find uol_cmp9767m_base)/urdf/sensors.xacro" />
-  </include>
+  <group ns="thorvald_001">
+    <arg name="robot_name" default="thorvald_001" />
+    <arg name="tf_prefix" default="thorvald_001" />
+    <arg name="robot_model" default="$(find uol_cmp9767m_base)/config/robot.yaml"/>
+    <arg name="model_extras" default="$(find uol_cmp9767m_base)/urdf/sensors.xacro"/>
 
-  <!-- base bringup-->
-  <include file="$(find thorvald_base)/launch/base_bringup.launch">
-    <arg name="robot_model" value="$(find thorvald_model)/config/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim.yaml" />
-    <arg name="simple_sim" value="true" />
-    <arg name="enable_odom_tf" value="false" />
-  </include>
+    <!-- model bringup -->
+    <include file="$(find thorvald_model)/launch/model.launch">
+      <arg name="robot_name" value="$(arg robot_name)" />
+      <arg name="tf_prefix" value="$(arg tf_prefix)" />
+      <arg name="robot_model" value="$(arg robot_model)" />
+      <arg name="model_extras" value="$(arg model_extras)" />
+    </include>
 
-  <!-- twist mux bringup -->
-  <include file="$(find thorvald_twist_mux)/launch/twist_mux.launch" />
+    <!-- base bringup-->
+    <include file="$(find thorvald_base)/launch/base_bringup.launch">
+      <arg name="tf_prefix" value="$(arg tf_prefix)" />
+      <arg name="robot_model" value="$(arg robot_model)" />
+      <arg name="simple_sim" value="true" />
+      <arg name="enable_odom_tf" value="false" />
+      <arg name="odom_frame_id" value="odom" />
+    </include>
 
-  <!-- spawn robot in gazebo -->
-  <node pkg="gazebo_ros" type="spawn_model" name="spawner" args="-urdf -param robot_description -model thorvald_ii" />
+    <!-- twist mux bringup -->
+    <include file="$(find thorvald_twist_mux)/launch/twist_mux.launch" />
+
+    <!-- spawn robot in gazebo -->
+    <node pkg="gazebo_ros" type="spawn_model" name="spawner" args="-urdf -param robot_description -model thorvald_ii" />
   </group>
 
 </launch>

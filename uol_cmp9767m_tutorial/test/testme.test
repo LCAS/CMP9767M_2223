@@ -1,3 +1,0 @@
-<launch>
-  <test pkg="uol_cmp9767m_tutorial" type="simple_test.py" test-name="simpletest" />
-</launch>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>uol_cmp9767m_base</name>
-  <version>0.0.4</version>
+  <version>0.1.1</version>
   <description>The uol_cmp9767m_base package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
@@ -79,6 +79,10 @@
   <exec_depend>velodyne_description8</exec_depend>
   <exec_depend>velodyne_gazebo_plugins8</exec_depend>
   <exec_depend>kinect2_description</exec_depend>
+  <exec_depend>thorvald_base</exec_depend>
+  <exec_depend>thorvald_model</exec_depend>
+  
+  <exec_depend>map_server</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
