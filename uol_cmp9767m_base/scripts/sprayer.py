@@ -61,6 +61,7 @@ class Sprayer:
         request.model_xml = self.sdf
         request.reference_frame = 'thorvald_001/base_link'
         request.initial_pose.position.z = 0.005
+        request.initial_pose.position.x = -0.45
         request.initial_pose.orientation.w = 1.0
         self.spawner(request)
         return []
