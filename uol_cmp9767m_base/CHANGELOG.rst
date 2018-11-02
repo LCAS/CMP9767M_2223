@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2018-11-02)
+------------------
 * navtest added (`#14 <https://github.com/LCAS/CMP9767M/issues/14>`_)
 * Contributors: Marc Hanheide
 
