@@ -37,6 +37,7 @@
 
     <!-- spawn robot in gazebo -->
     <node pkg="gazebo_ros" type="spawn_model" name="spawner" args="-urdf -param robot_description -model thorvald_ii" />
+    <node pkg="uol_cmp9767m_base" type="sprayer.py" name="sprayer" />
   </group>
 
 </launch>

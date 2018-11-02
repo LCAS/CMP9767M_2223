@@ -4,6 +4,36 @@
   <xacro:arg name="robot_name" default=""/>
   <xacro:arg name="tf_prefix" default=""/>
 
+  <!-- Fake Sprayer Laser -->
+  <link name="$(arg tf_prefix)/sprayer">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <mass value="1" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />      
+    </inertial>
+  </link>
+  <gazebo reference="$(arg tf_prefix)/sprayer">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+  <joint name="$(arg robot_name)_base_link_sprayer" type="fixed">
+    <parent link="$(arg tf_prefix)/base_link"/>
+    <child link="$(arg tf_prefix)/sprayer"/>
+    <axis xyz="1 0 0" />
+    <origin xyz="-0.45 0.000 0.5" rpy="0 0 0"/>
+  </joint>
+
   <!-- Hokuyo Laser -->
   <link name="$(arg tf_prefix)/hokuyo">
     <collision>
@@ -231,7 +261,7 @@
   <!-- Kinect v2 -->
   <xacro:property name="kinect2_parent" value="base_link" />
   <xacro:property name="kinect2_name" value="kinect2" />
-  <xacro:property name="kinect2_cam_px" value="0.0" />
+  <xacro:property name="kinect2_cam_px" value="0.45" />
   <xacro:property name="kinect2_cam_py" value="0.0" />
   <xacro:property name="kinect2_cam_pz" value="0.5" />
   <xacro:property name="kinect2_cam_or" value="0.0" />
