@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2018-11-02)
+------------------
 * added sprayer (`#15 <https://github.com/LCAS/CMP9767M/issues/15>`_)
   * added sprayer
   * added sprayer into model
