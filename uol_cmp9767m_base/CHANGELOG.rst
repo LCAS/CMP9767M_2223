@@ -2,6 +2,19 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.0 (2018-11-02)
+------------------
+* added sprayer (`#15 <https://github.com/LCAS/CMP9767M/issues/15>`_)
+  * added sprayer
+  * added sprayer into model
+  * textures with alpha and better lighting
+* Contributors: Marc Hanheide
+
+0.1.2 (2018-11-02)
+------------------
+* navtest added (`#14 <https://github.com/LCAS/CMP9767M/issues/14>`_)
+* Contributors: Marc Hanheide
+
 0.1.1 (2018-10-23)
 ------------------
 * Update package.xml
