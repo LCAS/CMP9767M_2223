@@ -4,7 +4,7 @@ import rospy
 from cv2 import namedWindow, cvtColor, imshow
 from cv2 import destroyAllWindows, startWindowThread
 from cv2 import COLOR_BGR2GRAY, waitKey
-from cv2 import blur, Canny, threshold, THRESH_BINARY
+from cv2 import blur, Canny, threshold, THRESH_BINARY, split
 from numpy import median
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
@@ -21,14 +21,12 @@ class image_converter:
         namedWindow("Image window")
 
         cv_img = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        gray_img = cvtColor(cv_img, COLOR_BGR2GRAY)
-
-        retval, plants = threshold(gray_img,50, 255, THRESH_BINARY)
-
-        imshow("Image window", plants)
+        b,g,r = split(cv_img)        
         
-        #slice out the green channel, and do the thing
-        
+        ret, carrots = threshold(g, 50, 255, THRESH_BINARY)
+
+        imshow("Image window", carrots)
+                
         
         waitKey(1)
 
