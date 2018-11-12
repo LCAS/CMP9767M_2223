@@ -23,15 +23,10 @@ class image_converter:
         cv_img = self.bridge.imgmsg_to_cv2(data, "bgr8")
         b,g,r = split(cv_img)        
         
-        #gray_img = cvtColor(cv_img, COLOR_BGR2GRAY)
-        
-        #retval, plants = threshold(gray_img,50, 255, THRESH_BINARY)
         ret, carrots = threshold(g, 50, 255, THRESH_BINARY)
 
         imshow("Image window", carrots)
-        
-        #slice out the green channel, and do the thing
-        
+                
         
         waitKey(1)
 
