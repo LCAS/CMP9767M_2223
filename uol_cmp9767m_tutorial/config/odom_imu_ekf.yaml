@@ -1,0 +1,74 @@
+# For parameter descriptions, please refer to the template parameter files for each node.
+#ekf_se_odom:
+frequency: 20
+sensor_timeout: 0.1
+two_d_mode: false
+transform_time_offset: 0.0
+transform_timeout: 0.0
+print_diagnostics: true
+debug: false
+publish_tf: true
+
+#map_frame: map
+odom_frame: odom
+base_link_frame: base_link
+world_frame: odom
+
+odom0: /odometry/base_raw
+odom0_config: [false, false, false,  # X,        Y,        Z
+               false, false, false, # roll,     pitch,    yaw
+               true,  true,  false, # vx,       vy,       vz
+               false, false, true, # gyro_x,   gyro_y,   gyro_z
+               false, false, false] # accel_x,  accel_y,  accel_z
+odom0_queue_size: 10
+odom0_nodelay: true
+odom0_differential: false
+odom0_relative: false
+
+imu0: /imu/data
+imu0_config: [false, false, false,
+              false, false, true,
+              false, false, false,
+              false, false, true,  
+              true,  false, false]
+imu0_nodelay: false
+imu0_differential: false
+imu0_relative: true
+imu0_queue_size: 10
+imu0_remove_gravitational_acceleration: false
+
+use_control: false
+
+
+#process_noise_covariance: [0.05, 0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+#                           0,    0.05, 0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+#                           0,    0,    0.06, 0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+#                           0,    0,    0,    0.03,  0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+#                           0,    0,    0,    0,    0.03,  0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+#                           0,    0,    0,    0,    0,    0.06, 0,     0,     0,    0,    0,    0,    0,    0,    0,
+#                           0,    0,    0,    0,    0,    0,    0.025,   0,     0,    0,    0,    0,    0,    0,    0,
+#                           0,    0,    0,    0,    0,    0,    0,     0.5,   0,    0,    0,    0,    0,    0,    0,
+#                           0,    0,    0,    0,    0,    0,    0,     0,     0.1,  0,    0,    0,    0,    0,    0,
+#                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0.3,  0,    0,    0,    0,    0,
+#                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0.3,  0,    0,    0,    0,
+#                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.3,  0,    0,    0,
+#                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.3,  0,    0,
+#                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.3,  0,
+#                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.3]
+
+#initial_estimate_covariance: [1e-9, 0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+#                              0,    1e-9, 0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+#                              0,    0,    1e-9, 0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+#                              0,    0,    0,    1.0,  0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+#                              0,    0,    0,    0,    1.0,  0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+#                              0,    0,    0,    0,    0,    1e-6, 0,    0,    0,    0,     0,     0,     0,    0,    0,
+#                              0,    0,    0,    0,    0,    0,    1.0,  0,    0,    0,     0,     0,     0,    0,    0,
+#                              0,    0,    0,    0,    0,    0,    0,    1.0,  0,    0,     0,     0,     0,    0,    0,
+#                              0,    0,    0,    0,    0,    0,    0,    0,    1.0,  0,     0,     0,     0,    0,    0,
+#                              0,    0,    0,    0,    0,    0,    0,    0,    0,    1.0,   0,     0,     0,    0,    0,
+#                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     1.0,   0,     0,    0,    0,
+#                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     1.0,   0,    0,    0,
+#                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     1.0,  0,    0,
+#                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1.0,  0,
+#                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1.0]
+

@@ -4,10 +4,8 @@ material cmp9767m_plant_textures/texture_3
   {
     pass
     {
-      ambient 0.8 0.8 0.8 1.0
-      diffuse 0.1 0.1 0.1 1.0
-      specular 0.01 0.01 0.01 1.0
-      emissive 0.0 0.0 0.0 1.0
+      scene_blend alpha_blend
+      depth_write off
 
       texture_unit
       {
