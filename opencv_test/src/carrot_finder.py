@@ -3,8 +3,8 @@
 import rospy
 from cv2 import namedWindow, cvtColor, imshow
 from cv2 import destroyAllWindows, startWindowThread
-from cv2 import waitKey
-from cv2 import blur, Canny, threshold, THRESH_BINARY, split
+from cv2 import waitKey, morphologyEx, MORPH_CLOSE
+from cv2 import threshold, THRESH_BINARY, split
 from numpy import ones, uint8
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
@@ -24,11 +24,16 @@ class image_converter:
         namedWindow("Image window")
 
         cv_img = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        #splitting image into b,g,r channels        
         b,g,r = split(cv_img)        
+        #performing binary thresholding operation on green channel
+        ret, thresh = threshold(g, 50, 255, THRESH_BINARY)
         
-        ret, carrots = threshold(g, 50, 255, THRESH_BINARY)
-
-        imshow("Image window", carrots)
+        #performing closing operation for noise reduction and to remove voids in objects
+        closed_img = morphologyEx(thresh, MORPH_CLOSE, self.kernel)
+        
+        #displaying the result of thresholding, and closing operations
+        imshow("Image window", closed_img)
                 
         
         waitKey(1)
