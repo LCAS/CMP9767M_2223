@@ -19,18 +19,10 @@
         <remap from="odom" to="$(arg robot_name)/odometry/base_raw" />
         <remap from="cmd_vel" to="$(arg robot_name)/nav_vel" />
 
-<!--        <rosparam file="$(find uol_cmp9767m_tutorial)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find uol_cmp9767m_tutorial)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
         <rosparam file="$(find uol_cmp9767m_tutorial)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
 
-        <rosparam file="$(find uol_cmp9767m_tutorial)/config/global_costmap_params.yaml" command="load" ns="global_costmap"/>
-
-        <rosparam param="global_costmap/global_obstacle_layer/laser_scan_sensor/sensor_frame" subst_value="True">$(arg robot_name)/hokuyo</rosparam>
-        <rosparam param="global_costmap/global_obstacle_layer/laser_scan_sensor/topic" subst_value="True">$(arg robot_name)/scan</rosparam>
-        <rosparam param="global_costmap/robot_base_frame" subst_value="True">$(arg robot_name)/base_link</rosparam>
-
-        <rosparam file="$(find uol_cmp9767m_tutorial)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
-        <rosparam param="local_costmap/obstacle_layer/laser_scan_sensor/sensor_frame" subst_value="True">$(arg robot_name)/hokuyo</rosparam>
-        <rosparam param="local_costmap/obstacle_layer/laser_scan_sensor/topic" subst_value="True">$(arg robot_name)/scan</rosparam>
-        <rosparam param="local_costmap/robot_base_frame" subst_value="True">$(arg robot_name)/base_link</rosparam>   -->     
+        <rosparam file="$(find uol_cmp9767m_tutorial)/config/global_costmap_params.yaml" command="load"/>
+        <rosparam file="$(find uol_cmp9767m_tutorial)/config/local_costmap_params.yaml" command="load"/>
 	</node> 
 </launch>
