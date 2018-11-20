@@ -1,6 +1,4 @@
 local_costmap:
-#  global_frame: actor00/odom
-#  robot_base_frame: actor00/base_link
   update_frequency: 5.0
   publish_frequency: 2.0
   static_map: false
