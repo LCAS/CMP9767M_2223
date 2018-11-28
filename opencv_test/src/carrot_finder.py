@@ -30,6 +30,7 @@ class image_converter:
         #performing binary thresholding operation on green channel
         ret, thresh = threshold(g, 50, 255, THRESH_BINARY)
         
+        #consider replacing with opening, and increasing kernel size to further remove small objects/noise
         #preforming median filter to remove noise
         median_result = medianBlur(thresh, 5)
         
