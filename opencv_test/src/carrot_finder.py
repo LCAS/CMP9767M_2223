@@ -4,8 +4,9 @@ import rospy
 from cv2 import namedWindow, imshow
 from cv2 import destroyAllWindows, startWindowThread
 from cv2 import waitKey, morphologyEx, MORPH_CLOSE
-from cv2 import threshold, THRESH_BINARY, split, medianBlur
-from numpy import zeros, ones, uint8
+from cv2 import threshold, THRESH_BINARY, split, medianBlur, connectedComponents
+from cv2 import merge, cvtColor, COLOR_HSV2BGR
+from numpy import ones, uint8, max, ones_like
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
@@ -35,9 +36,26 @@ class image_converter:
         #performing closing operation to remove voids in remaining objects
         closed_img = morphologyEx(median_result, MORPH_CLOSE, self.kernel)
         
+        #finding the connected components from the closed image, Connected Components Example adapted from A.Reynolds (2017) Source: https://stackoverflow.com/questions/46441893/connected-component-labeling-in-python?rq=1
+        retval, labels = connectedComponents(closed_img)        
+        
+        
+        
+        ##DISPLAY METHODS, COMMENT OUT FOR INCREASED PERFORMANCE
+        # Map component labels to hue val
+        label_hue = uint8(179*labels/max(labels))
+        blank_ch = 255*ones_like(label_hue)
+        labeled_img = merge([label_hue, blank_ch, blank_ch])
+
+        # cvt to BGR for display
+        labeled_img = cvtColor(labeled_img, COLOR_HSV2BGR)
+
+        # set bg label to black
+        labeled_img[label_hue==0] = 0
+        
         #displaying the result of thresholding, and closing operations
-        imshow("Image window", closed_img)
-                
+        imshow("Image window", labeled_img)
+        ##END DISPLAY METHODS        
         
         waitKey(1)
 
