@@ -10,7 +10,7 @@
 
 	<!-- localization -->
 	<node name="fake_localization" pkg="fake_localization" type="fake_localization">
-            <remap from="base_pose_ground_truth" to="$(arg robot_name)/odometry/base_raw" />
+            <remap from="base_pose_ground_truth" to="$(arg robot_name)/odometry/gazebo" />
             <param name="odom_frame_id" type="string" value="$(arg robot_name)/odom"/>
             <param name="base_frame_id" type="string" value="$(arg robot_name)/base_link"/>
 	</node> 
