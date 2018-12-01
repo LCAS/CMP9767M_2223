@@ -32,7 +32,7 @@ class image_converter:
         
         #consider replacing with opening, and increasing kernel size to further remove small objects/noise
         #preforming median filter to remove noise
-        median_result = medianBlur(thresh, 5)
+        median_result = medianBlur(thresh, 11)
         
         #performing closing operation to remove voids in remaining objects
         closed_img = morphologyEx(median_result, MORPH_CLOSE, self.kernel)
