@@ -19,10 +19,14 @@ class image_converter:
         self.image_sub = rospy.Subscriber("/thorvald_001/kinect2_camera/hd/image_color_rect",
                                           Image, self.callback)
         #initialising kernel for closing operation                                   
-        self.kernel = ones((5,5), uint8)                                  
+        self.kernel = ones((5,5), uint8)                                       
 
     def callback(self, data):
-        namedWindow("Image window")
+        #OPENCV DISPLAY REMOVED FOR INCREASED PERFORMANCE
+        #namedWindow("Image window")
+
+        #defining publisher for output image
+        camera_objects = rospy.Publisher("camera_objects", Image, queue_size = 1)  
 
         cv_img = self.bridge.imgmsg_to_cv2(data, "bgr8")
         #splitting image into b,g,r channels        
@@ -40,9 +44,8 @@ class image_converter:
         #finding the connected components from the closed image, Connected Components Example adapted from A.Reynolds (2017) Source: https://stackoverflow.com/questions/46441893/connected-component-labeling-in-python?rq=1
         retval, labels = connectedComponents(closed_img)        
         
+        #iterating through the labels to find carrot/non-carrot objects
         
-        
-        ##DISPLAY METHODS, COMMENT OUT FOR INCREASED PERFORMANCE
         # Map component labels to hue val
         label_hue = uint8(179*labels/max(labels))
         blank_ch = 255*ones_like(label_hue)
@@ -54,10 +57,15 @@ class image_converter:
         # set bg label to black
         labeled_img[label_hue==0] = 0
         
+
         #displaying the result of thresholding, and closing operations
-        imshow("Image window", labeled_img)
+        #OPENCV DISPLAY REMOVED FOR INCREASED PERFORMANCE#imshow("Image window", labeled_img)
         ##END DISPLAY METHODS        
         
+        #publishing image
+        output = self.bridge.cv2_to_imgmsg(labeled_img, encoding="rgb8")
+        camera_objects.publish(output)
+
         waitKey(1)
 
 startWindowThread()
