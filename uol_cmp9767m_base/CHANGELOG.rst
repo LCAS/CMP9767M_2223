@@ -2,6 +2,43 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.0 (2018-11-02)
+------------------
+* added sprayer (`#15 <https://github.com/LCAS/CMP9767M/issues/15>`_)
+  * added sprayer
+  * added sprayer into model
+  * textures with alpha and better lighting
+* Contributors: Marc Hanheide
+
+0.1.2 (2018-11-02)
+------------------
+* navtest added (`#14 <https://github.com/LCAS/CMP9767M/issues/14>`_)
+* Contributors: Marc Hanheide
+
+0.1.1 (2018-10-23)
+------------------
+* Update package.xml
+* Contributors: Marc Hanheide
+
+0.1.0 (2018-10-23)
+------------------
+* fixed test
+* Merge pull request `#13 <https://github.com/LCAS/CMP9767M/issues/13>`_ from gpdas/master
+  sensor.xacro updated with working velodyne and kinect2.
+* fixed `gui` conflict
+* Merge branch 'master' into master
+* sensor.xacro updated with velodyne and kinect2.
+  raw urdf from the <sensor>_description added to sensors.xacro to avoid problems with tf_prefix and topic_names
+* Merge pull request `#12 <https://github.com/LCAS/CMP9767M/issues/12>`_ from LCAS/rostest_marc
+  added more meaningful rostests
+* fixed install
+* moved tests
+* added more meaningful rostests
+* Merge pull request `#7 <https://github.com/LCAS/CMP9767M/issues/7>`_ from LCAS/initial_map
+  added cropped map
+* added cropped map
+* Contributors: Marc Hanheide, gpdas
+
 0.0.4 (2018-10-09)
 ------------------
 * Merge pull request `#5 <https://github.com/LCAS/CMP9767M/issues/5>`_ from gpdas/master

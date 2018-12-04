@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+
+<launch>
+
+  <arg name="ekf_config" default="$(find uol_cmp9767m_tutorial)/config/odom_imu_ekf.yaml"/>
+  <arg name="publish_tf" default="true" />
+
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_local" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg ekf_config)"/>
+    <param name="publish_tf" value="$(arg publish_tf)"/>
+    </node> 
+
+</launch>
