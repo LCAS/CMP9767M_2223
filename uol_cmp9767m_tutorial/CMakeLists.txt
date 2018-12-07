@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   rostest
   std_msgs
+  topological_navigation
   uol_cmp9767m_base
 )
 

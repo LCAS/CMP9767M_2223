@@ -28,6 +28,7 @@
   <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
   <author email="marc@hanheide.net">mhanheide</author>
   <author email="gcielniak@lincoln.ac.uk">gcielniak</author>
+  <author email="pdasgautham@gmail.com">gpdas</author>
 
 
   <!-- The *depend tags are used to specify dependencies -->
@@ -58,6 +59,7 @@
   <build_depend>rostest</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>cv_bridge</build_depend>
+  <build_depend>topological_navigation</build_depend>
   <build_depend>uol_cmp9767m_base</build_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
   <build_export_depend>nav_msgs</build_export_depend>
@@ -66,12 +68,15 @@
   <build_export_depend>rostest</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
   <build_export_depend>cv_bridge</build_export_depend>
+  <build_export_depend>topological_navigation</build_export_depend>
   <build_export_depend>uol_cmp9767m_base</build_export_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>rostest</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>topological_navigation</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
   <exec_depend>uol_cmp9767m_base</exec_depend>
   <exec_depend>nodelet</exec_depend>
   <exec_depend>pcl_ros</exec_depend>
