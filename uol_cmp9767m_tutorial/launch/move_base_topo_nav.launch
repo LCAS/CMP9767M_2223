@@ -38,6 +38,12 @@
 
       <rosparam file="$(find uol_cmp9767m_tutorial)/config/planners_topo_nav.yaml" command="load"/>
 
+      <!--remap hokuyo frame and topic-->
+      <rosparam param="local_costmap/obstacle_layer/laser_scan_sensor/sensor_frame" subst_value="True">$(arg tf_prefix)/hokuyo</rosparam>
+      <rosparam param="local_costmap/obstacle_layer/laser_scan_sensor/topic" subst_value="True">scan</rosparam>
+      <rosparam param="global_costmap/global_obstacle_layer/laser_scan_sensor/sensor_frame" subst_value="True">$(arg tf_prefix)/hokuyo</rosparam>
+      <rosparam param="global_costmap/global_obstacle_layer/laser_scan_sensor/topic" subst_value="True">scan</rosparam>
+
     </node>
 
   </group>
