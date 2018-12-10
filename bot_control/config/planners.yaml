@@ -1,0 +1,41 @@
+# base_global_planner: navfn/NavfnROS #default
+base_global_planner: carrot_planner/CarrotPlanner
+
+# base_local_planner: base_local_planner/TrajectoryPlannerROS #default
+base_local_planner: dwa_local_planner/DWAPlannerROS
+
+#controller_frequency: 2.0 # (double, default: 20.0) The rate in Hz at which to run the control loop and send velocity commands to the base.
+planner_frequency: 0.0 # (double, default: 0.0) The rate in Hz at which to run the global planning loop. If the frequency is set to 0.0, the global planner will only run when a new goal is received or the local planner reports that its path is blocked.
+
+# TrajectoryPlannerROS:
+  # sim_time: 1.0 # (double, default: 1.0) The amount of time to forward-simulate trajectories in seconds
+  # holonomic_robot: true
+  #  yaw_goal_tolerance: 0.3 # (double, default: 0.05) The tolerance in radians for the controller in yaw/rotation when achieving its goal
+#  xy_goal_tolerance: 0.15 #  (double, default: 0.10) The tolerance in meters for the controller in the x & y distance when achieving a goal
+#  latch_xy_goal_tolerance: true # (bool, default: false) If goal tolerance is latched, if the robot ever reaches the goal xy location it will simply rotate in place, even if it ends up outside the goal tolerance while it is doing so.
+#  meter_scoring: true # (bool, default: false) Whether the gdist_scale and pdist_scale parameters should assume that goal_distance and path_distance are expressed in units of meters or cells. Cells are assumed by default. 
+
+DWAPlannerROS:
+  sim_time: 1.0 # (double, default: 1.0) The amount of time to forward-simulate trajectories in seconds
+  max_vel_x: 0.2
+  max_vel_y: 0.2
+  max_rot_vel: 0.2
+  # holonomic_robot: true
+  yaw_goal_tolerance: 0.05
+  twirling_scale: 10.0
+
+# NavfnROS:
+  # visualize_potential: true # (bool, default: false) Specifies whether or not to visualize the potential area computed via a PointCloud2.
+  # use_dijkstra: true # (bool, default: true) If true, use dijkstra's algorithm. Otherwise, A*.
+
+#recovery_behaviors:
+#  - {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
+#  - {name: aggressive_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
+
+#conservative_reset:
+#  layer_names: ["obstacle_layer"]
+#  reset_distance: 1.0
+
+#aggressive_reset:
+#  layer_names: ["obstacle_layer"]
+#  reset_distance: 0.38 #distance from rotation centre to tail (0.32m) + 6cm slack
