@@ -8,8 +8,11 @@
   <!-- launch move_base -->
   <include file="$(find weed_whacker)/launch/move_base.launch"><include>
 
-  <!-- test that Python works -->
-  <test pkg="weed_whacker" type="simple_test.py" test-name="pythontest" />
+  <include file="$(find weed_whacker)/launch/move_base.launch"/>
+
+  <node pkg="weed_whacker" name="weed_whacker" type="weeding.py"/>
+
+  <node pkg="weed_whacker" name="control" type="control.py"/>
 
   <!-- test topics -->
   <test name="publishtest"
