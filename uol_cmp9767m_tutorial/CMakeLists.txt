@@ -8,6 +8,10 @@ project(uol_cmp9767m_tutorial)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+## For DoDishesAction: uncomment the following lines
+#  genmsg
+#  actionlib_msgs
+#  actionlib
   geometry_msgs
   nav_msgs
   rospy
@@ -65,16 +69,19 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate actions in the 'action' folder
+## For DoDishesAction: uncomment the following lines
 # add_action_files(
+#   DIRECTORY
+#   action
 #   FILES
-#   Action1.action
-#   Action2.action
+#   DoDishes.action
 # )
 
 ## Generate added messages and services with any dependencies listed here
+## For DoDishesAction: uncomment the following lines
 # generate_messages(
 #   DEPENDENCIES
-#   geometry_msgs#   nav_msgs#   std_msgs
+#   actionlib_msgs #geometry_msgs #nav_msgs #std_msgs
 # )
 
 ################################################
@@ -163,10 +170,13 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   test/simple_test.py
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+ install(PROGRAMS
+    scripts/set_topo_nav_goal.py
+## For scripts using DoDishesAction: uncomment the following lines
+#   scripts/do_dishes_server.py
+#   scripts/do_dishes_client.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
 
 ## Mark executables and/or libraries for installation
 # install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node

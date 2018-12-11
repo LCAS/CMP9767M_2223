@@ -268,7 +268,7 @@
     node: WayPoint5
     pointset: test
   node:
-    edges: 
+    edges:
     - action: move_base
       edge_id: WayPoint5_WayPoint1
       inflation_radius: 0.0
