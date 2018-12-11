@@ -13,7 +13,7 @@ class Go_To_Point():
         self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction) #start actionclient
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
    
-    def point(self, P):
+    def point(self, P, wait_time):
        
         goal = MoveBaseGoal() # new MoveBaseGoal message
         goal_pose = Pose() # new Pose message
@@ -32,7 +32,7 @@ class Go_To_Point():
        
         self.move_client.send_goal(goal) # send new goal to actionlib server
        
-        success = self.move_client.wait_for_result(rospy.Duration(30)) # wait up to 30s for result
+        success = self.move_client.wait_for_result(rospy.Duration(wait_time)) # wait up to 30s for result
        
         state = self.move_client.get_state() # get the state of the current goal
         result = False # create result bool and set it to false

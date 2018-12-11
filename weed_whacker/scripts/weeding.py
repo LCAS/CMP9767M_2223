@@ -56,7 +56,7 @@ class image_converter:
 		go_place.append(0)#ox
 		go_place.append(0)#oy
 		go_place.append(0)#oz
-		success = move_base_commander.point(go_place)
+		success = move_base_commander.point(go_place, 20) #go_place = location for sprayer, 20 = time(s) until goal is rejected
 		if success == True:
 			sprayer()
 	self.weeds = []
