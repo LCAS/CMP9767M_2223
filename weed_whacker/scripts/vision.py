@@ -13,7 +13,9 @@ from cv_bridge import CvBridge
 
 from sensor_msgs.msg import Image, CameraInfo
 from geometry_msgs.msg import PoseStamped
-
+from simple_move_base import Go_To_Point
+from std_msgs.msg import Bool
+from std_srvs.srv import Empty
 
 class image_converter:
     camera_model = None
@@ -26,19 +28,48 @@ class image_converter:
                                           Image, self.callback)
 	self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/camera_info', 
             				  CameraInfo, self.camera_info_callback)
+	self.spray_sub = rospy.Subscriber('/spray', Bool, self.spray_weeds_call)
+	self.find_weeds_sub = rospy.Subscriber('/find_weeds', Bool, self.find_weeds_call)
 	self.tf_listener = tf.TransformListener()
+	self.find_weeds = False
 
     def camera_info_callback(self, data): #get camera info once
 	self.camera_model = image_geometry.PinholeCameraModel()
         self.camera_model.fromCameraInfo(data)
         self.camera_info_sub.unregister()
 
+    def find_weeds_call(self, data):
+	self.find_weeds = data.data
+
+    def spray_weeds_call(self, data):
+	rospy.wait_for_service('thorvald_001/spray')
+	sprayer = rospy.ServiceProxy('/thorvald_001/spray', Empty)
+	spray_list = self.weeds[:]
+	spray_list.reverse()
+	(trans, _) = self.tf_listener.lookupTransform('thorvald_001/base_link', 'thorvald_001/sprayer', rospy.Time())
+	move_base_commander = Go_To_Point()
+	
+	for x in range(len(spray_list)):
+		go_place = []
+		go_place.append(spray_list[x][0]-trans[0])#x
+		go_place.append(spray_list[x][1]+trans[1])#y
+		go_place.append(0)#ox
+		go_place.append(0)#oy
+		go_place.append(0)#oz
+		print go_place
+		success = move_base_commander.point(go_place)
+		if success == True:
+			sprayer()
+		
+	
     def callback(self, data):
 	if not self.camera_model:
             return
+	elif not self.find_weeds:
+	    return	
 	k = self.weeding(data)
 	self.coords(k)
-	
+	"""
 	(trans, rot) = self.tf_listener.lookupTransform('map', 
             'thorvald_001/kinect2_rgb_optical_frame', rospy.Time())
 
@@ -65,7 +96,7 @@ class image_converter:
 
         cv2.imshow("Image window", cv_image_s)
         cv2.waitKey(1)
-		
+	"""	
      	
     def coords(self, XY_pixel_list): #https://answers.ros.org/question/241624/converting-pixel-location-in-camera-frame-to-world-frame/
 
