@@ -1,0 +1,49 @@
+<launch>
+  <!-- launch thorvald -->
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch">
+    <env name="DISPLAY" value="" />
+      <arg name="gui" value="false" />
+  <include>
+
+  <!-- launch move_base -->
+  <include file="$(find weed_whacker)/launch/move_base.launch"><include>
+
+  <!-- test that Python works -->
+  <test pkg="weed_whacker" type="simple_test.py" test-name="pythontest" />
+
+  <!-- test topics -->
+  <test name="publishtest"
+  	test-name="publishtest"
+    	pkg="rostest type="publishtest">
+    <rosparam>
+      topics:
+        - name: /map
+	  timeout: 10
+	  negative: False
+	- name: /tf
+	  timeout: 10
+	  negative: False
+	- name: /thorvald_001/velodyne_points
+	  timeout: 10
+	  negative: False
+	- name: /thorvald_001/scan
+	  timeout: 10
+	  negative: False
+	- name: /thorvald_001/kinect2_camera/hd/camera_info
+	  timeout: 10
+	  negative: False
+	- name: /thorvald_001/kinect2_camera/hd/image_color_rect
+	  timeout: 10
+	  negative: False
+    </rosparam>
+  </test>
+
+  <!-- check that odometry is published at around 20Hz -->
+  <test test-name="hztest_odom" pkg="rostest" type="hztest" name="hztest_odom">
+	<param name="topic" value="/thorvald_001/odometry/gazebo" />
+	<param name="hz" value="20.0" />
+	<param name="hzerror" value="2" />
+	<param name="test_duration" value="10.0" />
+  </test>
+</launch>
+
