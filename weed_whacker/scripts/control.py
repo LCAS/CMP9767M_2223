@@ -44,6 +44,8 @@ class weed_control():
 		self.search()
 
     def search(self):
+	if len(self.map_places) == 0:
+		return
 	move_base_commander = Go_To_Point()
 	x = self.map_places.pop()
 	go_place = []
@@ -53,6 +55,8 @@ class weed_control():
 	go_place.append(0)
 	go_place.append(0)
 	success = move_base_commander.point(go_place, 120) #go_place = location for sprayer, 120 = time(s) until goal is rejected
+	if success == True:
+		pass 
 	
 rospy.init_node('weed_control')
 wc = weed_control()
