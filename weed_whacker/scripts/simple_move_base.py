@@ -32,7 +32,7 @@ class Go_To_Point():
        
         self.move_client.send_goal(goal) # send new goal to actionlib server
        
-        success = self.move_client.wait_for_result(rospy.Duration(90)) # wait up to 90s for result
+        success = self.move_client.wait_for_result(rospy.Duration(30)) # wait up to 30s for result
        
         state = self.move_client.get_state() # get the state of the current goal
         result = False # create result bool and set it to false

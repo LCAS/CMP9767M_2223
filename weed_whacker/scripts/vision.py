@@ -40,6 +40,7 @@ class image_converter:
 
     def find_weeds_call(self, data):
 	self.find_weeds = data.data
+	print self.find_weeds
 
     def spray_weeds_call(self, data):
 	rospy.wait_for_service('thorvald_001/spray')
@@ -56,11 +57,11 @@ class image_converter:
 		go_place.append(0)#ox
 		go_place.append(0)#oy
 		go_place.append(0)#oz
-		print go_place
 		success = move_base_commander.point(go_place)
 		if success == True:
 			sprayer()
-		
+	self.weeds = []
+	print 'spray finished: ', self.weeds
 	
     def callback(self, data):
 	if not self.camera_model:
@@ -69,7 +70,8 @@ class image_converter:
 	    return	
 	k = self.weeding(data)
 	self.coords(k)
-	"""
+
+	""" weed location vis
 	(trans, rot) = self.tf_listener.lookupTransform('map', 
             'thorvald_001/kinect2_rgb_optical_frame', rospy.Time())
 
