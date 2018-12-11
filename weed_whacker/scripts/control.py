@@ -29,8 +29,8 @@ class weed_control():
 	self.map_places = []
 
     def create_map_places(self, data): #create searching points in the four corners of the square map
-	y_trans = (data.info.height * data.info.resolution)/4
-	x_trans = (data.info.width * data.info.resolution)/4
+	y_trans = (data.info.height * data.info.resolution)/3
+	x_trans = (data.info.width * data.info.resolution)/3
 	self.map_places.append([x_trans, y_trans])
 	self.map_places.append([x_trans*-1.0, y_trans])
 	self.map_places.append([x_trans, y_trans*-1.0])
