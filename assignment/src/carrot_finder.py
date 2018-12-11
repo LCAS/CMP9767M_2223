@@ -3,7 +3,7 @@
 import rospy
 from cv2 import namedWindow, imshow
 from cv2 import destroyAllWindows, startWindowThread
-from cv2 import waitKey, morphologyEx, MORPH_CLOSE
+from cv2 import waitKey, morphologyEx, MORPH_CLOSE, MORPH_OPEN
 from cv2 import threshold, THRESH_BINARY, split, medianBlur, connectedComponents
 from cv2 import merge, cvtColor, COLOR_HSV2BGR
 from numpy import ones, uint8, max, ones_like
@@ -19,7 +19,8 @@ class image_converter:
         self.image_sub = rospy.Subscriber("/thorvald_001/kinect2_camera/hd/image_color_rect",
                                           Image, self.callback)
         #initialising kernel for closing operation                                   
-        self.kernel = ones((5,5), uint8)                                       
+        self.kernel = ones((9,9), uint8)     
+        self.kernel_small = ones((5,5), uint8)                                   
 
     def callback(self, data):
         #OPENCV DISPLAY REMOVED FOR INCREASED PERFORMANCE
@@ -35,11 +36,12 @@ class image_converter:
         ret, thresh = threshold(g, 50, 255, THRESH_BINARY)
         
         #consider replacing with opening, and increasing kernel size to further remove small objects/noise
+        open_result = morphologyEx(thresh, MORPH_OPEN, self.kernel)
         #preforming median filter to remove noise
-        median_result = medianBlur(thresh, 11)
+        #median_result = medianBlur(thresh, 11)
         
         #performing closing operation to remove voids in remaining objects
-        closed_img = morphologyEx(median_result, MORPH_CLOSE, self.kernel)
+        closed_img = morphologyEx(open_result, MORPH_CLOSE, self.kernel_small)
         
         #finding the connected components from the closed image, Connected Components Example adapted from A.Reynolds (2017) Source: https://stackoverflow.com/questions/46441893/connected-component-labeling-in-python?rq=1
         retval, labels = connectedComponents(closed_img)        
