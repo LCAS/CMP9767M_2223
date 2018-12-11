@@ -264,9 +264,9 @@
   <xacro:property name="kinect2_cam_px" value="0.45" />
   <xacro:property name="kinect2_cam_py" value="0.0" />
   <xacro:property name="kinect2_cam_pz" value="0.5" />
-  <xacro:property name="kinect2_cam_or" value="0.0" />
-  <xacro:property name="kinect2_cam_op" value="${M_PI/2}" />
-  <xacro:property name="kinect2_cam_oy" value="-${M_PI/2}" />
+  <xacro:property name="kinect2_cam_or" value="${M_PI/2}" /> <!-- change ${M_PI/2}-->
+  <xacro:property name="kinect2_cam_op" value="${M_PI/4.3}" />
+  <xacro:property name="kinect2_cam_oy" value="0" />
 
   <link name="$(arg tf_prefix)/${kinect2_name}_link">
     <visual>
