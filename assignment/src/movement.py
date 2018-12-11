@@ -13,7 +13,9 @@ from sensor_msgs.msg import LaserScan
 
 #add goals to local list and bounce off of that
 
+#listen for mid-goals from the image recognition algorithm
 
+#activate go over top, activate spray
 
 def scan_callback(data):
     # callback function for scan data
