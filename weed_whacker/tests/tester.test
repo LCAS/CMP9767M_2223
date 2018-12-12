@@ -13,7 +13,8 @@
   <!-- test topics -->
   <test name="publishtest"
         test-name="publishtest"
-        pkg="rostest type="publishtest">
+        pkg="rostest" 
+	type="publishtest">
     <rosparam>
       topics:
         - name: /map
