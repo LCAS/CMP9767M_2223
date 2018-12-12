@@ -21,7 +21,7 @@ class Go_To_Point():
         goal_pose.position.x = P[0] # fill up pose pos x
         goal_pose.position.y = P[1] # fill up pose pos y
         goal_pose.position.z = 0 # fill up pose pos z with 0
-        goal_pose.orientation.w = 1 # fill up pose ori w with 1
+        goal_pose.orientation.w = P[5] # fill up pose ori w with 1
         goal_pose.orientation.x = P[2] # fill up pose ori x with 0
         goal_pose.orientation.y = P[3] # fill up pose ori y with 0
         goal_pose.orientation.z = P[4] # fill up pose ori z with 0

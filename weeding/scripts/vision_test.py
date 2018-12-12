@@ -65,18 +65,35 @@ class image_converter:
 	kernel2 = np.ones((7,7),np.uint8)
 
 	erode = cv2.erode(image_mask,kernel,iterations = 1)
-    	dilation = cv2.dilate(erode,kernel2,iterations = 1)
-
-	_, contours, hierarchy = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    	dilation = cv2.dilate(erode,kernel2,iterations = 15)
+	height,width = dilation.shape
+	dilation = dilation[:,:((width/4)*2.5)]
+	_, cnts, hierarchy = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 	
+	
+	contours = []	
+	for c in range(len(cnts)):
+		if cv2.contourArea(cnts[c]) > 3000:
+			contours.append(cnts[c])
+
 	contours = sorted(contours, key=cv2.contourArea)
 
 	rows = []
 	for c in range(len(contours)):
+		"""
 		x,y,w,h = cv2.boundingRect(contours[c])
 		x = x+w
-		y = y+(h/2)
-		ray = self.camera_model.projectPixelTo3dRay((x,y))
+		y = y+(h/2)"""
+		M = cv2.moments(contours[c])
+		xy = []
+		if M["m00"] != 0:
+ 			cX = int(M["m10"] / M["m00"])
+ 			cY = int(M["m01"] / M["m00"])
+			xy.append([cX,cY])
+		else:
+ 			xy.append([0, 0])
+		ray = self.camera_model.projectPixelTo3dRay((xy[0][0],xy[0][1]))
+		cv2.circle(cv_image, (int(xy[0][0]),int(xy[0][1])), 10, 255, -1)
 
 		p_point = PoseStamped()
 		p_point.header.frame_id = 'thorvald_001/kinect2_rgb_optical_frame'
@@ -100,11 +117,9 @@ class image_converter:
 	for r in range(len(rows)):
 		dist = (((rows[r][0]-trans[0])*(rows[r][0]-trans[0]))+((rows[r][1]-trans[1])*(rows[r][0]-trans[0])))**0.5
 		row_dist.append(dist)
-	nav_lock = False
 	if len(row_dist) != 0:
 		_,coord = min((row_dist[i],i) for i in xrange(len(row_dist)))
 		if row_dist[coord] < 2:
-			nav_lock = True
 			self.find_weeds_pub.publish(True) #post back to control https://answers.ros.org/question/69754/quaternion-transformations-in-python/ !!!!!!!!!! (orient bot)
 		go_place = []
 		go_place.append(rows[coord][0])#x
@@ -112,14 +127,26 @@ class image_converter:
 		go_place.append(0)#ox
 		go_place.append(0)#oy
 		go_place.append(0)#oz
+		go_place.append(1)#ow
 		move_base_commander = Go_To_Point()
-		x = 0.5
+		x = 0.1
 		success = move_base_commander.point(go_place, x) #go_place = location for sprayer, x = time(s) until goal is rejecteda
 		self.unfin_path_pub.publish(True)
+		x,y,w,h = cv2.boundingRect(contours[coord])
+		x = x+w
+		y = y+(h/2)
+		cv2.circle(cv_image, (int(x),int(y)), 20, 150, -1)
+        #resize for visualisation
+        
 	else:
 		self.find_weeds_pub.publish(False)
 		self.unfin_path_pub.publish(False)
 
+	cv_image_s = cv2.resize(cv_image, (0,0), fx=0.5, fy=0.5)
+        cv2.imshow("Image window", cv_image_s)
+        cv2.waitKey(1)	
+cv2.startWindowThread()
 rospy.init_node('vis_test', anonymous=True)
 ic = image_converter()
 rospy.spin()
+cv2.destroyAllWindows()
