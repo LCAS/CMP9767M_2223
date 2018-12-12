@@ -14,13 +14,30 @@ from cv_bridge import CvBridge
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose
+from std_srvs.srv import Empty 
 
 
 class image_converter:
 
     def __init__(self):
 
+        #initialising local odometry flags
+        self.posX = 0               #robot X pos
+        self.posY = 0               #robot Y pos
+        self.posZ = 0               #robot Z pos
+        self.angularW = 0           #robot W component (orientation)
+        self.angularX = 0           #robot angularX
+        self.angularY = 0           #robot angularY
+        self.angularZ = 0           #robot angularZ      
+
+        #initialising object local flags
+        self.goal_flag = True      #flag for observing current goal
+
         self.bridge = CvBridge()
+
+        #initialising the sprayer service node
+        self.sprayer_node = rospy.ServiceProxy('/thorvald_001/spray', Empty)
+
         #initialising subscribers
         #initialising subscriber for camera data
         self.image_sub = rospy.Subscriber("/thorvald_001/kinect2_camera/hd/image_color_rect",
@@ -35,15 +52,6 @@ class image_converter:
         #creating the move base client
         self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)          #POTENTIALLY PUBLISHING TO WRONG TOPIC, CHECK THIS
         self.move_client.wait_for_server(rospy.Duration(5))
-
-        #initialising local odometry flags
-        self.posX = 0               #robot X pos
-        self.posY = 0               #robot Y pos
-        self.posZ = 0               #robot Z pos
-        self.angularW = 0           #robot W component (orientation)
-        self.angularX = 0           #robot angularX
-        self.angularY = 0           #robot angularY
-        self.angularZ = 0           #robot angularZ        
 
     def img_callback(self, data):
         #OPENCV DISPLAY REMOVED FOR INCREASED PERFORMANCE
@@ -102,11 +110,13 @@ class image_converter:
         self.angularY = data.pose.pose.orientation.y           #robot angularY
         self.angularZ = data.pose.pose.orientation.z           #robot angularZ       
 
-        self.navigateTo(1,1,1)
-        self.checkGoalComplete(1,1,1)
+        #self.navigateTo(1,1,1)
+        #self.checkGoalComplete(1,1,1)
         #uncomment for output of odometry
-        self.print_local_odometry()
-        self.sprayGround(1,1)
+        #self.print_local_odometry()
+        if self.goal_flag:
+            self.sprayGround(1,1)
+            self.goal_flag = False
 
     def print_local_odometry(self):
         #outputs to terminal the current values in the local odometry    
@@ -197,6 +207,8 @@ class image_converter:
     def sprayGround(self, worldX, worldY):
         #function handles the sprayer mechanism
         
+        self.sprayer_node()
+
         output_msg = "x: " + str(self.posX) + " y: " + str(self.posY)
         print "sprayed ground at " + output_msg   
 
