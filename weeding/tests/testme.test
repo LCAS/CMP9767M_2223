@@ -1,8 +1,8 @@
 <launch>
-  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch">
-    <env name="DISPLAY" value="" />
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch"/>
+  <!--  <env name="DISPLAY" value="" />
   	<arg name="gui" value="false" />
-  </include>
+  </include-->
 
   <!-- launch a map server -->
   <include file="$(find weeding)/launch/move_base.launch"/>
