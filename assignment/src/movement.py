@@ -7,6 +7,16 @@ from sensor_msgs.msg import LaserScan
 #MODULE ADAPTED FROM WORKSHOP 3
 ################
 
+#import tutorial scripts to launch fake_localisation and mapping
+
+#create subscriber to goals topic
+
+#add goals to local list and bounce off of that
+
+#listen for mid-goals from the image recognition algorithm
+
+#activate go over top, activate spray
+
 def scan_callback(data):
     # callback function for scan data
     pub = rospy.Publisher("/twist_mux/cmd_vel", Twist, queue_size = 1)
