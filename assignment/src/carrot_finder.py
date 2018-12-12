@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
+import actionlib
 from cv2 import namedWindow, imshow
 from cv2 import destroyAllWindows, startWindowThread
 from cv2 import waitKey, morphologyEx, MORPH_CLOSE, MORPH_OPEN
@@ -10,6 +11,10 @@ from numpy import ones, uint8, max, ones_like
 from sensor_msgs.msg import Image
 from nav_msgs.msg import Odometry
 from cv_bridge import CvBridge
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from actionlib_msgs.msg import *
+from geometry_msgs.msg import Pose
+
 
 class image_converter:
 
@@ -21,12 +26,19 @@ class image_converter:
         self.image_sub = rospy.Subscriber("/thorvald_001/kinect2_camera/hd/image_color_rect",
                                           Image, self.img_callback)
         #subscriber for fake localisation odometry data
-        self.odom = rospy.Subscriber("/thorvald_001/odometry/base_raw", Odometry, self.odom_callback)
+        self.odom_sub = rospy.Subscriber("/thorvald_001/odometry/base_raw", Odometry, self.odom_callback)
+
         #subscriber for testing flag
 
         #initialising kernels for opening and closing operations                                   
         self.kernel = ones((9,9), uint8)     
         self.kernel_small = ones((5,5), uint8)
+
+        #creating the move base client
+        self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)          #POTENTIALLY PUBLISHING TO WRONG TOPIC, CHECK THIS
+        self.move_client.wait_for_server(rospy.Duration(5))
+
+        
 
         #initialising local odometry flags
         self.posX = 0               #robot X pos
@@ -92,7 +104,9 @@ class image_converter:
         self.angularY = data.pose.pose.orientation.y           #robot angularY
         self.angularZ = data.pose.pose.orientation.z           #robot angularZ       
 
-        self.print_local_odometry()
+        self.navigateTo(1,1,1)
+        #uncomment for output of odometry
+        #self.print_local_odometry()
 
     def print_local_odometry(self):
         #outputs to terminal the current values in the local odometry    
@@ -107,7 +121,7 @@ class image_converter:
         #callback method for flag test
         print "test"
 
-    #def getCoOrds(imageX, imageY):
+    #def getCoOrds(self, imageX, imageY):
         #function returns spatial co-ords relative to robots frame given a camera value
         #camera parameters
     #    camera_angle = 45           #angle of camera
@@ -115,8 +129,38 @@ class image_converter:
     #    cam_displacement_x = 0.0    #displacement of the camera from robot center on x axis
     #    cam_displacement_y = 0.0    #displacement of the camera from robot center on y axis
 
-    #def navigateTo(worldX, worldY):
+    def navigateTo(self, worldX, worldY, orientation):
         #function sets a goal for the robot to navigate to 
+
+        #creating a new MoveBaseGoal, and target pose
+        goal = MoveBaseGoal() 
+        goal_pose = Pose() 
+
+        #setting desired pose 
+        goal_pose.position.x = worldX 
+        goal_pose.position.y = worldY 
+        goal_pose.position.z = 0 
+        goal_pose.orientation.w = orientation # 1 for parallel to rows
+        goal_pose.orientation.x = 0 
+        goal_pose.orientation.y = 0 
+        goal_pose.orientation.z = 0 
+
+        goal.target_pose.header.stamp = rospy.Time.now() # set MoveBaseGoal time stamp to current time from rospy
+        goal.target_pose.header.frame_id = 'map' # set the frame to map
+        goal.target_pose.pose = goal_pose # set the pose to the above
+       
+        #sending goal to actionlib server
+        self.move_client.send_goal(goal) 
+        
+        print "Goal Set"
+
+    def cancelGoal(self):
+        #function publishes an empty nav goal to clear the queue (as a side effect stops the robot)
+        print "test"
+
+    def sprayGround(self, worldX, worldY):
+        #function handles the sprayer mechanism
+        print "test"    
 
 startWindowThread()
 rospy.init_node('image_converter')
