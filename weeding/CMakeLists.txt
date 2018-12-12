@@ -9,7 +9,7 @@ project(weeding)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   actionlib
-  actionlin_msgs
+  actionlib_msgs
   geometry_msgs
   move_base_msgs
   nav_msgs
