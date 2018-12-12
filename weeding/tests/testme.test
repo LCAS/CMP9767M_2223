@@ -28,6 +28,9 @@
         - name: /thorvald_001/scan
           timeout: 10
           negative: False
+        - name: /thorvald_001/kinect2_camera/hd/image_color_rect
+          timeout: 10
+          negative: False
     </rosparam>
   </test>
 
