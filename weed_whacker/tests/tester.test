@@ -7,17 +7,13 @@
 
   <!-- launch move_base -->
   <include file="$(find weed_whacker)/launch/move_base.launch"><include>
-
-  <include file="$(find weed_whacker)/launch/move_base.launch"/>
-
   <node pkg="weed_whacker" name="weed_whacker" type="weeding.py"/>
-
   <node pkg="weed_whacker" name="control" type="control.py"/>
 
   <!-- test topics -->
   <test name="publishtest"
-  	test-name="publishtest"
-    	pkg="rostest type="publishtest">
+        test-name="publishtest"
+        pkg="rostest type="publishtest">
     <rosparam>
       topics:
         - name: /map
