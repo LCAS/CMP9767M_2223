@@ -28,8 +28,6 @@ class image_converter:
         #subscriber for fake localisation odometry data
         self.odom_sub = rospy.Subscriber("/thorvald_001/odometry/base_raw", Odometry, self.odom_callback)
 
-        #subscriber for testing flag
-
         #initialising kernels for opening and closing operations                                   
         self.kernel = ones((9,9), uint8)     
         self.kernel_small = ones((5,5), uint8)
@@ -38,12 +36,11 @@ class image_converter:
         self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)          #POTENTIALLY PUBLISHING TO WRONG TOPIC, CHECK THIS
         self.move_client.wait_for_server(rospy.Duration(5))
 
-        
-
         #initialising local odometry flags
         self.posX = 0               #robot X pos
         self.posY = 0               #robot Y pos
         self.posZ = 0               #robot Z pos
+        self.angularW = 0           #robot W component (orientation)
         self.angularX = 0           #robot angularX
         self.angularY = 0           #robot angularY
         self.angularZ = 0           #robot angularZ        
@@ -100,34 +97,34 @@ class image_converter:
         self.posX = data.pose.pose.position.x                  #robot X pos
         self.posY = data.pose.pose.position.y                  #robot Y pos
         self.posZ = data.pose.pose.position.z                  #robot Z pos
+        self.angularW = data.pose.pose.orientation.w           #robot W component
         self.angularX = data.pose.pose.orientation.x           #robot angularX
         self.angularY = data.pose.pose.orientation.y           #robot angularY
         self.angularZ = data.pose.pose.orientation.z           #robot angularZ       
 
         self.navigateTo(1,1,1)
+        self.checkGoalComplete(1,1,1)
         #uncomment for output of odometry
-        #self.print_local_odometry()
+        self.print_local_odometry()
+        self.sprayGround(1,1)
 
     def print_local_odometry(self):
         #outputs to terminal the current values in the local odometry    
         print "pos x: " + str(self.posX) 
         print "pos y: " + str(self.posY) 
         print "pos z: " + str(self.posZ) 
+        print "w component: " + str(self.angularW)
         print "orientation x: " + str(self.angularX) 
         print "orientation y: " + str(self.angularY) 
         print "orientation z: " + str(self.angularZ)  
 
-    def flag_callback(self, data):
-        #callback method for flag test
-        print "test"
-
-    #def getCoOrds(self, imageX, imageY):
+    def getCoOrds(self, imageX, imageY):
         #function returns spatial co-ords relative to robots frame given a camera value
         #camera parameters
-    #    camera_angle = 45           #angle of camera
-    #    cam_height = 0.5            #height of camera from the ground
-    #    cam_displacement_x = 0.0    #displacement of the camera from robot center on x axis
-    #    cam_displacement_y = 0.0    #displacement of the camera from robot center on y axis
+        camera_angle = 45           #angle of camera
+        cam_height = 0.5            #height of camera from the ground
+        cam_displacement_x = 0.0    #displacement of the camera from robot center on x axis
+        cam_displacement_y = 0.0    #displacement of the camera from robot center on y axis
 
     def navigateTo(self, worldX, worldY, orientation):
         #function sets a goal for the robot to navigate to 
@@ -154,13 +151,54 @@ class image_converter:
         
         print "Goal Set"
 
+    def checkGoalComplete(self, targetX, targetY, tar_orient):
+        #function checks if goal has been reached within tolerances
+        retval = False
+        tolerance = 0.15
+
+        #setting tolerance values
+        upperX = targetX + tolerance
+        lowerX = targetX - tolerance 
+        upperY = targetY + tolerance
+        lowerY = targetY - tolerance 
+        upperW = tar_orient + tolerance
+        lowerW = tar_orient - tolerance 
+
+        #checking to see if current position is within the desired goal position
+        Xreached = False    #denotes if X value is within tolerances
+        Yreached = False    #denotes if Y value is within tolerances
+        Wreached = False    #denotes if W value is within tolerances
+
+        if self.posX > lowerX and self.posX < upperX:
+            Xreached = True
+
+        if self.posY > lowerY and self.posY < upperY:
+            Yreached = True
+
+        if self.angularW > lowerW and self.angularW < upperW:
+            Wreached = True
+
+        if Xreached and Yreached and Wreached:
+            print "Goal reached"
+            retval = True
+
+        return retval
+
     def cancelGoal(self):
         #function publishes an empty nav goal to clear the queue (as a side effect stops the robot)
-        print "test"
+        goal = MoveBaseGoal() 
+        goal_pose = Pose() 
+
+        #sending empty goal message
+        self.move_client.send_goal(goal) 
+
+        print "Goal Cancelled"
 
     def sprayGround(self, worldX, worldY):
         #function handles the sprayer mechanism
-        print "test"    
+        
+        output_msg = "x: " + str(self.posX) + " y: " + str(self.posY)
+        print "sprayed ground at " + output_msg   
 
 startWindowThread()
 rospy.init_node('image_converter')
