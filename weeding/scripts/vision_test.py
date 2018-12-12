@@ -114,7 +114,7 @@ class image_converter:
 		go_place.append(0)#oz
 		move_base_commander = Go_To_Point()
 		x = 0.5
-		success = move_base_commander.point(go_place, x) #go_place = location for sprayer, x = time(s) until goal is rejected
+		success = move_base_commander.point(go_place, x) #go_place = location for sprayer, x = time(s) until goal is rejecteda
 		self.unfin_path_pub.publish(True)
 	else:
 		self.find_weeds_pub.publish(False)
