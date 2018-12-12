@@ -1,8 +1,8 @@
 <launch>
-  <!-- include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch">
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch">
     <env name="DISPLAY" value="" />
   	<arg name="gui" value="false" />
-  </include -->
+  </include>
 
   <!-- launch a map server -->
   <include file="$(find weeding)/launch/weed_whacker.launch"></include>
@@ -29,6 +29,12 @@
           timeout: 10
           negative: False
         - name: /thorvald_001/kinect2_camera/hd/image_color_rect
+          timeout: 10
+          negative: False
+        - name: /thorvald_001/twist_mux/cmd_vel
+          timeout: 10
+          negative: False
+        - name: /thorvald_001/odometry/gazebo
           timeout: 10
           negative: False
     </rosparam>
