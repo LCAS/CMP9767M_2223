@@ -3,6 +3,6 @@
 <launch>
   <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch"/>
   <include file="$(find weeding)/launch/move_base.launch"/>
-  <node pkg="weeding" name="weed_whacker" type="weeding.py"/>
-  <node pkg="weeding" name="control" type="control.py"/>
+  <node pkg="weeding" name="weed_whackering" type="weeding.py"/>
+  <node pkg="weeding" name="controler" type="control.py"/>
 </launch>
