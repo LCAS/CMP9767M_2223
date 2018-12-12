@@ -40,7 +40,7 @@ class weed_control():
 	self.map_places.append([x_trans, y_trans*-1.0])
 	self.map_places.append([x_trans*-1.0, y_trans*-1.0])
 	self.map_sub.unregister()
-	self.search()
+	#self.search()
 
     def unfin_path_call(self, data):
 	if data.data == True:
@@ -57,7 +57,7 @@ class weed_control():
     def spray_weeds_call(self, data):
 	if data.data == False:
 		self.spray = False #spraying finished
-		self.search()
+		#self.search()
 
     def search(self):
 	if len(self.map_places) == 0:
