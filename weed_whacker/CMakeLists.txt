@@ -22,7 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_srvs
   sensor_msgs
   actionlib
-  move_base_msgs.msg
+  move_base_msgs
   eband_local_planner
 )
 # find_package( OpenCV REQUIRED )
