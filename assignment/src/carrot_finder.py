@@ -76,7 +76,16 @@ class image_converter:
         retval, labels = connectedComponents(closed_img)        
         
         #iterating through the labels to find carrot/non-carrot objects
-        
+        out_labels = []
+
+        ##############################################################################  NEEDS TO BE CONNCOMPWITH STATS  
+        for i in labels:
+            #removing small objects
+            if i.area > 20:
+                out_labels.append(i)
+
+        labels = out_labels
+
         # Map component labels to hue val
         label_hue = uint8(179*labels/max(labels))
         blank_ch = 255*ones_like(label_hue)
@@ -89,7 +98,7 @@ class image_converter:
         labeled_img[label_hue==0] = 0
         
 
-        #displaying the result of thresholding, and closing operations
+        #displaying the result of operations
         #OPENCV DISPLAY REMOVED FOR INCREASED PERFORMANCE#imshow("Image window", labeled_img)
         ##END DISPLAY METHODS        
         
