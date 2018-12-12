@@ -5,8 +5,6 @@
   </include>
 
   <!-- launch a map server -->
-  <include file="$(find weeding)/launch/move_base.launch">
-  </include>
   <include file="$(find weeding)/launch/weed_whacker.launch">
   </include>
 
