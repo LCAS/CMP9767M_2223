@@ -5,7 +5,8 @@
   </include>
 
   <!-- launch a map server -->
-  <include file"$(find weeding)/launch/move_base.launch"></include>
+  <include file="$(find weeding)/launch/move_base.launch">
+  </include>
 
   <!-- a very basic Python unittest -->
   <test pkg="weeding" type="simple_test.py" test-name="simpletest" />
