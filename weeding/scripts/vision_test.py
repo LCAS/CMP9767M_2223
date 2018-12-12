@@ -20,6 +20,7 @@ class image_converter:
     camera_model = None
     weeds = []
     lock = True
+
     def __init__(self):
 
         self.bridge = CvBridge()
@@ -118,6 +119,7 @@ class image_converter:
 	else:
 		self.find_weeds_pub.publish(False)
 		self.unfin_path_pub.publish(False)
-rospy.init_node('vis_test')
+
+rospy.init_node('vis_test', anonymous=True)
 ic = image_converter()
 rospy.spin()

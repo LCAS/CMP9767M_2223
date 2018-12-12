@@ -3,5 +3,5 @@
 <launch>
   <node pkg="weeding" name="weed_whackering" type="weeding.py"/>
   <node pkg="weeding" name="controler" type="control.py"/>
-  <node pkg="weeding" name="row_vision" type="vision_test.py"/>
+  <node pkg="weeding" name="vision_test" type="vision_test.py"/>
 </launch>
