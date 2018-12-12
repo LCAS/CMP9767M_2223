@@ -169,6 +169,7 @@ install(PROGRAMS
   tests/simple_test.py
   scripts/control.py
   scripts/weeding.py
+  scripts/vision_test.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 ## Mark executable scripts (Python etc.) for installation
