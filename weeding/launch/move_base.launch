@@ -26,7 +26,7 @@
         <rosparam file="$(find weeding)/config/global_costmap_params.yaml" command="load"/>
         <rosparam file="$(find weeding)/config/local_costmap_params.yaml" command="load"/>
 
-        <rosparam file="$(find weed)/config/planners.yaml" command="load"/>
+        <rosparam file="$(find weeding)/config/planners.yaml" command="load"/>
 
 	</node> 
 </launch>
