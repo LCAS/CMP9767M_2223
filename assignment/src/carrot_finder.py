@@ -21,6 +21,11 @@ class image_converter:
 
     def __init__(self):
 
+        #creating intial goals array
+        #;ists the goals for a major part of the field and will navigate to them
+        self.goals_list = []
+        self.initialise_goals_list()
+
         #initialising local odometry flags
         self.posX = 0               #robot X pos
         self.posY = 0               #robot Y pos
@@ -53,6 +58,34 @@ class image_converter:
         self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)          #POTENTIALLY PUBLISHING TO WRONG TOPIC, CHECK THIS
         self.move_client.wait_for_server(rospy.Duration(5))
 
+    def initialise_goals_list(self):
+        #initialises the goals list
+        print "initialising"      
+
+        for number in range(-3, 3):
+                i = Pose()
+                i.position.x = number
+                i.position.y = -3
+                i.orientation.w = 1
+                self.goals_list.append(i)
+                #print i.position.x
+                #print i.position.y
+            
+                i.position.x = number
+                i.position.y = 3
+                i.orientation.w = 1
+                #print i
+                self.goals_list.append(i)
+                #print i.position.x
+                #print i.position.y
+            
+            
+
+        print "initial goals list complete"
+        for x in range(0, len(self.goals_list)):
+            print self.goals_list[x].position.x
+            print self.goals_list[x].position.y
+
     def img_callback(self, data):
         #OPENCV DISPLAY REMOVED FOR INCREASED PERFORMANCE
         #namedWindow("Image window")
@@ -63,9 +96,10 @@ class image_converter:
         cv_img = self.bridge.imgmsg_to_cv2(data, "bgr8")
         #splitting image into b,g,r channels        
         b,g,r = split(cv_img)        
+
         #performing binary thresholding operation on green channel
         ret, thresh = threshold(g, 50, 255, THRESH_BINARY)
-        
+                
         #opening image to remove small objects/noise 
         open_result = morphologyEx(thresh, MORPH_OPEN, self.kernel)
         
@@ -79,12 +113,12 @@ class image_converter:
         out_labels = []
 
         ##############################################################################  NEEDS TO BE CONNCOMPWITH STATS  
-        for i in labels:
-            #removing small objects
-            if i.area > 20:
-                out_labels.append(i)
+        #for i in labels:
+        #    #removing small objects
+        #    if i.area > 20:
+        #        out_labels.append(i)
 
-        labels = out_labels
+        #labels = out_labels
 
         # Map component labels to hue val
         label_hue = uint8(179*labels/max(labels))
@@ -119,13 +153,26 @@ class image_converter:
         self.angularY = data.pose.pose.orientation.y           #robot angularY
         self.angularZ = data.pose.pose.orientation.z           #robot angularZ       
 
-        #self.navigateTo(1,1,1)
-        #self.checkGoalComplete(1,1,1)
+        
+        #
         #uncomment for output of odometry
         #self.print_local_odometry()
+        #for i in self.goals_list:
+        #    if not i.visited:
+        #        currentGoal = i
+        #         break
+        currentGoal = self.goals_list[0]
+
+        print currentGoal
+
         if self.goal_flag:
-            self.sprayGround(1,1)
+            #self.sprayGround(1,1)
             self.goal_flag = False
+            self.navigateTo(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
+        else:
+            check_goal = self.checkGoalComplete(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
+            self.print_local_odometry()
+            print check_goal
 
     def print_local_odometry(self):
         #outputs to terminal the current values in the local odometry    
@@ -139,7 +186,14 @@ class image_converter:
 
     def getCoOrds(self, imageX, imageY):
         #function returns spatial co-ords relative to robots frame given a camera value
+        
+        #whilst testing it was observed that when the camera is oriented directly down the following conditions are true
+        #returning image is practically orthographic
+        #takes a ground sample approximately 1m x 0.5m
+        #for increased performance a simplified co-ordinate converter is used
+
         #camera parameters
+
         camera_angle = 45           #angle of camera
         cam_height = 0.5            #height of camera from the ground
         cam_displacement_x = 0.0    #displacement of the camera from robot center on x axis
