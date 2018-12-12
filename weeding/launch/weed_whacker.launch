@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 
 <launch>
-  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch"/>
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch">
+    <env name="DISPLAY" value="" />
+  	<arg name="gui" value="false" />
+  </include>
   <include file="$(find weeding)/launch/move_base.launch"/>
   <node pkg="weeding" name="weed_whackering" type="weeding.py"/>
   <node pkg="weeding" name="controler" type="control.py"/>
