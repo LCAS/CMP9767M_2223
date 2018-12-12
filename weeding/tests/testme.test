@@ -16,9 +16,9 @@
         pkg="rostest" type="publishtest">
     <rosparam>
       topics:
-        <!-- name: /map
+        - name: /map
           timeout: 10
-          negative: False -->
+          negative: False
         - name: /tf
           timeout: 10
           negative: False
