@@ -28,15 +28,6 @@
         - name: /thorvald_001/scan
           timeout: 10
           negative: False
-        - name: /thorvald_001/kinect2_camera/hd/image_color_rect
-          timeout: 10
-          negative: False
-        - name: /thorvald_001/twist_mux/cmd_vel
-          timeout: 10
-          negative: False
-        - name: /thorvald_001/odometry/gazebo
-          timeout: 10
-          negative: False
     </rosparam>
   </test>
 
