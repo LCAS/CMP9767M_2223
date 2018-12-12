@@ -8,9 +8,16 @@ project(weed_whacker)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  geometry_msgs
+  nav_msgs
   rospy
+  rostest
+  std_msgs
+  uol_cmp9767m_base
 )
-
+find_package( OpenCV REQUIRED )
+include_directories(${OpenCV_INCLUDE_DIRS})
+target_link_libraries( weed_whacker ${OpenCV_LIBS} )
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
