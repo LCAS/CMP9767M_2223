@@ -18,8 +18,8 @@
     <rosparam>
       topics:
         - name: /map
-	  timeout: 10
-	  negative: False
+          timeout: 10
+          negative: False
 	- name: /tf
 	  timeout: 10
 	  negative: False
