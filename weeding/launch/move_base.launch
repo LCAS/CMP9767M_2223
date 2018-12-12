@@ -20,13 +20,13 @@
         <remap from="odom" to="$(arg robot_name)/odometry/base_raw" />
         <remap from="cmd_vel" to="$(arg robot_name)/nav_vel" />
 
-        <rosparam file="$(find weed_whacker)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
-        <rosparam file="$(find weed_whacker)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+        <rosparam file="$(find weeding)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find weeding)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
 
-        <rosparam file="$(find weed_whacker)/config/global_costmap_params.yaml" command="load"/>
-        <rosparam file="$(find weed_whacker)/config/local_costmap_params.yaml" command="load"/>
+        <rosparam file="$(find weeding)/config/global_costmap_params.yaml" command="load"/>
+        <rosparam file="$(find weeding)/config/local_costmap_params.yaml" command="load"/>
 
-        <rosparam file="$(find weed_whacker)/config/planners.yaml" command="load"/>
+        <rosparam file="$(find weed)/config/planners.yaml" command="load"/>
 
 	</node> 
 </launch>
