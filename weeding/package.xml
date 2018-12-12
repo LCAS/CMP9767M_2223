@@ -74,6 +74,7 @@
   <exec_depend>uol_cmp9767m_base</exec_depend>
 
   <exec_depend>map_server</exec_depend>
+  <exec_depend>fake_localization</exec_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
