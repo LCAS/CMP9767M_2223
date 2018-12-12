@@ -20,21 +20,21 @@
         - name: /map
           timeout: 10
           negative: False
-	- name: /tf
-	  timeout: 10
-	  negative: False
-	- name: /thorvald_001/velodyne_points
-	  timeout: 10
-	  negative: False
-	- name: /thorvald_001/scan
-	  timeout: 10
-	  negative: False
-	- name: /thorvald_001/kinect2_camera/hd/camera_info
-	  timeout: 10
-	  negative: False
-	- name: /thorvald_001/kinect2_camera/hd/image_color_rect
-	  timeout: 10
-	  negative: False
+        - name: /tf
+          timeout: 10
+          negative: False
+        - name: /thorvald_001/velodyne_points
+          timeout: 10
+          negative: False
+        - name: /thorvald_001/scan
+          timeout: 10
+          negative: False
+        - name: /thorvald_001/kinect2_camera/hd/camera_info
+          timeout: 10
+          negative: False
+        - name: /thorvald_001/kinect2_camera/hd/image_color_rect
+          timeout: 10
+          negative: False
     </rosparam>
   </test>
 
