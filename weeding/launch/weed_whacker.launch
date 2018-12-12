@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<launch>
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch"/>
+  <include file="$(find weed_whacker)/launch/move_base.launch"/>
+  <node pkg="weed_whacker" name="weed_whacker" type="weeding.py"/>
+  <node pkg="weed_whacker" name="control" type="control.py"/>
+</launch>
