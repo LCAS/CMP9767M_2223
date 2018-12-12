@@ -8,11 +8,15 @@ project(weeding)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  cv_bridge
+  image_geometry
+  tf
   #fake_localization
   actionlib
   actionlib_msgs
   geometry_msgs
   move_base_msgs
+  sensor_msgs
   nav_msgs
   rospy
   uol_cmp9767m_base
