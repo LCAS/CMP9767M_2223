@@ -17,7 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 find_package( OpenCV REQUIRED )
 include_directories(${OpenCV_INCLUDE_DIRS})
-target_link_libraries( weed_whacker ${OpenCV_LIBS} )
+# target_link_libraries( weed_whacker ${OpenCV_LIBS} )
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
