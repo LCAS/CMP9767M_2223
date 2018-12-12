@@ -190,7 +190,7 @@ class image_converter:
         https://stackoverflow.com/questions/46441893/connected-component-labeling-in-python?rq=1
         """             
 cv2.startWindowThread()
-rospy.init_node('image_converter')
+rospy.init_node('image_converter', anonymous=True)
 ic = image_converter()
 rospy.spin()
 

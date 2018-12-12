@@ -74,7 +74,7 @@ class weed_control():
 	if success == True:
 		pass 
 	
-rospy.init_node('weed_control')
+rospy.init_node('weed_control', anonymous=True)
 wc = weed_control()
 rospy.spin()
 
