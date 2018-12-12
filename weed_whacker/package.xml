@@ -63,7 +63,6 @@
   <build_depend>sensor_msgs</build_depend>
   <build_depend>std_srvs</build_depend>
   <build_depend>image_geometry</build_depend>
-  <build_depend>numpy</build_depend>
   <build_depend>actionlib</build_depend>
   <build_depend>move_base_msgs</build_depend>
   <build_depend>uol_cmp9767m_base</build_depend>
@@ -80,7 +79,6 @@
   <build_export_depend>sensor_msgs</build_export_depend>
   <build_export_depend>std_srvs</build_export_depend>
   <build_export_depend>image_geometry</build_export_depend>
-  <build_export_depend>numpy</build_export_depend>
   <build_export_depend>actionlib</build_export_depend>
   <build_export_depend>move_base_msgs</build_export_depend>
   <build_export_depend>uol_cmp9767m_base</build_export_depend>
@@ -98,7 +96,6 @@
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>std_srvs</exec_depend>
   <exec_depend>image_geometry</exec_depend>
-  <exec_depend>numpy</exec_depend>
   <exec_depend>actionlib</exec_depend>
   <exec_depend>move_base_msgs</exec_depend>
   <exec_depend>uol_cmp9767m_base</exec_depend>

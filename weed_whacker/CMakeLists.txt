@@ -18,7 +18,6 @@ find_package(catkin REQUIRED COMPONENTS
   roslib
   std_msgs
   uol_cmp9767m_base
-  numpy
   std_srvs
   sensor_msgs
   actionlib
