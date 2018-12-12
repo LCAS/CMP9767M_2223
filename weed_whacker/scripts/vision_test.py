@@ -14,32 +14,43 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import Image, CameraInfo
 from geometry_msgs.msg import PoseStamped
 from simple_move_base import Go_To_Point
+from std_msgs.msg import Bool
 
 class image_converter:
     camera_model = None
     weeds = []
-
+    lock = True
     def __init__(self):
 
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/image_color_rect',
-                                          Image, self.search)
+                                          Image, self.image_callback)
 	self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/camera_info', 
             				  CameraInfo, self.camera_info_callback)
+	self.go_sub = rospy.Subscriber('/find_row', 
+            				  Bool, self.search)
 	self.tf_listener = tf.TransformListener()
+	self.curr_image = Image()
 
     def camera_info_callback(self, data): #get camera info once
 	self.camera_model = image_geometry.PinholeCameraModel()
         self.camera_model.fromCameraInfo(data)
         self.camera_info_sub.unregister()
 
-    def search(self, data): #row finding in camera image
+    def image_callback(self, data):
+	self.curr_image = data
+	self.lock = False
 
+    def search(self, data): #row finding in camera image
+	if data == False:
+		return
+	if self.lock == True:
+		return
 	(trans, rot) = self.tf_listener.lookupTransform('map', 
             'thorvald_001/kinect2_rgb_optical_frame', rospy.Time())
 
     	#set up hsv image from camera sub
-    	cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+    	cv_image = self.bridge.imgmsg_to_cv2(self.curr_image, "bgr8")
     	hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
         
 	#set mask
@@ -51,7 +62,7 @@ class image_converter:
 	kernel2 = np.ones((7,7),np.uint8)
 
 	erode = cv2.erode(image_mask,kernel,iterations = 1)
-    	dilation = cv2.dilate(erode,kernel2,iterations = 10)
+    	dilation = cv2.dilate(erode,kernel2,iterations = 1)
 
 	_, contours, hierarchy = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 	
@@ -84,11 +95,15 @@ class image_converter:
 
 	row_dist = []
 	for r in range(len(rows)):
-		dist = (((rows[r][0]+trans[0])*(rows[r][0]+trans[0]))+((rows[r][1]+trans[1])*(rows[r][0]+trans[0])))**0.5
+		dist = (((rows[r][0]-trans[0])*(rows[r][0]-trans[0]))+((rows[r][1]-trans[1])*(rows[r][0]-trans[0])))**0.5
 		row_dist.append(dist)
-
+	nav_lock = False
 	if len(row_dist) != 0:
 		_,coord = min((row_dist[i],i) for i in xrange(len(row_dist)))
+		if row_dist[coord] < 2:
+			nav_lock = True
+			print "turn on weed finding" #post back to control https://answers.ros.org/question/69754/quaternion-transformations-in-python/ !!!!!!!!!! (orient bot)
+		print row_dist[coord]
 		go_place = []
 		go_place.append(rows[coord][0])#x
 		go_place.append(rows[coord][1])#y
@@ -96,13 +111,15 @@ class image_converter:
 		go_place.append(0)#oy
 		go_place.append(0)#oz
 		move_base_commander = Go_To_Point()
-		success = move_base_commander.point(go_place, 1) #go_place = location for sprayer, 20 = time(s) until goal is rejected
+		x = 0.5
+		success = move_base_commander.point(go_place, x) #go_place = location for sprayer, 20 = time(s) until goal is rejected
 
 		if success:
 			print "bam!"
 		else:
 			print "no bam :( "
-
+	else:
+		print "finished"
 rospy.init_node('vis_test')
 ic = image_converter()
 rospy.spin()
