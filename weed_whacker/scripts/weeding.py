@@ -42,6 +42,8 @@ class image_converter:
 	self.find_weeds = data.data
 
     def spray_weeds_call(self, data):
+	if data.data == False:
+		return
 	rospy.wait_for_service('thorvald_001/spray')
 	sprayer = rospy.ServiceProxy('/thorvald_001/spray', Empty)
 	spray_list = self.weeds[:]
@@ -61,7 +63,7 @@ class image_converter:
 			sprayer()
 	self.weeds = []
 	sprayer_fin_pub = rospy.Publisher('/spray', Bool, queue_size=10)
-	sprayer_fin_pub.pub(False)
+	sprayer_fin_pub.publish(False)
 	
     def callback(self, data):
 	if not self.camera_model:

@@ -8,22 +8,26 @@ from simple_move_base import Go_To_Point
 class weed_control():
 	
     def __init__(self):
-
+	#pubs
 	self.spray_pub = rospy.Publisher('/spray', \
 					 Bool, \
 					 queue_size=10)
-
 	self.find_weeds_pub = rospy.Publisher('/find_weeds', \
 					      Bool, \
 					      queue_size=10)
-
+	self.go_pub = rospy.Publisher('/find_row', \
+				      Bool, queue_size=10)
+	#subs
 	self.spray_sub = rospy.Subscriber('/spray', \
 					  Bool, \
 					  self.spray_weeds_call)
-
+	self.find_weeds_sub = rospy.Subscriber('/found_weeds', \
+					       Bool, \
+					       self.found_weeds_call)
 	self.map_sub = rospy.Subscriber('/map', \
 					OccupancyGrid,\
 					self.create_map_places)
+	self.unfin_path_sub = rospy.Subscriber('/unfinished_path', Bool, self.unfin_path_call)
 	self.spray = False
 	self.find_weeds = False
 	self.map_places = []
@@ -37,6 +41,18 @@ class weed_control():
 	self.map_places.append([x_trans*-1.0, y_trans*-1.0])
 	self.map_sub.unregister()
 	self.search()
+
+    def unfin_path_call(self, data):
+	if data.data == True:
+		self.go_pub.publish(True)
+
+    def found_weeds_call(self, data):
+	if data.data == True:
+		self.find_weeds_pub.publish(True)
+	elif data.data == False:
+		self.find_weeds_pub.publish(False)
+		self.spray_pub.publish(True)
+		self.spray = True
 	
     def spray_weeds_call(self, data):
 	if data.data == False:

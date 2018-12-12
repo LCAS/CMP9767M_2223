@@ -23,6 +23,8 @@ class image_converter:
     def __init__(self):
 
         self.bridge = CvBridge()
+	self.unfin_path_pub = rospy.Publisher('/unfinished_path', Bool, queue_size=10)
+	self.find_weeds_pub = rospy.Publisher('/found_weeds', Bool, queue_size=10)
         self.image_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/image_color_rect',
                                           Image, self.image_callback)
 	self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/camera_info', 
@@ -102,8 +104,7 @@ class image_converter:
 		_,coord = min((row_dist[i],i) for i in xrange(len(row_dist)))
 		if row_dist[coord] < 2:
 			nav_lock = True
-			print "turn on weed finding" #post back to control https://answers.ros.org/question/69754/quaternion-transformations-in-python/ !!!!!!!!!! (orient bot)
-		print row_dist[coord]
+			self.find_weeds_pub.publish(True) #post back to control https://answers.ros.org/question/69754/quaternion-transformations-in-python/ !!!!!!!!!! (orient bot)
 		go_place = []
 		go_place.append(rows[coord][0])#x
 		go_place.append(rows[coord][1])#y
@@ -112,14 +113,11 @@ class image_converter:
 		go_place.append(0)#oz
 		move_base_commander = Go_To_Point()
 		x = 0.5
-		success = move_base_commander.point(go_place, x) #go_place = location for sprayer, 20 = time(s) until goal is rejected
-
-		if success:
-			print "bam!"
-		else:
-			print "no bam :( "
+		success = move_base_commander.point(go_place, x) #go_place = location for sprayer, x = time(s) until goal is rejected
+		self.unfin_path_pub.publish(True)
 	else:
-		print "finished"
+		self.find_weeds_pub.publish(False)
+		self.unfin_path_pub.publish(False)
 rospy.init_node('vis_test')
 ic = image_converter()
 rospy.spin()
