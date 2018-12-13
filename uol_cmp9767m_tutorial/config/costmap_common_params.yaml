@@ -7,17 +7,17 @@ map_layer:
   map_topic: /map
 
 global_inflation_layer:
-  inflation_radius: 0.5
+  inflation_radius: 1.5
   cost_scaling_factor: 2.0
 
 local_inflation_layer:
-  inflation_radius: 0.5
-  cost_scaling_factor: 2.0
+  inflation_radius: 2.0
+  cost_scaling_factor: 1.0
 
 obstacle_layer:
   max_obstacle_height: 2.0
-  obstacle_range: 2.5
-  raytrace_range: 3.0
+  obstacle_range: 13.0
+  raytrace_range: 15.0
 
   unknown_threshold: 6
   mark_threshold: 0

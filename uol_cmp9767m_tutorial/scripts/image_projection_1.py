@@ -34,8 +34,7 @@ class image_projection:
         #project a point in camera coordinates into the pixel coordinates
         uv = self.camera_model.project3dToPixel((0,0,0.5))
 
-        print 'Pixel coordinates: ', uv
-        print ''
+        print "Pixel coordinates: ", uv
 
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")

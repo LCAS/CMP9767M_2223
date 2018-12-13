@@ -17,22 +17,29 @@ from geometry_msgs.msg import PointStamped
 from cv_bridge import CvBridge, CvBridgeError
 
 class KinectProcessor:
-    camera_model = None
-    depth_img = None
-    start_time = None
 
     def __init__(self):    
 
         self.bridge = CvBridge()
+        self.dist_coeff_x = 84.1/1920.0
+        self.dist_coeff_y = 53.8/1080.0
+        self.degree_diff = 45.0 - (84.1/2)
+        self.kinect_height = 0.5
+        self.deg2rad = math.pi/180
+        self.kinect_vert_half = 1080/2
+        self.kinect_x_disp = 0.45
+        self.mode = 2 # 0 = Find field, 1 = align with row
 
+        # transform listener
+        self.tf_listener = tf.TransformListener()
 
         # Processed Image Publishers: optional, may be turned off with /show_img param
         self.kinect_processed_pub = rospy.Publisher('/thorvald_001/kinect_processed_pub', 
             Image, queue_size=1)
         self.kinect_processed_thresh1 = rospy.Publisher('/thorvald_001/kinect_processed_thresh1', 
             Image, queue_size=1)
-        self.kinect_processed_thresh2 = rospy.Publisher('/thorvald_001/kinect_processed_thresh2', 
-            Image, queue_size=1)
+        # self.kinect_processed_thresh2 = rospy.Publisher('/thorvald_001/kinect_processed_thresh2', 
+        #     Image, queue_size=1)
         self.kinect_processed_final = rospy.Publisher('/thorvald_001/kinect_processed_final', 
             Image, queue_size=1)
         
@@ -40,65 +47,98 @@ class KinectProcessor:
         self.weed_location_pub = rospy.Publisher('/thorvald_001/weed_location', 
             PointStamped, queue_size=1)
 
-        # Subscribers for kinect
-        # Kinect rgb sensor data is 420 pixels wider than depth sensor data
-        self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/camera_info', 
-            CameraInfo, self.camera_info_callback)
+        # Subscriber for kinect rgb cam
         rospy.Subscriber("/thorvald_001/kinect2_camera/hd/image_color_rect",
             Image, self.image_callback)
-        rospy.Subscriber("/thorvald_001/kinect2_sensor/sd/image_depth_rect",
-            Image, self.depth_callback)
-
-        self.tf_listener = tf.TransformListener()
         
-    # callback for subscriber to kinect depth cam. Sets depth_img
-    def depth_callback(self, data):
-        try:
-            self.depth_img = self.bridge.imgmsg_to_cv2(data, "32FC1")
-        except CvBridgeError as e:
-            print(e)
-
     # callback for subscriber to kinect rgb cam.
     def image_callback(self, data):
-        # check if camera_model is set
-        if not self.camera_model:
-            return
-        # check if depth_img is set. If not, return
-        try:
-            _ = self.depth_img.shape
-        except NameError:
-            return
-        except AttributeError:
-            return
         # try converting rgbcam ros message to cv2 image, return if failed
         try:
             img = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
             print(e)
             return
-        # if start_time is not set, initialize it with current time
-        # if not self.start_time:
-        #     self.start_time = rospy.Time.now()
         # check for the show_img ros param. If true, the processed images are published
         if rospy.has_param('show_img') and rospy.get_param('show_img') == True:
             self.show_img = True
         else:
             self.show_img = False
+        
+        if self.mode == 0:
+            self.find_field(img)
+        elif self.mode == 1:
+            self.find_weeds(img)
+        elif self.mode == 2:
+            self.find_weeds(img)
+    #
+    # finds field in the image
+    #
+    def find_field(self, img):
+        # convert BGR to HSV 
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        # filter Hue for green color
+        res,thresh1 = cv2.threshold(hsv[:,:,0], 60, 255, cv2.THRESH_BINARY)
+        # filter Value for bright regions in image
+        # res,thresh2 = cv2.threshold(hsv[:,:,2], 140, 255, cv2.THRESH_BINARY)
+
+        # a 4x4 kernel to be used for morphing
+        kernel = np.ones((10,10), 'uint8')
+        # Open expands the area
+        final = cv2.morphologyEx(thresh1, cv2.MORPH_CLOSE, kernel, iterations=4)
+
+        # bitwise AND on thresh1 and thresh2 to get common regions.
+        # final = cv2.bitwise_and(thresh1, thresh2)
+        # blur final to straigten out the jagged edges
+
+        if self.show_img:
+            img2 = img.copy()
+            index = -1
+            thickness = 1
+            color = (255, 0, 0)
+        
+        # check if we're allowed to publish the processed images.
+        if self.show_img:
+            try:
+                # draw an outline
+                # cv2.drawContours(img2, filter_contours, index, color, thickness)
+
+                # convert cv2 image to ros message image. Binary images use the default passthrough
+                ros_img1 = self.bridge.cv2_to_imgmsg(thresh1, encoding="passthrough")
+                ros_img3 = self.bridge.cv2_to_imgmsg(final, encoding="passthrough")
+                ros_img4 = self.bridge.cv2_to_imgmsg(img2, "bgr8")
+
+                # publish images through respective Publishers
+                ros_img1.header.stamp = rospy.Time.now()
+                ros_img3.header.stamp = rospy.Time.now()
+                ros_img4.header.stamp = rospy.Time.now()
+                self.kinect_processed_thresh1.publish(ros_img1)
+                self.kinect_processed_final.publish(ros_img3)
+                self.kinect_processed_pub.publish(ros_img4)
+            except CvBridgeError as e:
+                print(e)
+                return
+
+    #
+    # finds weeds in the image and published their map cordinates
+    #
+    def find_weeds(self, img):
         # convert BGR to HSV 
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         # filter Hue for green color
         res,thresh1 = cv2.threshold(hsv[:,:,0], 55, 255, cv2.THRESH_BINARY)
         # filter Value for bright regions in image
-        res,thresh2 = cv2.threshold(hsv[:,:,2], 140, 255, cv2.THRESH_BINARY)
+        # res,thresh2 = cv2.threshold(hsv[:,:,2], 140, 255, cv2.THRESH_BINARY)
 
         # a 4x4 kernel to be used for morphing
         kernel = np.ones((4,4), 'uint8')
-        # 4 passes of erosion on thresh2.
+        # 4 passes of erosion on final.
         # Removes smaller regions, breaks up thin stems to extract individual leaves
-        thresh2 = cv2.erode(thresh2, kernel, iterations=4)
+        final = cv2.erode(thresh1, kernel, iterations=3)
+        final = cv2.morphologyEx(final, cv2.MORPH_OPEN, kernel, iterations=3)
 
         # bitwise AND on thresh1 and thresh2 to get common regions.
-        final = cv2.bitwise_and(thresh1, thresh2)
+        # final = cv2.bitwise_and(thresh1, thresh2)
         # blur final to straigten out the jagged edges
         final = cv2.medianBlur(final, 5)
         res, final = cv2.threshold(final, 200, 255, cv2.THRESH_BINARY)
@@ -121,35 +161,37 @@ class KinectProcessor:
             if hull_area == 0 or area == 0 or perimeter == 0:
                 continue
             solidity = area/hull_area
-            if solidity < 0.7 or area < 2500:
+            if solidity < 0.85 or area < 3000:
                 continue
 
-            if self.show_img:
-                filter_contours.append(c)
             M = cv2.moments(c)
             if M['m00'] != 0:
                 weed_x = int( M['m10']/M['m00'])
                 weed_y = int( M['m01']/M['m00'])
-                depth_xy = self.coords_rgb2depth((weed_x,weed_y))
-                if depth_xy[0] == -1:
-                    continue
-                dist = self.depth_img[depth_xy[0], depth_xy[1]]
-                weed_cam = self.camera_model.projectPixelTo3dRay((weed_x,weed_y))
-                weed_cam = [x * dist for x in weed_cam]
-
+                
                 pt_kinect = PointStamped()
                 pt_kinect.header.stamp = rospy.Time(0)
-                pt_kinect.header.frame_id = "thorvald_001/kinect2_rgb_optical_frame"
-                pt_kinect.point.x = weed_cam[0]
-                pt_kinect.point.y = weed_cam[1]
-                pt_kinect.point.z = weed_cam[2]
+                # pt_kinect.header.frame_id = "thorvald_001/kinect2_rgb_optical_frame"
+                pt_kinect.header.frame_id = "thorvald_001/base_link"
+                pt_kinect.point.x = self.kinect_height * math.tan(
+                    self.deg2rad * (self.degree_diff + self.dist_coeff_x * weed_x))
 
-                weed_coords = self.tf_listener.transformPoint('map', pt_kinect)
-                weed_coords.point.z = 0
-                if math.isnan(weed_coords.point.x) or math.isnan(weed_coords.point.y):
-                    print(dist, depth_xy)
+                if (pt_kinect.point.x * math.tan( 1.1 * self.deg2rad * 
+                    (self.kinect_vert_half - math.sqrt(area)) * self.dist_coeff_y)) < 0.07:
                     continue
-                
+                pt_kinect.point.y = pt_kinect.point.x * math.tan( 1.3 *
+                    self.deg2rad * (self.kinect_vert_half - weed_y) * self.dist_coeff_y)
+
+                pt_kinect.point.z = 0
+                pt_kinect.point.x += self.kinect_x_disp + 0.45
+                try:
+                    weed_coords = self.tf_listener.transformPoint('map', pt_kinect)
+                except tf.ExtrapolationException:
+                    continue
+                weed_coords.point.z = 0
+                weed_coords.header.stamp = rospy.Time.now()
+                if self.show_img:
+                    filter_contours.append(c)
                 self.weed_location_pub.publish(weed_coords)
 
                 if self.show_img:
@@ -168,37 +210,22 @@ class KinectProcessor:
 
                 # convert cv2 image to ros message image. Binary images use the default passthrough
                 ros_img1 = self.bridge.cv2_to_imgmsg(thresh1, encoding="passthrough")
-                ros_img2 = self.bridge.cv2_to_imgmsg(thresh2, encoding="passthrough")
+                # ros_img2 = self.bridge.cv2_to_imgmsg(thresh2, encoding="passthrough")
                 ros_img3 = self.bridge.cv2_to_imgmsg(final, encoding="passthrough")
                 ros_img4 = self.bridge.cv2_to_imgmsg(img2, "bgr8")
 
                 # publish images through respective Publishers
+                ros_img1.header.stamp = rospy.Time.now()
+                # ros_img2.header.stamp = rospy.Time.now()
+                ros_img3.header.stamp = rospy.Time.now()
+                ros_img4.header.stamp = rospy.Time.now()
                 self.kinect_processed_thresh1.publish(ros_img1)
-                self.kinect_processed_thresh2.publish(ros_img2)
+                # self.kinect_processed_thresh2.publish(ros_img2)
                 self.kinect_processed_final.publish(ros_img3)
                 self.kinect_processed_pub.publish(ros_img4)
             except CvBridgeError as e:
                 print(e)
                 return
-    
-    # takes camera_info data, sets up camera_model as pinhole camera, then unregisters subscriber
-    def camera_info_callback(self, data):
-        self.camera_model = image_geometry.PinholeCameraModel()
-        self.camera_model.fromCameraInfo(data)
-        self.camera_info_sub.unregister() #Only subscribe once
-
-    # converts a point from RGB cam to Depth cam
-    def coords_rgb2depth(self, coords):
-        rc = [0,0]
-        # removing the extra 210 pixels (total 420px from the width) 
-        # and then scaling down from 1500px to 512px
-        rc[0] = int((coords[0]-210)*0.34133)
-        # sclaing down the height from 1080px to 374px and adding extra 30px
-        rc[1] = int(coords[1]/1080.0 * 374) + 30
-        if rc[0] < 0 or rc[1] < 0:
-            return [-1,-1]
-        return rc
-
 
 
 def main(args):

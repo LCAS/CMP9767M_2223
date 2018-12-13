@@ -1,5 +1,5 @@
-base_global_planner: navfn/NavfnROS #default
-#base_global_planner: carrot_planner/CarrotPlanner
+# base_global_planner: navfn/NavfnROS #default
+base_global_planner: carrot_planner/CarrotPlanner
 
 base_local_planner: base_local_planner/TrajectoryPlannerROS #default
 #base_local_planner: dwa_local_planner/DWAPlannerROS
@@ -14,7 +14,7 @@ TrajectoryPlannerROS:
 #  latch_xy_goal_tolerance: true # (bool, default: false) If goal tolerance is latched, if the robot ever reaches the goal xy location it will simply rotate in place, even if it ends up outside the goal tolerance while it is doing so.
 #  meter_scoring: true # (bool, default: false) Whether the gdist_scale and pdist_scale parameters should assume that goal_distance and path_distance are expressed in units of meters or cells. Cells are assumed by default. 
 
-#DWAPlannerROS:
+#DWAPlannerROS:DWAPlannerROS
 #  sim_time: 5.0 # (double, default: 1.0) The amount of time to forward-simulate trajectories in seconds
 
 NavfnROS:
