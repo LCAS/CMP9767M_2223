@@ -35,8 +35,7 @@ class TestWeeds(unittest.TestCase):
 			return#
 		count += 1#
 		rate.sleep()#
-	if rate >= max_seconds:#
-		self.assertTrue(False, msg="timeout")#
+	self.assertTrue(False, msg="timeout")#
 
     def test_y_y_h(self):
 	self.assertTrue(True)
