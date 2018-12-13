@@ -23,7 +23,7 @@ class TestWeeds(unittest.TestCase):
     def spray_weeds_call(self, data):
 	self.spray = data.data
 
-    def test_y_y_h(self):
+    def test_re_nav(self):
 	rate=rospy.Rate(1)
 	max_seconds = 20
 	count = 0
