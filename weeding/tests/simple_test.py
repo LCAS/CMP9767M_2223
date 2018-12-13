@@ -6,7 +6,7 @@ import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose
-from std_msgs.msg import Bool
+#from std_msgs.msg import Bool
 
 # A sample python unit test
 class TestWeeds(unittest.TestCase):
@@ -14,15 +14,13 @@ class TestWeeds(unittest.TestCase):
     # only functions with 'test_'-prefix will be run!
     def setUp(self):
 	rospy.init_node("simple_test")
-	self.x = 5
 	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)
 	#self.sub = rospy.Subscriber('/spray', Bool, self.spray_callback )
-	self.pub = rospy.Publisher('/spray', Bool, queue_size=10)
-        self.spray = False
+	#self.pub = rospy.Publisher('/spray', Bool, queue_size=10)
+        #self.spray = False
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
     def test_y_y_h(self):
-	self.pub.publish(False)
 	rate = rospy.Rate(1)
 	max_seconds = 240
 	count = 0
