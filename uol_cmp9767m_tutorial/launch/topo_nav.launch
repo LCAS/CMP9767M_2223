@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="db_path" default="$(optenv HOME)/mongodb" />
+  <arg name="tmap" default="test" />
+  <arg name="robot_name" default="thorvald_001" />
+  <arg name="pointset" default="$(arg tmap)" />
+  <arg name="mon_nav_config_file"  default="" />
+  <arg name="max_bumper_recoveries" default=".inf"/>
+  <arg name="wait_reset_bumper_duration" default="0.0"/>
+  <arg name="topological_navigation_retries" default="3"/>
+  <arg name="machine" default="localhost" />
+  <arg name="user" default="" />
+  <arg name="launch_manager" default="true"/>
+  <arg name="move_base_reconf_service" default="DWAPlannerROS" />
+
+  <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true"/>
+
+  <include file="$(find mongodb_store)/launch/mongodb_store.launch" >
+    <arg name="db_path" value="$(arg db_path)" />
+  </include>
+
+  <node pkg="topological_navigation" type="map_manager.py" name="topological_map_manager" args="$(arg tmap)" respawn="true" if="$(arg launch_manager)"/>
+
+  <group ns="$(arg robot_name)">
+
+    <node pkg="topological_navigation" type="visualise_map.py" name="visualise_map" args="$(arg tmap)" respawn="true"/>
+
+    <node pkg="monitored_navigation" type="monitored_nav.py" name="monitored_nav" output="screen" args="$(arg mon_nav_config_file)">
+      <remap from="/monitored_navigation/goal" to="monitored_navigation/goal" />
+      <remap from="/monitored_navigation/cancel" to="monitored_navigation/cancel" />
+      <remap from="/move_base/$(arg move_base_reconf_service)/set_parameters" to="move_base/$(arg move_base_reconf_service)/set_parameters" />
+      <remap from="/monitored_navigation/add_helper" to="monitored_navigation/add_helper" />
+      <remap from="/monitored_navigation/add_monitor_recovery_pair" to="monitored_navigation/add_monitor_recovery_pair" />
+      <remap from="/monitored_navigation/del_helper" to="monitored_navigation/del_helper" />
+      <remap from="/monitored_navigation/del_monitor_recovery_pair" to="monitored_navigation/del_monitor_recovery_pair" />
+      <remap from="/monitored_navigation/get_helpers" to="monitored_navigation/get_helpers" />
+      <remap from="/monitored_navigation/get_monitor_recovery_pairs" to="monitored_navigation/get_monitor_recovery_pairs" />
+      <remap from="/monitored_navigation/get_nav_recovery" to="monitored_navigation/get_nav_recovery" />
+      <remap from="/monitored_navigation/human_help" to="monitored_navigation/human_help" />
+      <remap from="/monitored_navigation/set_helpers" to="monitored_navigation/set_helpers" />
+      <remap from="/monitored_navigation/set_monitor_recovery_pairs" to="monitored_navigation/set_monitor_recovery_pairs" />
+      <remap from="/monitored_navigation/set_nav_recovery" to="monitored_navigation/set_nav_recovery" />
+
+      <param name="wait_reset_bumper_duration" value="$(arg wait_reset_bumper_duration)"/>
+      <rosparam param="monitored_navigation/recover_states/recover_bumper" subst_value="True">[True, $(arg max_bumper_recoveries)]</rosparam>
+    </node>
+
+    <node pkg="topological_navigation" name="topological_localisation" type="localisation.py" output="screen" respawn="true">
+      <remap from="/robot_pose" to="robot_pose" />
+      <remap from="/closest_node" to="closest_node" />
+      <remap from="/current_node" to="current_node" />
+      <remap from="/current_edge" to="current_edge" />
+    </node>
+
+    <node pkg="topological_navigation" name="topological_navigation" type="navigation.py" output="screen" respawn="true">
+      <remap from="/closest_node" to="closest_node" />
+      <remap from="/current_node" to="current_node" />
+      <remap from="/current_edge" to="current_edge" />
+      <remap from="/topological_navigation/Route" to="topological_navigation/Route" />
+      <remap from="/topological_navigation/Statistics" to="topological_navigation/Statistics" />
+      <remap from="/topological_navigation/Edge" to="topological_navigation/Edge" />
+      <remap from="/topological_navigation/action_topics" to="topological_navigation/action_topics" />
+      <param name="retries" type="int" value="$(arg topological_navigation_retries)"/>
+      <param name="move_base_reconf_service" type="str" value="$(arg move_base_reconf_service)"/>
+      <remap from="/move_base/$(arg move_base_reconf_service)/set_parameters" to="move_base/$(arg move_base_reconf_service)/set_parameters" />
+      <remap from="/move_base/$(arg move_base_reconf_service)/parameter_descriptions" to="move_base/$(arg move_base_reconf_service)/parameter_descriptions" />
+      <remap from="/move_base/$(arg move_base_reconf_service)/parameter_updates" to="move_base/$(arg move_base_reconf_service)/parameter_updates" />
+    </node>
+
+  </group>
+
+</launch>

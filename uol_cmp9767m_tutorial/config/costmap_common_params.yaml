@@ -1,17 +1,17 @@
 global_frame: /map
 robot_base_frame: thorvald_001/base_link
 
-footprint: [[0.67, 0.47], [0.67, -0.47], [-0.67, -0.47], [-0.67, 0.47]]
+footprint: [[0.67, 0.64], [0.67, -0.64], [-0.67, -0.64], [-0.67, 0.64]]
 
 map_layer:
   map_topic: /map
 
 global_inflation_layer:
-  inflation_radius: 0.5
+  inflation_radius: 0.7
   cost_scaling_factor: 2.0
 
 local_inflation_layer:
-  inflation_radius: 0.5
+  inflation_radius: 0.7
   cost_scaling_factor: 2.0
 
 obstacle_layer:
