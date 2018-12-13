@@ -19,7 +19,7 @@ class TestWeeds(unittest.TestCase):
 	#self.pub = rospy.Publisher('/spray', Bool, queue_size=10)
         #self.spray = False
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
-
+"""
     def test_y_y_h(self):
 	rate = rospy.Rate(1)
 	max_seconds = 240
@@ -33,7 +33,7 @@ class TestWeeds(unittest.TestCase):
 		rate.sleep()
 	if rate >= max_seconds:
 		self.assertTrue(False, msg="timed out after %d seconds" % max_seconds)
-
+"""
     def test_move_base(self): #test move_base
 	goal = MoveBaseGoal() # new MoveBaseGoal message
 	goal_pose = Pose() # new Pose message
