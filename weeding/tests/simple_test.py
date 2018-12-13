@@ -18,8 +18,6 @@ class TestWeeds(unittest.TestCase):
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
     def test_y_y_h(self):
-	sprayer = rospy.ServiceProxy('/thorvald_001/spray', Empty)#
-	sprayer()
 	self.assertTrue(True)
 
     def test_move_base(self):#test move_base
