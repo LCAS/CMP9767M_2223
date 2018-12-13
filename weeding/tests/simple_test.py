@@ -5,7 +5,8 @@ import rospy
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import *
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pos
+from std_srvs.srv import Empty#
 
 # A sample python unit test
 class TestWeeds(unittest.TestCase):
@@ -17,7 +18,12 @@ class TestWeeds(unittest.TestCase):
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
     def test_y_y_h(self):
-	self.assertTrue(True)
+	sprayer = rospy.ServiceProxy('/thorvald_001/spray', Empty)#
+	try:
+		sprayer()
+		self.assert(True)
+	except:
+		self.assertTrue(False, msg="sprayer failure")
 
     def test_move_base(self):#test move_base
 	goal = MoveBaseGoal() # new MoveBaseGoal message
