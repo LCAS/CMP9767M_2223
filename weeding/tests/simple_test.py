@@ -12,6 +12,7 @@ class TestBareBones(unittest.TestCase):
     # test 1 == 1
     # only functions with 'test_'-prefix will be run!
     def setUp(self):
+	rospy.init_node("simple_test")
 	self.x = 5
 	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction) #start actionclient
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
