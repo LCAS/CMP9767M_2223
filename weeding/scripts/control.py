@@ -10,6 +10,7 @@ from tf.transformations import euler_from_quaternion, quaternion_from_euler
 
 class weed_control():
     map_places = []
+    spin_count = 0
     #move_base_commander = Go_To_Point()
     def __init__(self):
 	#pubs
@@ -21,6 +22,9 @@ class weed_control():
 					      queue_size=10)
 	self.go_pub = rospy.Publisher('/find_row', \
 				      Bool, queue_size=10)
+	self.search_pub = rospy.Publisher('/search_topic', \
+					   Bool, \
+					   queue_size=10)
 	#subs
 	self.spray_sub = rospy.Subscriber('/spray', \
 					  Bool, \
@@ -34,12 +38,16 @@ class weed_control():
 	self.odom_sub = rospy.Subscriber('/thorvald_001/odometry/gazebo', \
 					 Odometry, \
 					 self.odom_call)
+	self.search_sub = rospy.Subscriber('/search_result', \
+					   Bool, \
+					   self.spinning)
 	self.tf_listener = tf.TransformListener()
 	self.unfin_path_sub = rospy.Subscriber('/unfinished_path', Bool, self.unfin_path_call)
 	self.spray = False
 	self.find_weeds = False
 	self.ends = False
 	self.odom = Odometry()
+	self.search_found = False
 
     def odom_call(self, data):
 	self.odom = data
@@ -92,13 +100,48 @@ class weed_control():
 	
     def spray_weeds_call(self, data):
 	if data.data == False:#spray finished
-		self.search()
-    	
+		self.search()#start search function
+
+    def spinning(self, data):
+	if data.data == False:
+		self.spin_count += 1
+		if self.spin_count == 6:
+			self.spin_count = 0
+			self.search()
+		else:
+			self.search_pub.publish(True)
+			move_base_commander = Go_To_Point()
+			(roll, pitch, yaw) = euler_from_quaternion([self.odom.pose.pose.orientation.x, \
+								    self.odom.pose.pose.orientation.y, \
+								    self.odom.pose.pose.orientation.z, \
+								    self.odom.pose.pose.orientation.w])
+			yaw1 = 0
+			yaw2 = math.pi/2
+			yaw3 = math.pi
+			yaw4 = (math.pi/2)*3
+
+			quat1 = quaternion_from_euler (roll, pitch, yaw1)
+			quat2 = quaternion_from_euler (roll, pitch, yaw2)
+			quat3 = quaternion_from_euler (roll, pitch, yaw3)
+			quat4 = quaternion_from_euler (roll, pitch, yaw4)
+			quats=[quat1,quat2,quat3,quat4,quat1]
+			c = self.spin_count - 1
+			go_place = []
+			go_place.append(self.odom.pose.pose.position.x)
+			go_place.append(self.odom.pose.pose.position.y)
+			go_place.append(quats[c][0])
+			go_place.append(quats[c][1])
+			go_place.append(quats[c][2])
+			go_place.append(quats[c][3])
+			success = move_base_commander.point(go_place, 20)
+	elif data.data == True:
+		self.go_pub.publish(True)
+
     def search(self):
 	if len(self.map_places) == 0:
 		return
 	self.ends = False#change ends to False
-	x = self.map_places[3]
+	x = self.map_places.pop()
 	go_place = []
 	go_place.append(x[0])
 	go_place.append(x[1])
@@ -108,9 +151,8 @@ class weed_control():
 	go_place.append(1)
 	move_base_commander = Go_To_Point()
 	success = move_base_commander.point(go_place, 120) #go_place = location for sprayer, 120 = time(s) until goal is rejected
-	if success == True:
-		self.go_pub.publish(True)#needs new logic 
-	
+	self.search_pub.publish(True)
+			
 rospy.init_node('weed_control', anonymous=True)
 wc = weed_control()
 rospy.spin()

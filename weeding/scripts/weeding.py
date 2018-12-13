@@ -24,6 +24,8 @@ class image_converter:
     def __init__(self):
 
         self.bridge = CvBridge()
+	
+	self.sprayer_fin_pub = rospy.Publisher('/spray', Bool, queue_size=10)
         self.image_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/image_color_rect',
                                           Image, self.callback)
 	self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/camera_info', 
@@ -63,8 +65,7 @@ class image_converter:
 		if success == True:
 			sprayer()
 	self.weeds = []
-	sprayer_fin_pub = rospy.Publisher('/spray', Bool, queue_size=10)
-	sprayer_fin_pub.publish(False)
+	self.sprayer_fin_pub.publish(False)
 	
     def callback(self, data):
 	if not self.camera_model:

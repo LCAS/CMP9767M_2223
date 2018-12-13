@@ -31,6 +31,7 @@ class image_converter:
 	self.unfin_path_pub = rospy.Publisher('/unfinished_path', Bool, queue_size=10)
 	self.fin_path_pub = rospy.Publisher('/finished_path', Bool, queue_size=10)
 	self.find_weeds_pub = rospy.Publisher('/found_weeds', Bool, queue_size=10)
+	self.search_pub = rospy.Publisher('/search_result', Bool, queue_size=10)
         self.image_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/image_color_rect',
                                           Image, self.image_callback)
 	self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/camera_info', 
@@ -40,6 +41,9 @@ class image_converter:
 	self.odom_sub = rospy.Subscriber('/thorvald_001/odometry/gazebo', \
 					 Odometry, \
 					 self.odom_call)
+	self.search_sub = rospy.Subscriber('/search_topic', \
+					   Bool, \
+					   self.searching_in_place)
 	self.tf_listener = tf.TransformListener()
 	self.curr_image = Image()
 
@@ -90,7 +94,6 @@ class image_converter:
 	contours = sorted(contours, key=cv2.contourArea)
 
 	rows = []
-	cnts_two = []
 	for c in range(len(contours)):
 		"""
 		x,y,w,h = cv2.boundingRect(contours[c])
@@ -131,9 +134,8 @@ class image_converter:
 				p2 = np.asarray(self.lines[x][1])
 				p3 = np.array([inter_vec[0], inter_vec[1]])
 				d = LA.norm(np.cross(p2-p1, p1-p3))/LA.norm(p2-p1)
-				if d > 1:
+				if d > 0.4:
 					rows.append((inter_vec[0], inter_vec[1]))
-					cnts_two.append(contours[c])
 		else:
 			rows.append((inter_vec[0], inter_vec[1]))	
 
@@ -175,6 +177,81 @@ class image_converter:
 	cv_image_s = cv2.resize(cv_image, (0,0), fx=0.5, fy=0.5)
         cv2.imshow("Image window", cv_image_s)
         cv2.waitKey(1)	
+
+    def searching_in_place(self, data):
+
+	(trans, rot) = self.tf_listener.lookupTransform('map', 
+            'thorvald_001/kinect2_rgb_optical_frame', rospy.Time())
+
+	#set up hsv image from camera sub
+    	cv_image = self.bridge.imgmsg_to_cv2(self.curr_image, "bgr8")
+    	hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
+        
+	#set mask
+    	lower_green = np.array([40,20,20])
+    	upper_green = np.array([80,255,255])        
+    	image_mask = cv2.inRange(hsv, lower_green, upper_green)  
+	#erode and open the image to split up plants
+    	kernel = np.ones((3,3),np.uint8)
+	kernel2 = np.ones((7,7),np.uint8)
+
+	erode = cv2.erode(image_mask,kernel,iterations = 1)
+    	dilation = cv2.dilate(erode,kernel2,iterations = 15)
+	_, cnts, hierarchy = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+
+	contours = []	
+	for c in range(len(cnts)):
+		if cv2.contourArea(cnts[c]) > 2500:
+			contours.append(cnts[c])
+
+	contours = sorted(contours, key=cv2.contourArea)
+
+	rows = []
+	found_new_row = False
+	for c in range(len(contours)):
+		M = cv2.moments(contours[c])
+		xy = []
+		if M["m00"] != 0:
+ 			cX = int(M["m10"] / M["m00"])
+ 			cY = int(M["m01"] / M["m00"])
+			xy.append([cX,cY])
+		else:
+ 			xy.append([0, 0])
+		ray = self.camera_model.projectPixelTo3dRay((xy[0][0],xy[0][1]))
+
+		p_point = PoseStamped()
+		p_point.header.frame_id = 'thorvald_001/kinect2_rgb_optical_frame'
+		p_point.pose.orientation.w = 1.0
+		p_point.pose.position.x = ray[0]
+		p_point.pose.position.y = ray[1]
+		p_point.pose.position.z = ray[2]
+		p_test = self.tf_listener.transformPose('map', p_point)
+
+		vector = [p_test.pose.position.x - trans[0],
+		  	  p_test.pose.position.y - trans[1],
+		  	  p_test.pose.position.z - trans[2]]
+		vector_n = []
+		for c in range(3):
+			vector_n.append(vector[c] / ((vector[0]*vector[0])+(vector[1]*vector[1])+(vector[2]*vector[2]))**.5)
+		change_mag = (0.0 - p_test.pose.position.z)/vector_n[2]
+		inter_vec = [p_test.pose.position.x + (vector_n[0]*change_mag),p_test.pose.position.y + (vector_n[1]*change_mag),0]
+
+		if len(self.lines) > 0:
+			#check if co-ord is near prev line
+			for x in range(len(self.lines)):
+				p1 = np.asarray(self.lines[x][0])
+				p2 = np.asarray(self.lines[x][1])
+				p3 = np.array([inter_vec[0], inter_vec[1]])
+				d = LA.norm(np.cross(p2-p1, p1-p3))/LA.norm(p2-p1)
+				if d > 0.4:
+					found_new_row = True
+		else:
+			found_new_row = True
+	if found_new_row == True:
+		self.search_pub.publish(True)
+	else:
+		self.search_pub.publish(False)
+		
 cv2.startWindowThread()
 rospy.init_node('vis_test', anonymous=True)
 ic = image_converter()
