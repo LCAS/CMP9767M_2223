@@ -6,6 +6,7 @@ import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose
+from std_msgs.msg import Bool
 
 # A sample python unit test
 class TestWeeds(unittest.TestCase):
@@ -14,13 +15,32 @@ class TestWeeds(unittest.TestCase):
     def setUp(self):
 	rospy.init_node("simple_test")
 	self.x = 5
-	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction) #start actionclient
+	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)
+	self.sub = rospy.Subscriber('/spray', Bool, self.spray_callback )
+	self.pub = rospy.Publisher('/spray', Bool, queue_size=10)
+        self.spray = False
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
     def test_y_y_h(self):
-	self.assertTrue(True)
+	elf.pub.publish(False)
+	rate = rospy.Rate(1)
+	max_seconds = 240
+	count = 0
+	while not rospy.is_shutdown() and count < max_seconds:
+		if self.spray == True:
+			self.assertTrue(True)
+			self.sub.unregister()
+			return
+		count = += 1
+		rate.sleep()
+	if rate >= max_seconds:
+		self.assertTrue(False, msg="timed out after %d seconds" % max_seconds)
 
-    def test_move_base(self):
+    def spray_callback(self, msg):
+	if msg.data == True and self.spray == False:
+		self.spray = True
+
+    def test_move_base(self): #test move_base
 	goal = MoveBaseGoal() # new MoveBaseGoal message
 	goal_pose = Pose() # new Pose message
        
