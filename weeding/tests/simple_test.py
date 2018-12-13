@@ -23,6 +23,21 @@ class TestWeeds(unittest.TestCase):
     def spray_callback(self, data):#
 	self.spray = data.data#
 
+    def test_spraying(self):#
+        rate = rospy.Rate(1)#
+	max_seconds = 10#
+	count = 0#
+	self.pub.publish(False)#
+	while not rospy.is_shutdown() and count < max_seconds:#
+		if self.spray == True:#
+			self.sub.unregister()#
+			self.assertTrue(True)#
+			return#
+		count += 1#
+		rate.sleep()#
+	if rate >= max_seconds:#
+		self.assertTrue(False, msg="timeout")#
+
     def test_y_y_h(self):
 	self.assertTrue(True)
 
