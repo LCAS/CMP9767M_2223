@@ -20,7 +20,7 @@ class TestWeeds(unittest.TestCase):
 	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction) #start actionclient
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
-    def spray_weed_call(self, data):
+    def spray_weeds_call(self, data):
 	self.spray = data.data
 
     def test_y_y_h(self):
