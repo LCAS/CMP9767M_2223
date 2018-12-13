@@ -105,26 +105,33 @@ class weed_control():
     def spinning(self, data):
 	if data.data == False:
 		self.spin_count += 1
-		if self.spin_count == 6:
+		if self.spin_count == 10:
 			self.spin_count = 0
 			self.search()
-		else:
-			self.search_pub.publish(True)
+		else:			
 			move_base_commander = Go_To_Point()
 			(roll, pitch, yaw) = euler_from_quaternion([self.odom.pose.pose.orientation.x, \
 								    self.odom.pose.pose.orientation.y, \
 								    self.odom.pose.pose.orientation.z, \
 								    self.odom.pose.pose.orientation.w])
 			yaw1 = 0
-			yaw2 = math.pi/2
-			yaw3 = math.pi
-			yaw4 = (math.pi/2)*3
+			yaw2 = math.pi/4
+			yaw3 = math.pi/2
+			yaw4 = (math.pi/4)*3
+			yaw5 = math.pi
+			yaw6 = (math.pi/4)*5
+			yaw7 = (math.pi/2)*3
+			yaw8 = (math.pi/4)*7
 
 			quat1 = quaternion_from_euler (roll, pitch, yaw1)
 			quat2 = quaternion_from_euler (roll, pitch, yaw2)
 			quat3 = quaternion_from_euler (roll, pitch, yaw3)
 			quat4 = quaternion_from_euler (roll, pitch, yaw4)
-			quats=[quat1,quat2,quat3,quat4,quat1]
+			quat5 = quaternion_from_euler (roll, pitch, yaw5)
+			quat6 = quaternion_from_euler (roll, pitch, yaw6)
+			quat7 = quaternion_from_euler (roll, pitch, yaw7)
+			quat8 = quaternion_from_euler (roll, pitch, yaw8)
+			quats=[quat1,quat2,quat3,quat4,quat5,quat6,quat7,quat8,quat1]
 			c = self.spin_count - 1
 			go_place = []
 			go_place.append(self.odom.pose.pose.position.x)
@@ -134,6 +141,7 @@ class weed_control():
 			go_place.append(quats[c][2])
 			go_place.append(quats[c][3])
 			success = move_base_commander.point(go_place, 20)
+			self.search_pub.publish(True)
 	elif data.data == True:
 		self.go_pub.publish(True)
 
@@ -141,7 +149,8 @@ class weed_control():
 	if len(self.map_places) == 0:
 		return
 	self.ends = False#change ends to False
-	x = self.map_places.pop()
+	x = self.map_places.pop(0)
+	self.map_places.append(x)
 	go_place = []
 	go_place.append(x[0])
 	go_place.append(x[1])

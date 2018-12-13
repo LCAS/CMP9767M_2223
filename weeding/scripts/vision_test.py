@@ -79,8 +79,8 @@ class image_converter:
     	kernel = np.ones((3,3),np.uint8)
 	kernel2 = np.ones((7,7),np.uint8)
 
-	erode = cv2.erode(image_mask,kernel,iterations = 1)
-    	dilation = cv2.dilate(erode,kernel2,iterations = 15)
+	erode = cv2.erode(image_mask,kernel,iterations = 2)
+    	dilation = cv2.dilate(erode,kernel2,iterations = 7)
 	height,width = dilation.shape
 	dilation = dilation[:,:((width/4)*2)]
 	_, cnts, hierarchy = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -88,18 +88,18 @@ class image_converter:
 	
 	contours = []	
 	for c in range(len(cnts)):
-		if cv2.contourArea(cnts[c]) > 2500:
+		if cv2.contourArea(cnts[c]) > 500:
 			contours.append(cnts[c])
 
 	contours = sorted(contours, key=cv2.contourArea)
 
 	rows = []
-	for c in range(len(contours)):
+	for j in range(len(contours)):
 		"""
-		x,y,w,h = cv2.boundingRect(contours[c])
+		x,y,w,h = cv2.boundingRect(contours[j])
 		x = x+w
 		y = y+(h/2)"""
-		M = cv2.moments(contours[c])
+		M = cv2.moments(contours[j])
 		xy = []
 		if M["m00"] != 0:
  			cX = int(M["m10"] / M["m00"])
@@ -108,7 +108,7 @@ class image_converter:
 		else:
  			xy.append([0, 0])
 		ray = self.camera_model.projectPixelTo3dRay((xy[0][0],xy[0][1]))
-		cv2.circle(cv_image, (int(xy[0][0]),int(xy[0][1])), 10, 255, -1)
+		cv2.circle(dilation, (int(xy[0][0]),int(xy[0][1])), 10, 255, -1)
 
 		p_point = PoseStamped()
 		p_point.header.frame_id = 'thorvald_001/kinect2_rgb_optical_frame'
@@ -135,18 +135,23 @@ class image_converter:
 				p3 = np.array([inter_vec[0], inter_vec[1]])
 				d = LA.norm(np.cross(p2-p1, p1-p3))/LA.norm(p2-p1)
 				if d > 0.4:
-					rows.append((inter_vec[0], inter_vec[1]))
+					rospy.loginfo("%s, %s", c, contours[j])
+					rows.append((inter_vec[0], inter_vec[1], contours[j]))
 		else:
-			rows.append((inter_vec[0], inter_vec[1]))	
+			rows.append((inter_vec[0], inter_vec[1], contours[j]))	
 
 		
 
 	row_dist = []
+	row_value = []
 	for r in range(len(rows)):
 		dist = (((rows[r][0]-trans[0])*(rows[r][0]-trans[0]))+((rows[r][1]-trans[1])*(rows[r][0]-trans[0])))**0.5
 		row_dist.append(dist)
+		value = cv2.contourArea(rows[r][2])/(dist*2)
+		row_value.append(value)
+
 	if len(row_dist) != 0:
-		_,coord = min((row_dist[i],i) for i in xrange(len(row_dist)))
+		_,coord = max((row_value[i],i) for i in xrange(len(row_value)))
 		if row_dist[coord] < 2:
 			self.find_weeds_pub.publish(True) #post back to control https://answers.ros.org/question/69754/quaternion-transformations-in-python/ !!!!!!!!!! (orient bot)
 		go_place = []
@@ -160,7 +165,6 @@ class image_converter:
 		x = 0.1
 		success = move_base_commander.point(go_place, x) #go_place = location for sprayer, x = time(s) until goal is rejecteda
 		self.unfin_path_pub.publish(True)
-        #resize for visualisation
         
 	else:
 		self.find_weeds_pub.publish(False)
@@ -174,7 +178,7 @@ class image_converter:
 			self.lines.append([self.prev_end_line,[self.odom.pose.pose.position.x,self.odom.pose.pose.position.y]])
 			self.fin_path_pub.publish(True)
 
-	cv_image_s = cv2.resize(cv_image, (0,0), fx=0.5, fy=0.5)
+	cv_image_s = cv2.resize(dilation, (0,0), fx=0.5, fy=0.5)
         cv2.imshow("Image window", cv_image_s)
         cv2.waitKey(1)	
 
@@ -195,7 +199,7 @@ class image_converter:
     	kernel = np.ones((3,3),np.uint8)
 	kernel2 = np.ones((7,7),np.uint8)
 
-	erode = cv2.erode(image_mask,kernel,iterations = 1)
+	erode = cv2.erode(image_mask,kernel,iterations = 2)
     	dilation = cv2.dilate(erode,kernel2,iterations = 15)
 	_, cnts, hierarchy = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
