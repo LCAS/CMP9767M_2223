@@ -6,6 +6,7 @@ import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose
+from std_msgs.msg import Bool
 
 # A sample python unit test
 class TestWeeds(unittest.TestCase):
