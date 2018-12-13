@@ -167,6 +167,7 @@ include_directories(
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 install(PROGRAMS
   tests/simple_test.py
+  tests/weed_test.py
   scripts/control.py
   scripts/weeding.py
   scripts/vision_test.py

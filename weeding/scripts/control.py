@@ -144,6 +144,7 @@ class weed_control():
 			self.search_pub.publish(True)
 	elif data.data == True:
 		self.go_pub.publish(True)
+		self.spin_count = 0
 
     def search(self):
 	if len(self.map_places) == 0:

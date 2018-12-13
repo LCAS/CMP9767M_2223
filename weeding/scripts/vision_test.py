@@ -88,7 +88,7 @@ class image_converter:
 	
 	contours = []	
 	for c in range(len(cnts)):
-		if cv2.contourArea(cnts[c]) > 500:
+		if cv2.contourArea(cnts[c]) > 200:
 			contours.append(cnts[c])
 
 	contours = sorted(contours, key=cv2.contourArea)

@@ -42,6 +42,6 @@
   </test>
 
   <!-- a very basic Python unittest -->
-  <test pkg="uol_cmp9767m_base" type="nav_test.py" test-name="nav_test" />
+  <test pkg="weeding" type="weed_test.py" test-name="weed_test" />
 
 </launch>
