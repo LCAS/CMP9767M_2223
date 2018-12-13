@@ -1,0 +1,46 @@
+<launch>
+  <include file="$(find bot_control)/launch/thorvald-sim.launch">
+    <env name="DISPLAY" value="" />
+  	<arg name="gui" value="false" />
+    <arg name="x" value="-4.0"/>
+    <arg name="y" value="2.0"/>
+  </include>
+  <include file="$(find bot_control)/launch/weedbot.launch">
+  </include>
+
+  <!-- run a test to check that some basic topics are available -->
+  <test name="publishtest"
+        test-name="publishtest"
+        pkg="rostest" type="publishtest">
+    <rosparam>
+      topics:
+        - name: /map
+          timeout: 10
+          negative: False
+        - name: /tf
+          timeout: 10
+          negative: False
+        - name: /thorvald_001/velodyne_points
+          timeout: 10
+          negative: False
+        - name: /thorvald_001/scan
+          timeout: 10
+          negative: False
+    </rosparam>
+  </test>
+
+  <!-- check that odometry is published at around 20Hz -->
+  <test test-name="hztest_odom" pkg="rostest" type="hztest" name="hztest_odom">
+	<param name="topic" value="/thorvald_001/odometry/gazebo" />
+	<param name="hz" value="20.0" />
+	<param name="hzerror" value="2" />
+	<param name="test_duration" value="10.0" />
+  </test>
+
+  <!-- a very basic Python unittest -->
+  <test pkg="bot_control" type="row_traversal_test.py" test-name="row_traversal_test" />
+
+  <!-- a very basic Python unittest -->
+  <test pkg="bot_control" type="weed_detection_test.py" test-name="weed_detection_test" />
+
+</launch>

@@ -194,8 +194,7 @@ def main(args):
                 # print("nav")
                 if bot_nav.bot_state == bot_nav.possible_states["Weeding"]:
                     bot_nav.navigate_to_weeds()
-                else:
-                    break
+                
             r.sleep()
     except KeyboardInterrupt:
         print("Shutting down")

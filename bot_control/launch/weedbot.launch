@@ -33,4 +33,9 @@
 
 	</node> 
 	<param name="show_img" type="bool" value="True" />
+
+	<!-- Kinetic processor node: detects weeds -->
+	<node pkg="bot_control" type="kinect_processor.py" name="kinect_processor" />
+    <!-- bot navigator traverses crop rows, spraying weeds at the points given by kinect_processor -->
+	<node pkg="bot_control" type="bot_navigator.py" name="bot_navigator" />
 </launch>
