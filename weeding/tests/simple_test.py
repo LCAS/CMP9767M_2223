@@ -25,7 +25,7 @@ class TestWeeds(unittest.TestCase):
 
     def test_spraying(self):#
         rate = rospy.Rate(1)#
-	max_seconds = 10#
+	max_seconds = 180#
 	count = 0#
 	self.pub.publish(False)#
 	while not rospy.is_shutdown() and count < max_seconds:#
@@ -35,7 +35,8 @@ class TestWeeds(unittest.TestCase):
 			return#
 		count += 1#
 		rate.sleep()#
-	self.assertTrue(False, msg="timeout")#
+	if rate >= max_seconds:#
+		self.assertTrue(False, msg="timeout")#
 
     def test_y_y_h(self):
 	self.assertTrue(True)
