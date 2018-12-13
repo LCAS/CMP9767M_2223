@@ -17,6 +17,9 @@ class TestWeeds(unittest.TestCase):
 	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction) #start actionclient
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
+    def test_y_y_h(self):
+	self.assertTrue(True)
+
     def test_move_base(self):
 	goal = MoveBaseGoal() # new MoveBaseGoal message
 	goal_pose = Pose() # new Pose message
