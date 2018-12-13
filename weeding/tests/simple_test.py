@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 
 import unittest
-
+import rospy
+import actionlib
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from actionlib_msgs.msg import *
+from geometry_msgs.msg import Pose
 
 # A sample python unit test
 class TestBareBones(unittest.TestCase):
