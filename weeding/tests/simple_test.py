@@ -16,7 +16,7 @@ class TestWeeds(unittest.TestCase):
 	rospy.init_node("simple_test")
 	self.x = 5
 	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)
-	self.sub = rospy.Subscriber('/spray', Bool, self.spray_callback )
+	#self.sub = rospy.Subscriber('/spray', Bool, self.spray_callback )
 	self.pub = rospy.Publisher('/spray', Bool, queue_size=10)
         self.spray = False
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
@@ -29,16 +29,12 @@ class TestWeeds(unittest.TestCase):
 	while not rospy.is_shutdown() and count < max_seconds:
 		if self.spray == True:
 			self.assertTrue(True)
-			self.sub.unregister()
+			#self.sub.unregister()
 			return
 		count = += 1
 		rate.sleep()
 	if rate >= max_seconds:
 		self.assertTrue(False, msg="timed out after %d seconds" % max_seconds)
-
-    def spray_callback(self, msg):
-	if msg.data == True and self.spray == False:
-		self.spray = True
 
     def test_move_base(self): #test move_base
 	goal = MoveBaseGoal() # new MoveBaseGoal message
