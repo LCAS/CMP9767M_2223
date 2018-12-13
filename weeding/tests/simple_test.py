@@ -8,7 +8,7 @@ from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose
 
 # A sample python unit test
-class TestBareBones(unittest.TestCase):
+class TestWeeds(unittest.TestCase):
     # test 1 == 1
     # only functions with 'test_'-prefix will be run!
     def setUp(self):
@@ -17,7 +17,7 @@ class TestBareBones(unittest.TestCase):
 	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction) #start actionclient
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
-    def test_two_equals_two(self):
+    def test_move_base(self):
 	goal = MoveBaseGoal() # new MoveBaseGoal message
 	goal_pose = Pose() # new Pose message
        
@@ -48,4 +48,4 @@ if __name__ == '__main__':
     #PKG = 'test_roslaunch'
     PKG = 'weeding'
     import rostest
-    rostest.rosrun(PKG, 'test_bare_bones', TestBareBones)
+    rostest.rosrun(PKG, 'test_bare_bones', TestWeeds)
