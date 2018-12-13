@@ -13,6 +13,7 @@ from std_msgs.msg import Bool
 from math import sqrt
 
 class WeedTest(unittest.TestCase):
+    
     def setUp(self):
         rospy.init_node("weed_tester")
         self.sub = rospy.Subscriber('/spray', Bool, self.spray_callback )
@@ -70,4 +71,4 @@ class WeedTest(unittest.TestCase):
 if __name__ == '__main__':
     PKG = 'weeding'
     import rostest
-    rostest.rosrun(PKG, 'WeedTEST', WeedTEST)
+    rostest.rosrun(PKG, 'WeedTest', WeedTest)

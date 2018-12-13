@@ -42,6 +42,6 @@
   </test>
 
   <!-- a very basic Python unittest -->
-  <test pkg="weeding" type="weed_test.py" test-name="weedtest" />
+  <test pkg="weeding" type="weed_test.py" test-name="weed_test" />
 
 </launch>
