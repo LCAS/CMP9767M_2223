@@ -10,21 +10,26 @@ import tf
 
 import cv2
 from cv_bridge import CvBridge
-
+from numpy import linalg as LA #https://docs.scipy.org/doc/numpy-1.15.1/reference/generated/numpy.linalg.norm.html
 from sensor_msgs.msg import Image, CameraInfo
 from geometry_msgs.msg import PoseStamped
+from nav_msgs.msg import Odometry
 from simple_move_base import Go_To_Point
 from std_msgs.msg import Bool
 
 class image_converter:
     camera_model = None
-    weeds = []
     lock = True
+    end_count = 0
+    prev_end_line = [0.0,0.0]
+    lines = []
+    odom = Odometry()
 
     def __init__(self):
 
         self.bridge = CvBridge()
 	self.unfin_path_pub = rospy.Publisher('/unfinished_path', Bool, queue_size=10)
+	self.fin_path_pub = rospy.Publisher('/finished_path', Bool, queue_size=10)
 	self.find_weeds_pub = rospy.Publisher('/found_weeds', Bool, queue_size=10)
         self.image_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/image_color_rect',
                                           Image, self.image_callback)
@@ -32,8 +37,14 @@ class image_converter:
             				  CameraInfo, self.camera_info_callback)
 	self.go_sub = rospy.Subscriber('/find_row', 
             				  Bool, self.search)
+	self.odom_sub = rospy.Subscriber('/thorvald_001/odometry/gazebo', \
+					 Odometry, \
+					 self.odom_call)
 	self.tf_listener = tf.TransformListener()
 	self.curr_image = Image()
+
+    def odom_call(self, data):
+	self.odom = data
 
     def camera_info_callback(self, data): #get camera info once
 	self.camera_model = image_geometry.PinholeCameraModel()
@@ -67,18 +78,19 @@ class image_converter:
 	erode = cv2.erode(image_mask,kernel,iterations = 1)
     	dilation = cv2.dilate(erode,kernel2,iterations = 15)
 	height,width = dilation.shape
-	dilation = dilation[:,:((width/4)*2.5)]
+	dilation = dilation[:,:((width/4)*2)]
 	_, cnts, hierarchy = cv2.findContours(dilation, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 	
 	
 	contours = []	
 	for c in range(len(cnts)):
-		if cv2.contourArea(cnts[c]) > 3000:
+		if cv2.contourArea(cnts[c]) > 2500:
 			contours.append(cnts[c])
 
 	contours = sorted(contours, key=cv2.contourArea)
 
 	rows = []
+	cnts_two = []
 	for c in range(len(contours)):
 		"""
 		x,y,w,h = cv2.boundingRect(contours[c])
@@ -111,7 +123,21 @@ class image_converter:
 			vector_n.append(vector[c] / ((vector[0]*vector[0])+(vector[1]*vector[1])+(vector[2]*vector[2]))**.5)
 		change_mag = (0.0 - p_test.pose.position.z)/vector_n[2]
 		inter_vec = [p_test.pose.position.x + (vector_n[0]*change_mag),p_test.pose.position.y + (vector_n[1]*change_mag),0]
-		rows.append((inter_vec[0], inter_vec[1]))
+
+		if len(self.lines) > 0:
+			#check if co-ord is near prev line
+			for x in range(len(self.lines)):
+				p1 = np.asarray(self.lines[x][0])
+				p2 = np.asarray(self.lines[x][1])
+				p3 = np.array([inter_vec[0], inter_vec[1]])
+				d = LA.norm(np.cross(p2-p1, p1-p3))/LA.norm(p2-p1)
+				if d > 1:
+					rows.append((inter_vec[0], inter_vec[1]))
+					cnts_two.append(contours[c])
+		else:
+			rows.append((inter_vec[0], inter_vec[1]))	
+
+		
 
 	row_dist = []
 	for r in range(len(rows)):
@@ -132,15 +158,19 @@ class image_converter:
 		x = 0.1
 		success = move_base_commander.point(go_place, x) #go_place = location for sprayer, x = time(s) until goal is rejecteda
 		self.unfin_path_pub.publish(True)
-		x,y,w,h = cv2.boundingRect(contours[coord])
-		x = x+w
-		y = y+(h/2)
-		cv2.circle(cv_image, (int(x),int(y)), 20, 150, -1)
         #resize for visualisation
         
 	else:
 		self.find_weeds_pub.publish(False)
 		self.unfin_path_pub.publish(False)
+		if self.end_count == 0:
+			self.end_count = 1
+			self.prev_end_line[0] = self.odom.pose.pose.position.x
+			self.prev_end_line[1] = self.odom.pose.pose.position.y 
+		elif self.end_count == 1:
+			self.end_count = 0
+			self.lines.append([self.prev_end_line,[self.odom.pose.pose.position.x,self.odom.pose.pose.position.y]])
+			self.fin_path_pub.publish(True)
 
 	cv_image_s = cv2.resize(cv_image, (0,0), fx=0.5, fy=0.5)
         cv2.imshow("Image window", cv_image_s)

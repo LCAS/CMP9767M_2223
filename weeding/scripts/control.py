@@ -52,13 +52,13 @@ class weed_control():
 	self.map_places.append([x_trans, y_trans*-1.0])
 	self.map_places.append([x_trans*-1.0, y_trans*-1.0])
 	self.map_sub.unregister()
-	self.search()
+	#self.search()
 
     def unfin_path_call(self, data):
-	if data.data == True:
-		self.go_pub.publish(True)
-	elif data.data == False:
-		if self.ends == False:
+	if data.data == True:#path not finished
+		self.go_pub.publish(True)#keep doing vision runs
+	elif data.data == False:#path finished
+		if self.ends == False:#if no previous end
 			move_base_commander = Go_To_Point()
 			(roll, pitch, yaw) = euler_from_quaternion([self.odom.pose.pose.orientation.x, \
 								   self.odom.pose.pose.orientation.y, \
@@ -78,27 +78,27 @@ class weed_control():
 			go_place.append(quat[3])
 			success = move_base_commander.point(go_place, 20)
 			if success == True:
-				self.go_pub.publish(True)
-				self.ends = True
+				self.go_pub.publish(True)#Do another vision run
+				self.ends = True#change ends to True
 
-		elif self.ends == True:
-			self.spray_pub.publish(True)
-			self.ends = False
+		elif self.ends == True:#if previous end
+			self.spray_pub.publish(True)#spray weeds[]
 
     def found_weeds_call(self, data):
-	if data.data == True:
-		self.find_weeds_pub.publish(True)
-	elif data.data == False:
-		self.find_weeds_pub.publish(False)
+	if data.data == True:#found weeds = True (happens is vision_test gets close to weeds)
+		self.find_weeds_pub.publish(True)#start weed tracking		
+	elif data.data == False:#row finished in vision_test
+		self.find_weeds_pub.publish(False)#stop weed tracking
 	
     def spray_weeds_call(self, data):
-	if data.data == False:
-		self.spray = False #spraying finished
+	if data.data == False:#spray finished
+		self.search()
     	
     def search(self):
 	if len(self.map_places) == 0:
 		return
-	x = self.map_places.pop()
+	self.ends = False#change ends to False
+	x = self.map_places[3]
 	go_place = []
 	go_place.append(x[0])
 	go_place.append(x[1])
@@ -109,8 +109,7 @@ class weed_control():
 	move_base_commander = Go_To_Point()
 	success = move_base_commander.point(go_place, 120) #go_place = location for sprayer, 120 = time(s) until goal is rejected
 	if success == True:
-		print "go find row"
-		self.go_pub.publish(True) 
+		self.go_pub.publish(True)#needs new logic 
 	
 rospy.init_node('weed_control', anonymous=True)
 wc = weed_control()
