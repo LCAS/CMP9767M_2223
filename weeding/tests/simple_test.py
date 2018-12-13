@@ -22,7 +22,7 @@ class TestWeeds(unittest.TestCase):
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
     def test_y_y_h(self):
-	elf.pub.publish(False)
+	self.pub.publish(False)
 	rate = rospy.Rate(1)
 	max_seconds = 240
 	count = 0
