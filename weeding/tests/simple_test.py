@@ -11,6 +11,7 @@ class TestBareBones(unittest.TestCase):
         self.assertEquals(1, 1, "1!=1")
 
 if __name__ == '__main__':
-    PKG = 'test_roslaunch'
+    #PKG = 'test_roslaunch'
+    PKG = 'weeding'
     import rostest
     rostest.rosrun(PKG, 'test_bare_bones', TestBareBones)
