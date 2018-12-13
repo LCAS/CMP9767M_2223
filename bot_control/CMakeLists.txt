@@ -7,7 +7,7 @@ project(bot_control)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED message_generation std_msgs geometry_msgs)
+find_package(catkin REQUIRED std_msgs geometry_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -43,11 +43,11 @@ find_package(catkin REQUIRED message_generation std_msgs geometry_msgs)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-    FILES
-    WeedList.msg
-    UniqueWeed.msg
-)
+#add_message_files(
+#    FILES
+#    WeedList.msg
+#    UniqueWeed.msg
+#)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -64,11 +64,11 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-    DEPENDENCIES
-    geometry_msgs
-    std_msgs  # Or other packages containing msgs
-)
+#generate_messages(
+#    DEPENDENCIES
+#    geometry_msgs
+#    std_msgs  # Or other packages containing msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -156,10 +156,11 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(PROGRAMS
+  scripts/bot_navigator.py
+  scripts/kinect_processor.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables and/or libraries for installation
 # install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node

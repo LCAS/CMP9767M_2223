@@ -15,7 +15,7 @@ class TestWeedDetection(unittest.TestCase):
 
     def setUp(self):
         rospy.init_node("weed_location_tester")
-        self.pub = rospy.Subscriber('/thorvald_001/weed_location', PointStamped, self.weed_location_callback)
+        self.sub = rospy.Subscriber('/thorvald_001/weed_location', PointStamped, self.weed_location_callback)
         self.weed_received = None
 
     def test_weed_detection(self):
