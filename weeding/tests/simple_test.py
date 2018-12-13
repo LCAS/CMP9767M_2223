@@ -13,9 +13,29 @@ class TestWeeds(unittest.TestCase):
     # only functions with 'test_'-prefix will be run!
     def setUp(self):
 	rospy.init_node("simple_test")
-	self.x = 5
+	self.spray = False#
+	self.sub = rospy.Subscriber('/spray', Bool, self.spray_callback)#
+	self.pub = rospy.Publisher('/spray', Bool, queue_limit=10)#
 	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction) #start actionclient
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
+
+    def spray_callback(self, data):#
+	self.spray = data.data#
+
+    def test_spray_test(self):#
+	rate = rospy.Rate(1)#
+	max_seconds = 180#
+	count = 0#
+	while not rospy.is_shutdown() and count < max_seconds:#
+		if self.spray == True:#
+			self.assertTrue(True)#
+			self.sub.unregister()#
+			return#
+		count = += 1#
+		rate.sleep()#
+	if rate >= max_seconds:#
+		self.assertTrue(False, msg="timed out after %d seconds" % max_seconds)#
+
 
     def test_y_y_h(self):
 	self.assertTrue(True)
