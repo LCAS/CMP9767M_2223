@@ -28,13 +28,12 @@ class TestWeeds(unittest.TestCase):
 	max_seconds = 20
 	count = 0
 	while not rospy.is_shutdown() and count < max_seconds:
-		if self.spray == False:
-			self.assertTrue(True)
-			self.spray_sub.unregister()
-			return
 		count += 1
 		rate.sleep()
-	self.assertTrue(False, msg="timeout")
+	if self.spray == False:
+		self.assertTrue(True)
+	else:
+		self.assertTrue(False, msg="timeout")
 
     def test_move_base(self):#test move_base
 	goal = MoveBaseGoal() # new MoveBaseGoal message
