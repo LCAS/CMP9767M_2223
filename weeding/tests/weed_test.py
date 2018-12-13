@@ -70,4 +70,4 @@ class WeedTest(unittest.TestCase):
 if __name__ == '__main__':
     PKG = 'weeding'
     import rostest
-    rostest.rosrun(PKG, 'WeedTest', WeedTest)
+    rostest.rosrun(PKG, 'WeedTEST', WeedTEST)
