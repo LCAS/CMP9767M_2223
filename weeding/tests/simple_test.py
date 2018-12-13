@@ -16,6 +16,7 @@ class TestWeeds(unittest.TestCase):
 	rospy.init_node("simple_test")
 	self.spray = False#
 	self.sub = rospy.Subscriber('/spray', Bool, self.spray_callback)#
+	self.pub = rospy.Publisher('/spray', Bool, queue_size=10)#
 	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction) #start actionclient
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
