@@ -27,6 +27,7 @@ class TestWeeds(unittest.TestCase):
 	rate=rospy.Rate(1)
 	max_seconds = 20
 	count = 0
+	self.sprayer_fin_pub.publish(True)
 	while not rospy.is_shutdown() and count < max_seconds:
 		count += 1
 		rate.sleep()
