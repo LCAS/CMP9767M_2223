@@ -1,7 +1,7 @@
 global_frame: /map
 robot_base_frame: thorvald_001/base_link
 
-footprint: [[0.67, 0.47], [0.67, -0.47], [-0.67, -0.47], [-0.67, 0.47]]
+footprint: [[0.67, 0.64], [0.67, -0.64], [-0.67, -0.64], [-0.67, 0.64]]
 
 map_layer:
   map_topic: /map
