@@ -5,7 +5,8 @@ import rospy
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import *
-from geometry_msgs.msg import Pos
+from geometry_msgs.msg import Pose
+from std_msgs.msg import Bool
 
 # A sample python unit test
 class TestWeeds(unittest.TestCase):
@@ -13,11 +14,27 @@ class TestWeeds(unittest.TestCase):
     # only functions with 'test_'-prefix will be run!
     def setUp(self):
 	rospy.init_node("simple_test")
+	self.spray = True#
+	self.sprayer_fin_pub = rospy.Publisher('/spray', Bool, queue_size=10)#
+	self.spray_sub = rospy.Subscriber('/spray', Bool, self.spray_weeds_call)#
 	self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction) #start actionclient
         self.move_client.wait_for_server(rospy.Duration(5)) #wait for server to start up
 
+    def spray_weed_call(self, data):
+	self.spray = data.data
+
     def test_y_y_h(self):
-	self.assertTrue(True)
+	rate=rospy.Rate(1)
+	max_seconds = 20
+	count = 0
+	while not rospy.is_shutdown() and count < max_seconds:
+		if self.spray == False:
+			self.assertTrue(True)
+			self.spray_sub.unregister()
+			return
+		count += 1
+		rate.sleep()
+	self.assertTrue(False, msg="timeout")
 
     def test_move_base(self):#test move_base
 	goal = MoveBaseGoal() # new MoveBaseGoal message
