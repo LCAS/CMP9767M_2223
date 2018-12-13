@@ -19,11 +19,8 @@ class TestWeeds(unittest.TestCase):
 
     def test_y_y_h(self):
 	sprayer = rospy.ServiceProxy('/thorvald_001/spray', Empty)#
-	try:
-		sprayer()
-		self.assert(True)
-	except:
-		self.assertTrue(False, msg="sprayer failure")
+	sprayer()
+	self.assertTrue(True)
 
     def test_move_base(self):#test move_base
 	goal = MoveBaseGoal() # new MoveBaseGoal message
