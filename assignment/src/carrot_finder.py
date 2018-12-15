@@ -34,6 +34,10 @@ class image_converter:
         self.angularY = 0           #robot angularY
         self.angularZ = 0           #robot angularZ      
 
+        #initialising kernels for opening and closing operations                                   
+        self.kernel = ones((9,9), uint8)     
+        self.kernel_small = ones((5,5), uint8)
+
         #initialising object local flags
         self.goal_flag = True      #flag for observing current goal
 
@@ -49,10 +53,6 @@ class image_converter:
         #subscriber for fake localisation odometry data
         self.odom_sub = rospy.Subscriber("/thorvald_001/odometry/gazebo", Odometry, self.odom_callback)
 
-        #initialising kernels for opening and closing operations                                   
-        self.kernel = ones((9,9), uint8)     
-        self.kernel_small = ones((5,5), uint8)
-
         #creating the move base client
         self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)        
         self.move_client.wait_for_server(rospy.Duration(5))
@@ -60,17 +60,17 @@ class image_converter:
     def initialise_goals_list(self):
         #initialises the goals list
         print "initialising"      
-        for number in range(-3, 3):
+        for number in range(-7, 7):
                 i = Pose()
                 i.position.x = number
-                i.position.y = -3
+                i.position.y = -7
                 i.orientation.w = 1
                 self.goals_list.append(i)
                 #print i.position.x
                 #print i.position.y
             
                 i.position.x = number
-                i.position.y = 3
+                i.position.y = 7
                 i.orientation.w = 1
                 #print i
                 self.goals_list.append(i)
@@ -150,10 +150,16 @@ class image_converter:
         self.angularY = data.pose.pose.orientation.y           #robot angularY
         self.angularZ = data.pose.pose.orientation.z           #robot angularZ       
 
-        
-        #
         #uncomment for output of odometry
-        self.print_local_odometry()
+        #self.print_local_odometry()
+    
+        #on successful update of the odometry, call the move_robot method to handle setting of goals
+        self.move_robot()
+
+
+    def move_robot(self):
+        
+        print "function call success"
         #for i in self.goals_list:
         #    if not i.visited:
         #        currentGoal = i
@@ -258,12 +264,12 @@ class image_converter:
         if self.posX > lowerX and self.posX < upperX:
             Xreached = True
 
-        print Xreached
+        #print Xreached
 
         if self.posY > lowerY and self.posY < upperY:
             Yreached = True
 
-        print Yreached
+        #print Yreached
 
         if self.angularW > lowerW and self.angularW < upperW:
             Wreached = True
@@ -271,7 +277,7 @@ class image_converter:
         if -self.angularW > lowerW and -self.angularW < upperW:
             Wreached = True    
 
-        print Wreached 
+        #print Wreached 
 
         if Xreached and Yreached and Wreached:
             print "Goal reached"
