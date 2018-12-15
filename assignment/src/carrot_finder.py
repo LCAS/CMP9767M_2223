@@ -7,7 +7,7 @@ from cv2 import destroyAllWindows, startWindowThread
 from cv2 import waitKey, morphologyEx, MORPH_CLOSE, MORPH_OPEN
 from cv2 import threshold, THRESH_BINARY, split, medianBlur, connectedComponents
 from cv2 import merge, cvtColor, COLOR_HSV2BGR
-from numpy import ones, uint8, max, ones_like
+from numpy import ones, zeros, uint8, max, ones_like
 from sensor_msgs.msg import Image
 from nav_msgs.msg import Odometry
 from cv_bridge import CvBridge
@@ -23,7 +23,7 @@ class image_converter:
         #creating intial goals array
         #lists the goals for a major part of the field and will navigate to them
         self.goals_list = []
-        self.initialise_goals_list()
+        self.initialise_goals_list()        
 
         #initialising local odometry flags
         self.posX = 0               #robot X pos
@@ -58,28 +58,50 @@ class image_converter:
         self.move_client.wait_for_server(rospy.Duration(5))
 
     def initialise_goals_list(self):
-        #initialises the goals list
+        #initialises the goals list with a desired search field
+        #co-ordinates are defined for rows 1m apart to thoroughly search a space
         print "initialising"      
-        for number in range(-7, 7):
+        for number in range(-7, 7, 2): #looping through range in increments of 2
+                next_row = number + 1
+
+                #initilising empty pose goals within local scope
                 i = Pose()
-                i.position.x = number
-                i.position.y = -7
+                j = Pose()
+                k = Pose()
+                l = Pose()
+                #Adding Co-Ordinates To Object and appending to goals list
+                i.position.x = -7
+                i.position.y = number
                 i.orientation.w = 1
                 self.goals_list.append(i)
-                #print i.position.x
-                #print i.position.y
-            
-                i.position.x = number
-                i.position.y = 7
-                i.orientation.w = 1
-                #print i
-                self.goals_list.append(i)
-                #print i.position.x
-                #print i.position.y
-            
-            
+                #Adding Co-Ordinates To Object and appending to goals list
+                j.position.x = 7
+                j.position.y = number
+                j.orientation.w = 1
+                self.goals_list.append(j)
+                #Adding Co-Ordinates To Object and appending to goals list
+                k.position.x = 7
+                k.position.y = next_row
+                k.orientation.w = 1
+                self.goals_list.append(k)
+                #Adding Co-Ordinates To Object and appending to goals list
+                l.position.x = -7
+                l.position.y = next_row
+                l.orientation.w = 1
+                self.goals_list.append(l)
+        
+        #adding a list for checking if a goal has been visited before
+        goals_len = len(self.goals_list)
+        self.goals_list_visited = zeros(goals_len)
+
+        #uncomment for printing of intial goals list
+        #self.printInitialGoalsList()    
+
+
+    def printInitialGoalsList(self):          
         print "initial goals list complete"
         for x in range(0, len(self.goals_list)):
+            print "Co-ord : " + str(x)
             print self.goals_list[x].position.x
             print self.goals_list[x].position.y
 
@@ -158,15 +180,22 @@ class image_converter:
 
 
     def move_robot(self):
+        #initialising local variables
+        goal_id = 0
+        currentGoal = Pose()
         
-        print "function call success"
-        #for i in self.goals_list:
-        #    if not i.visited:
-        #        currentGoal = i
-        #         break
+        #looping through the list of visited goal flags
+        for i in range(0, len(self.goals_list_visited)):
+            if self.goals_list_visited[i] == False:
+                currentGoal = self.goals_list[i]
+                goal_id = i
+                break
         
-        self.navigateTo(-7,-7,1)
-        self.checkGoalComplete(-7,-7,1)
+        self.navigateTo(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
+        goal_check = self.checkGoalComplete(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
+
+        if goal_check:
+            self.goals_list_visited[goal_id] = True
 
         #if self.goal_flag:
             #self.sprayGround(1,1)
