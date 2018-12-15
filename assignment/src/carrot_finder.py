@@ -20,9 +20,8 @@ from std_srvs.srv import Empty
 class image_converter:
 
     def __init__(self):
-
         #creating intial goals array
-        #;ists the goals for a major part of the field and will navigate to them
+        #lists the goals for a major part of the field and will navigate to them
         self.goals_list = []
         self.initialise_goals_list()
 
@@ -48,20 +47,19 @@ class image_converter:
         self.image_sub = rospy.Subscriber("/thorvald_001/kinect2_camera/hd/image_color_rect",
                                           Image, self.img_callback)
         #subscriber for fake localisation odometry data
-        self.odom_sub = rospy.Subscriber("/thorvald_001/odometry/base_raw", Odometry, self.odom_callback)
+        self.odom_sub = rospy.Subscriber("/thorvald_001/odometry/gazebo", Odometry, self.odom_callback)
 
         #initialising kernels for opening and closing operations                                   
         self.kernel = ones((9,9), uint8)     
         self.kernel_small = ones((5,5), uint8)
 
         #creating the move base client
-        self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)          #POTENTIALLY PUBLISHING TO WRONG TOPIC, CHECK THIS
+        self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)        
         self.move_client.wait_for_server(rospy.Duration(5))
 
     def initialise_goals_list(self):
         #initialises the goals list
         print "initialising"      
-
         for number in range(-3, 3):
                 i = Pose()
                 i.position.x = number
@@ -80,7 +78,6 @@ class image_converter:
                 #print i.position.y
             
             
-
         print "initial goals list complete"
         for x in range(0, len(self.goals_list)):
             print self.goals_list[x].position.x
@@ -156,23 +153,23 @@ class image_converter:
         
         #
         #uncomment for output of odometry
-        #self.print_local_odometry()
+        self.print_local_odometry()
         #for i in self.goals_list:
         #    if not i.visited:
         #        currentGoal = i
         #         break
-        currentGoal = self.goals_list[0]
+        
+        self.navigateTo(-7,-7,1)
+        self.checkGoalComplete(-7,-7,1)
 
-        print currentGoal
-
-        if self.goal_flag:
+        #if self.goal_flag:
             #self.sprayGround(1,1)
-            self.goal_flag = False
-            self.navigateTo(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
-        else:
-            check_goal = self.checkGoalComplete(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
-            self.print_local_odometry()
-            print check_goal
+            #self.goal_flag = False
+            #self.navigateTo(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
+        #else:
+            #check_goal = self.checkGoalComplete(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
+            #self.print_local_odometry()
+            #print check_goal
 
     def print_local_odometry(self):
         #outputs to terminal the current values in the local odometry    
@@ -193,9 +190,24 @@ class image_converter:
         #for increased performance a simplified co-ordinate converter is used
 
         #camera parameters
+        im_height = 1080
+        im_width = 1920
+        t_height = 0.5
+        t_width = 1
 
-        camera_angle = 45           #angle of camera
-        cam_height = 0.5            #height of camera from the ground
+        pixel_height = t_height / im_height
+        pixel_width = t_width / im_width
+
+        rotation = self.angularZ
+        
+        #finding where the center of the image frame is (0,0)
+        cent_left = t_width / 2
+        cent_top = t_height / 2
+
+        #finding how far from the left of the image a pixel is
+        displacement_left = imageX * pixel_height
+        displacement_top = imageY * pixel_height
+
         cam_displacement_x = 0.0    #displacement of the camera from robot center on x axis
         cam_displacement_y = 0.0    #displacement of the camera from robot center on y axis
 
@@ -227,15 +239,16 @@ class image_converter:
     def checkGoalComplete(self, targetX, targetY, tar_orient):
         #function checks if goal has been reached within tolerances
         retval = False
-        tolerance = 0.15
+        tolerance = 0.2
+        w_tolerance = 0.05
 
         #setting tolerance values
         upperX = targetX + tolerance
         lowerX = targetX - tolerance 
         upperY = targetY + tolerance
         lowerY = targetY - tolerance 
-        upperW = tar_orient + tolerance
-        lowerW = tar_orient - tolerance 
+        upperW = tar_orient + w_tolerance
+        lowerW = tar_orient - w_tolerance 
 
         #checking to see if current position is within the desired goal position
         Xreached = False    #denotes if X value is within tolerances
@@ -245,16 +258,25 @@ class image_converter:
         if self.posX > lowerX and self.posX < upperX:
             Xreached = True
 
+        print Xreached
+
         if self.posY > lowerY and self.posY < upperY:
             Yreached = True
+
+        print Yreached
 
         if self.angularW > lowerW and self.angularW < upperW:
             Wreached = True
 
+        if -self.angularW > lowerW and -self.angularW < upperW:
+            Wreached = True    
+
+        print Wreached 
+
         if Xreached and Yreached and Wreached:
             print "Goal reached"
             retval = True
-
+        
         return retval
 
     def cancelGoal(self):
