@@ -132,19 +132,31 @@ class image_converter:
         num_labels, labels, stats, centroids = connectedComponentsWithStats(closed_img)        
         
         #iterating through the labels to find carrot/non-carrot objects
+        #adapted from https://stackoverflow.com/questions/42798659/how-to-remove-small-connected-objects-using-opencv
+        sizes = stats[1:, -1]; num_labels = num_labels - 1
+            
+        min_size = 200  
+        max_size = 500
+
         
- 
-        #for i in labels:
-        #    #removing small objects
-        #    if i.area > 20:
-        #        out_labels.append(i)
+        img2 = zeros((labels.shape))
+        #for every component in the image, you keep it only if it's above min_size and below max_size
+        #attempting to find weeds by size
+        for i in range(0, num_labels):
+            if sizes[i] >= min_size:
+                img2[labels == i + 1] = 255
 
-        #labels = out_labels
-
-        # Map component labels to hue val
-        label_hue = uint8(179*labels/max(labels))
-        blank_ch = 255*ones_like(label_hue)
-        labeled_img = merge([label_hue, blank_ch, blank_ch])
+        if img2 == []:
+            labeled_img = labels
+        else: 
+            #if the array is not empty then a weed has been located
+            print "Possible Weed Located"
+            #This is where the weed sprayer mechanism should be called
+            #self.sprayGround()
+            # Map component labels to hue val
+            label_hue = uint8(179*img2/max(img2))
+            blank_ch = 255*ones_like(label_hue)
+            labeled_img = merge([label_hue, blank_ch, blank_ch])
 
         # cvt to BGR for display
         labeled_img = cvtColor(labeled_img, COLOR_HSV2BGR)
@@ -199,14 +211,6 @@ class image_converter:
         if goal_check:
             self.goals_list_visited[goal_id] = True
 
-        #if self.goal_flag:
-            #self.sprayGround(1,1)
-            #self.goal_flag = False
-            #self.navigateTo(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
-        #else:
-            #check_goal = self.checkGoalComplete(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
-            #self.print_local_odometry()
-            #print check_goal
 
     def print_local_odometry(self):
         #outputs to terminal the current values in the local odometry    
@@ -272,7 +276,7 @@ class image_converter:
         #sending goal to actionlib server
         self.move_client.send_goal(goal) 
         
-        print "Goal Set"
+        #print "Goal Set"
 
     def checkGoalComplete(self, targetX, targetY, tar_orient):
         #function checks if goal has been reached within tolerances
