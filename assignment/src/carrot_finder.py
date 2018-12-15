@@ -1,20 +1,21 @@
 #!/usr/bin/env python
 
-import rospy
-import actionlib
-from cv2 import namedWindow, imshow
+from actionlib_msgs.msg import *
 from cv2 import destroyAllWindows, startWindowThread
-from cv2 import waitKey, morphologyEx, MORPH_CLOSE, MORPH_OPEN
-from cv2 import threshold, THRESH_BINARY, split, medianBlur, connectedComponents
 from cv2 import merge, cvtColor, COLOR_HSV2BGR
+from cv2 import namedWindow, imshow
+from cv2 import threshold, THRESH_BINARY, split, medianBlur
+from cv2 import waitKey, morphologyEx, MORPH_CLOSE, MORPH_OPEN
+from cv2 import CV_32S, connectedComponentsWithStats
+from cv_bridge import CvBridge
+from geometry_msgs.msg import Pose
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from nav_msgs.msg import Odometry
 from numpy import ones, zeros, uint8, max, ones_like
 from sensor_msgs.msg import Image
-from nav_msgs.msg import Odometry
-from cv_bridge import CvBridge
-from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-from actionlib_msgs.msg import *
-from geometry_msgs.msg import Pose
 from std_srvs.srv import Empty 
+import actionlib
+import rospy
 
 
 class image_converter:
@@ -116,8 +117,8 @@ class image_converter:
         #splitting image into b,g,r channels        
         b,g,r = split(cv_img)        
 
-        #performing binary thresholding operation on green channel
-        ret, thresh = threshold(g, 50, 255, THRESH_BINARY)
+        #performing binary thresholding operation on green channel to eliminate most non-plant objects
+        ret, thresh = threshold(g, 62, 255, THRESH_BINARY)
                 
         #opening image to remove small objects/noise 
         open_result = morphologyEx(thresh, MORPH_OPEN, self.kernel)
@@ -125,13 +126,14 @@ class image_converter:
         #performing closing operation to remove voids in remaining objects
         closed_img = morphologyEx(open_result, MORPH_CLOSE, self.kernel_small)
         
+        #connected components with stats setup
+        connectivity = 4 # opencv connectivity type (either 4 or 8)
         #finding the connected components from the closed image, Connected Components Example adapted from A.Reynolds (2017) Source: https://stackoverflow.com/questions/46441893/connected-component-labeling-in-python?rq=1
-        retval, labels = connectedComponents(closed_img)        
+        num_labels, labels, stats, centroids = connectedComponentsWithStats(closed_img)        
         
         #iterating through the labels to find carrot/non-carrot objects
-        out_labels = []
-
-        ##############################################################################  NEEDS TO BE CONNCOMPWITH STATS  
+        
+ 
         #for i in labels:
         #    #removing small objects
         #    if i.area > 20:
@@ -216,8 +218,8 @@ class image_converter:
         print "orientation y: " + str(self.angularY) 
         print "orientation z: " + str(self.angularZ)  
 
-    def getCoOrds(self, imageX, imageY):
-        #function returns spatial co-ords relative to robots frame given a camera value
+    def getDisplacement(self, imageX, imageY):
+        #function returns displacement of pixel from camera center in metres
         
         #whilst testing it was observed that when the camera is oriented directly down the following conditions are true
         #returning image is practically orthographic
@@ -228,23 +230,24 @@ class image_converter:
         im_height = 1080
         im_width = 1920
         t_height = 0.5
-        t_width = 1
+        t_width = 0.9999999999
 
         pixel_height = t_height / im_height
         pixel_width = t_width / im_width
 
-        rotation = self.angularZ
-        
         #finding where the center of the image frame is (0,0)
-        cent_left = t_width / 2
-        cent_top = t_height / 2
+        cent_left = 960 * pixel_width
+        cent_top = 540 * pixel_height
+        
 
         #finding how far from the left of the image a pixel is
-        displacement_left = imageX * pixel_height
-        displacement_top = imageY * pixel_height
+        displacement_top = imageX * pixel_height
+        displacement_left = imageY * pixel_width
 
-        cam_displacement_x = 0.0    #displacement of the camera from robot center on x axis
-        cam_displacement_y = 0.0    #displacement of the camera from robot center on y axis
+        cam_displacement_x = cent_left - displacement_left
+        cam_displacement_y = cent_top - displacement_top
+
+        return cam_displacement_x, cam_displacement_y        
 
     def navigateTo(self, worldX, worldY, orientation):
         #function sets a goal for the robot to navigate to 
