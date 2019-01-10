@@ -1,25 +1,30 @@
 #!/usr/bin/env python
 
-import rospy
-import actionlib
-from cv2 import namedWindow, imshow
-from cv2 import destroyAllWindows, startWindowThread
-from cv2 import waitKey, morphologyEx, MORPH_CLOSE, MORPH_OPEN
-from cv2 import threshold, THRESH_BINARY, split, medianBlur, connectedComponents
-from cv2 import merge, cvtColor, COLOR_HSV2BGR
-from numpy import ones, uint8, max, ones_like
-from sensor_msgs.msg import Image
-from nav_msgs.msg import Odometry
-from cv_bridge import CvBridge
-from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import *
+from cv2 import destroyAllWindows, startWindowThread
+from cv2 import merge, cvtColor, COLOR_HSV2BGR
+from cv2 import namedWindow, imshow
+from cv2 import threshold, THRESH_BINARY, split, medianBlur
+from cv2 import waitKey, morphologyEx, MORPH_CLOSE, MORPH_OPEN
+from cv2 import CV_32S, connectedComponentsWithStats
+from cv_bridge import CvBridge
 from geometry_msgs.msg import Pose
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from nav_msgs.msg import Odometry
+from numpy import ones, zeros, uint8, max, ones_like
+from sensor_msgs.msg import Image
 from std_srvs.srv import Empty 
+import actionlib
+import rospy
 
 
 class image_converter:
 
     def __init__(self):
+        #creating intial goals array
+        #lists the goals for a major part of the field and will navigate to them
+        self.goals_list = []
+        self.initialise_goals_list()        
 
         #initialising local odometry flags
         self.posX = 0               #robot X pos
@@ -29,6 +34,10 @@ class image_converter:
         self.angularX = 0           #robot angularX
         self.angularY = 0           #robot angularY
         self.angularZ = 0           #robot angularZ      
+
+        #initialising kernels for opening and closing operations                                   
+        self.kernel = ones((9,9), uint8)     
+        self.kernel_small = ones((5,5), uint8)
 
         #initialising object local flags
         self.goal_flag = True      #flag for observing current goal
@@ -43,15 +52,59 @@ class image_converter:
         self.image_sub = rospy.Subscriber("/thorvald_001/kinect2_camera/hd/image_color_rect",
                                           Image, self.img_callback)
         #subscriber for fake localisation odometry data
-        self.odom_sub = rospy.Subscriber("/thorvald_001/odometry/base_raw", Odometry, self.odom_callback)
-
-        #initialising kernels for opening and closing operations                                   
-        self.kernel = ones((9,9), uint8)     
-        self.kernel_small = ones((5,5), uint8)
+        self.odom_sub = rospy.Subscriber("/thorvald_001/odometry/gazebo", Odometry, self.odom_callback)
 
         #creating the move base client
-        self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)          #POTENTIALLY PUBLISHING TO WRONG TOPIC, CHECK THIS
+        self.move_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)        
         self.move_client.wait_for_server(rospy.Duration(5))
+
+    def initialise_goals_list(self):
+        #initialises the goals list with a desired search field
+        #co-ordinates are defined for rows 1m apart to thoroughly search a space
+        print "initialising"      
+        for number in range(-7, 7, 2): #looping through range in increments of 2
+                next_row = number + 1
+
+                #initilising empty pose goals within local scope
+                i = Pose()
+                j = Pose()
+                k = Pose()
+                l = Pose()
+                #Adding Co-Ordinates To Object and appending to goals list
+                i.position.x = -7
+                i.position.y = number
+                i.orientation.w = 1
+                self.goals_list.append(i)
+                #Adding Co-Ordinates To Object and appending to goals list
+                j.position.x = 7
+                j.position.y = number
+                j.orientation.w = 1
+                self.goals_list.append(j)
+                #Adding Co-Ordinates To Object and appending to goals list
+                k.position.x = 7
+                k.position.y = next_row
+                k.orientation.w = 1
+                self.goals_list.append(k)
+                #Adding Co-Ordinates To Object and appending to goals list
+                l.position.x = -7
+                l.position.y = next_row
+                l.orientation.w = 1
+                self.goals_list.append(l)
+        
+        #adding a list for checking if a goal has been visited before
+        goals_len = len(self.goals_list)
+        self.goals_list_visited = zeros(goals_len)
+
+        #uncomment for printing of intial goals list
+        #self.printInitialGoalsList()    
+
+
+    def printInitialGoalsList(self):          
+        print "initial goals list complete"
+        for x in range(0, len(self.goals_list)):
+            print "Co-ord : " + str(x)
+            print self.goals_list[x].position.x
+            print self.goals_list[x].position.y
 
     def img_callback(self, data):
         #OPENCV DISPLAY REMOVED FOR INCREASED PERFORMANCE
@@ -63,24 +116,47 @@ class image_converter:
         cv_img = self.bridge.imgmsg_to_cv2(data, "bgr8")
         #splitting image into b,g,r channels        
         b,g,r = split(cv_img)        
-        #performing binary thresholding operation on green channel
-        ret, thresh = threshold(g, 50, 255, THRESH_BINARY)
-        
+
+        #performing binary thresholding operation on green channel to eliminate most non-plant objects
+        ret, thresh = threshold(g, 62, 255, THRESH_BINARY)
+                
         #opening image to remove small objects/noise 
         open_result = morphologyEx(thresh, MORPH_OPEN, self.kernel)
         
         #performing closing operation to remove voids in remaining objects
         closed_img = morphologyEx(open_result, MORPH_CLOSE, self.kernel_small)
         
+        #connected components with stats setup
+        connectivity = 4 # opencv connectivity type (either 4 or 8)
         #finding the connected components from the closed image, Connected Components Example adapted from A.Reynolds (2017) Source: https://stackoverflow.com/questions/46441893/connected-component-labeling-in-python?rq=1
-        retval, labels = connectedComponents(closed_img)        
+        num_labels, labels, stats, centroids = connectedComponentsWithStats(closed_img)        
         
         #iterating through the labels to find carrot/non-carrot objects
+        #adapted from https://stackoverflow.com/questions/42798659/how-to-remove-small-connected-objects-using-opencv
+        sizes = stats[1:, -1]; num_labels = num_labels - 1
+            
+        min_size = 200  
+        max_size = 500
+
         
-        # Map component labels to hue val
-        label_hue = uint8(179*labels/max(labels))
-        blank_ch = 255*ones_like(label_hue)
-        labeled_img = merge([label_hue, blank_ch, blank_ch])
+        img2 = zeros((labels.shape))
+        #for every component in the image, you keep it only if it's above min_size and below max_size
+        #attempting to find weeds by size
+        for i in range(0, num_labels):
+            if sizes[i] >= min_size:
+                img2[labels == i + 1] = 255
+
+        if img2 == []:
+            labeled_img = labels
+        else: 
+            #if the array is not empty then a weed has been located
+            print "Possible Weed Located"
+            #This is where the weed sprayer mechanism should be called
+            #self.sprayGround()
+            # Map component labels to hue val
+            label_hue = uint8(179*img2/max(img2))
+            blank_ch = 255*ones_like(label_hue)
+            labeled_img = merge([label_hue, blank_ch, blank_ch])
 
         # cvt to BGR for display
         labeled_img = cvtColor(labeled_img, COLOR_HSV2BGR)
@@ -89,7 +165,7 @@ class image_converter:
         labeled_img[label_hue==0] = 0
         
 
-        #displaying the result of thresholding, and closing operations
+        #displaying the result of operations
         #OPENCV DISPLAY REMOVED FOR INCREASED PERFORMANCE#imshow("Image window", labeled_img)
         ##END DISPLAY METHODS        
         
@@ -110,13 +186,31 @@ class image_converter:
         self.angularY = data.pose.pose.orientation.y           #robot angularY
         self.angularZ = data.pose.pose.orientation.z           #robot angularZ       
 
-        #self.navigateTo(1,1,1)
-        #self.checkGoalComplete(1,1,1)
         #uncomment for output of odometry
         #self.print_local_odometry()
-        if self.goal_flag:
-            self.sprayGround(1,1)
-            self.goal_flag = False
+    
+        #on successful update of the odometry, call the move_robot method to handle setting of goals
+        self.move_robot()
+
+
+    def move_robot(self):
+        #initialising local variables
+        goal_id = 0
+        currentGoal = Pose()
+        
+        #looping through the list of visited goal flags
+        for i in range(0, len(self.goals_list_visited)):
+            if self.goals_list_visited[i] == False:
+                currentGoal = self.goals_list[i]
+                goal_id = i
+                break
+        
+        self.navigateTo(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
+        goal_check = self.checkGoalComplete(currentGoal.position.x,currentGoal.position.y,currentGoal.orientation.w)
+
+        if goal_check:
+            self.goals_list_visited[goal_id] = True
+
 
     def print_local_odometry(self):
         #outputs to terminal the current values in the local odometry    
@@ -128,13 +222,36 @@ class image_converter:
         print "orientation y: " + str(self.angularY) 
         print "orientation z: " + str(self.angularZ)  
 
-    def getCoOrds(self, imageX, imageY):
-        #function returns spatial co-ords relative to robots frame given a camera value
+    def getDisplacement(self, imageX, imageY):
+        #function returns displacement of pixel from camera center in metres
+        
+        #whilst testing it was observed that when the camera is oriented directly down the following conditions are true
+        #returning image is practically orthographic
+        #takes a ground sample approximately 1m x 0.5m
+        #for increased performance a simplified co-ordinate converter is used
+
         #camera parameters
-        camera_angle = 45           #angle of camera
-        cam_height = 0.5            #height of camera from the ground
-        cam_displacement_x = 0.0    #displacement of the camera from robot center on x axis
-        cam_displacement_y = 0.0    #displacement of the camera from robot center on y axis
+        im_height = 1080
+        im_width = 1920
+        t_height = 0.5
+        t_width = 0.9999999999
+
+        pixel_height = t_height / im_height
+        pixel_width = t_width / im_width
+
+        #finding where the center of the image frame is (0,0)
+        cent_left = 960 * pixel_width
+        cent_top = 540 * pixel_height
+        
+
+        #finding how far from the left of the image a pixel is
+        displacement_top = imageX * pixel_height
+        displacement_left = imageY * pixel_width
+
+        cam_displacement_x = cent_left - displacement_left
+        cam_displacement_y = cent_top - displacement_top
+
+        return cam_displacement_x, cam_displacement_y        
 
     def navigateTo(self, worldX, worldY, orientation):
         #function sets a goal for the robot to navigate to 
@@ -159,20 +276,21 @@ class image_converter:
         #sending goal to actionlib server
         self.move_client.send_goal(goal) 
         
-        print "Goal Set"
+        #print "Goal Set"
 
     def checkGoalComplete(self, targetX, targetY, tar_orient):
         #function checks if goal has been reached within tolerances
         retval = False
-        tolerance = 0.15
+        tolerance = 0.2
+        w_tolerance = 0.05
 
         #setting tolerance values
         upperX = targetX + tolerance
         lowerX = targetX - tolerance 
         upperY = targetY + tolerance
         lowerY = targetY - tolerance 
-        upperW = tar_orient + tolerance
-        lowerW = tar_orient - tolerance 
+        upperW = tar_orient + w_tolerance
+        lowerW = tar_orient - w_tolerance 
 
         #checking to see if current position is within the desired goal position
         Xreached = False    #denotes if X value is within tolerances
@@ -182,16 +300,25 @@ class image_converter:
         if self.posX > lowerX and self.posX < upperX:
             Xreached = True
 
+        #print Xreached
+
         if self.posY > lowerY and self.posY < upperY:
             Yreached = True
+
+        #print Yreached
 
         if self.angularW > lowerW and self.angularW < upperW:
             Wreached = True
 
+        if -self.angularW > lowerW and -self.angularW < upperW:
+            Wreached = True    
+
+        #print Wreached 
+
         if Xreached and Yreached and Wreached:
             print "Goal reached"
             retval = True
-
+        
         return retval
 
     def cancelGoal(self):
