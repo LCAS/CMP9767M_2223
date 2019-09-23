@@ -201,7 +201,7 @@ install(PROGRAMS
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
-foreach (dir tests config launch models urdf worlds)
+foreach (dir tests config launch models urdf worlds maps)
     install(DIRECTORY ${dir}/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
 endforeach(dir)
