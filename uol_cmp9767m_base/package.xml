@@ -80,7 +80,7 @@
   <exec_depend>velodyne_gazebo_plugins8</exec_depend>
   <exec_depend>kinect2_description</exec_depend>
   <exec_depend>thorvald_base</exec_depend>
-  <exec_depend>thorvald_model</exec_depend>
+  <exec_depend>thorvald_description</exec_depend>
   
   <exec_depend>map_server</exec_depend>
 

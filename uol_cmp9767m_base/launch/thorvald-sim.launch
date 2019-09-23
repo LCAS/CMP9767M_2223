@@ -16,7 +16,7 @@
     <arg name="model_extras" default="$(find uol_cmp9767m_base)/urdf/sensors.xacro"/>
 
     <!-- model bringup -->
-    <include file="$(find thorvald_model)/launch/model.launch">
+    <include file="$(find thorvald_description)/launch/model.launch">
       <arg name="robot_name" value="$(arg robot_name)" />
       <arg name="tf_prefix" value="$(arg tf_prefix)" />
       <arg name="robot_model" value="$(arg robot_model)" />
