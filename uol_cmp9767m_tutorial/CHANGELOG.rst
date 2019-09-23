@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2019-09-23)
+------------------
 * fixed new thorvald (`#37 <https://github.com/LCAS/CMP9767M/issues/37>`_)
 * Merge pull request `#25 <https://github.com/LCAS/CMP9767M/issues/25>`_ from gpdas/tutorial_12
   Tutorial 12
