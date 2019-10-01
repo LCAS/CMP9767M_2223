@@ -19,6 +19,9 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   topological_navigation
   uol_cmp9767m_base
+  roscpp
+  rospy
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -68,6 +71,11 @@ find_package(catkin REQUIRED COMPONENTS
 #   Service2.srv
 # )
 
+add_service_files(
+  FILES
+  AddTwoInts.srv
+)
+
 ## Generate actions in the 'action' folder
 ## For DoDishesAction: uncomment the following lines
 # add_action_files(
@@ -79,10 +87,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate added messages and services with any dependencies listed here
 ## For DoDishesAction: uncomment the following lines
-# generate_messages(
-#   DEPENDENCIES
-#   actionlib_msgs #geometry_msgs #nav_msgs #std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##

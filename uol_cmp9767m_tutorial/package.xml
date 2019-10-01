@@ -83,6 +83,9 @@
   <exec_depend>nodelet</exec_depend>
   <exec_depend>pcl_ros</exec_depend>
 
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+
   <!--For DoDishesAction: uncomment the following lines-->
   <!--
   <build_depend>actionlib</build_depend>
