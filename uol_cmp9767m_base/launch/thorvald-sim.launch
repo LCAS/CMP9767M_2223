@@ -9,35 +9,13 @@
     <arg name="gui" value="$(arg gui)" />
   </include>
 
-  <group ns="thorvald_001">
-    <arg name="robot_name" default="thorvald_001" />
-    <arg name="tf_prefix" default="thorvald_001" />
-    <arg name="robot_model" default="$(find uol_cmp9767m_base)/config/robot.yaml"/>
-    <arg name="model_extras" default="$(find uol_cmp9767m_base)/urdf/sensors.xacro"/>
-
-    <!-- model bringup -->
-    <include file="$(find thorvald_description)/launch/model.launch">
-      <arg name="robot_name" value="$(arg robot_name)" />
-      <arg name="tf_prefix" value="$(arg tf_prefix)" />
-      <arg name="robot_model" value="$(arg robot_model)" />
-      <arg name="model_extras" value="$(arg model_extras)" />
-    </include>
-
-    <!-- base bringup-->
-    <include file="$(find thorvald_base)/launch/base_bringup.launch">
-      <arg name="tf_prefix" value="$(arg tf_prefix)" />
-      <arg name="robot_model" value="$(arg robot_model)" />
-      <arg name="simple_sim" value="true" />
-      <arg name="enable_odom_tf" value="false" />
-      <arg name="odom_frame_id" value="odom" />
-    </include>
-
-    <!-- twist mux bringup -->
-    <include file="$(find thorvald_twist_mux)/launch/twist_mux.launch" />
-
-    <!-- spawn robot in gazebo -->
-    <node pkg="gazebo_ros" type="spawn_model" name="spawner" args="-urdf -param robot_description -model thorvald_ii" />
-    <node pkg="uol_cmp9767m_base" type="sprayer.py" name="sprayer" />
-  </group>
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald.launch">
+    <arg name="robot_name" value="thorvald_001" />
+    <arg name="x" value="5.0" />
+  </include>
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald.launch">
+    <arg name="robot_name" value="thorvald_002" />
+    <arg name="x" value="-5.0" />
+  </include>
 
 </launch>
