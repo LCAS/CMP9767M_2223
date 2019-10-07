@@ -2,6 +2,13 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* multiple robots
+* bug fix
+* Friction
+* Contributors: Marc Hanheide
+
 0.3.0 (2019-09-23)
 ------------------
 * fixed new thorvald (`#37 <https://github.com/LCAS/CMP9767M/issues/37>`_)
