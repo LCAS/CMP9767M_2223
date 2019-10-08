@@ -18,6 +18,9 @@ find_package(catkin REQUIRED COMPONENTS
   kinect2_description
 )
 
+find_package (gazebo REQUIRED)
+
+
 if(CMAKE_HOST_UNIX)
   catkin_add_env_hooks(90-uol_cmp9767m_base SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env_hooks)
 else()
@@ -113,12 +116,13 @@ endif()
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
+
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES uol_cmp9767m_base
-#  CATKIN_DEPENDS nav_msgs rospy sensor_msgs std_msgs thorvald_simulator
-#  DEPENDS system_lib
+  INCLUDE_DIRS include ${GAZEBO_INCLUDE_DIRS}
+  LIBRARIES  ActorCollisionsPlugin
+  CATKIN_DEPENDS roscpp #gazebo_plugins gazebo_ros
 )
+
 
 ###########
 ## Build ##
@@ -126,10 +130,16 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
+include_directories(include)
+include_directories( ${catkin_INCLUDE_DIRS} 
+                     ${Boost_INCLUDE_DIR} 
+                     ${GAZEBO_INCLUDE_DIRS}
 )
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
+
+
+link_directories(${GAZEBO_LIBRARY_DIRS})
+add_library(ActorCollisionsPlugin src/ActorCollisionsPlugin.cc)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -181,11 +191,11 @@ install(PROGRAMS
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS ActorCollisionsPlugin
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/

@@ -1,0 +1,323 @@
+<sdf version='1.6'>
+  <world name='default'>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://cmp9767m_ground_3</uri>
+    </include>
+    <include>
+      <uri>model://cmp9767m_plant_textures</uri>
+      <pose>0 0 0 0 0 0 </pose>
+      <name>rows_1</name>
+    </include>
+    <include>
+      <uri>model://cmp9767m_plant_textures</uri>
+      <pose>0.0 -5.25 0.0 0 0 0</pose>
+      <name>rows_2</name>
+    </include>
+    <include>
+      <uri>model://cmp9767m_plant_textures</uri>
+      <pose>0.0 5.25 0.0 0 0 0</pose>
+      <name>rows_3</name>
+    </include>
+    <include>
+      <uri>model://cmp9767m_enclosure</uri>
+    </include>
+    <physics type="ode">
+        <real_time_update_rate>200</real_time_update_rate>
+        <real_time_factor>1</real_time_factor>
+        <max_step_size>0.005</max_step_size>
+    </physics>
+    <gravity>0 0 -9.8</gravity>
+
+
+    <actor name="walker">
+      <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+        <scaling collision="LHipJoint_LeftUpLeg_collision" scale="
+          0.01
+          0.001
+          0.001
+        "/>
+          <sensor name='contact_LHipJoint_LeftUpLeg' type='contact'>
+            <contact>
+              <collision>LHipJoint_LeftUpLeg_collision</collision>
+            </contact>
+          </sensor>
+              
+        <scaling collision="LeftUpLeg_LeftLeg_collision" scale="
+          8.0
+          8.0
+          1.0
+        "/>
+          <sensor name='contact_LeftUpLeg_LeftLeg' type='contact'>
+            <contact>
+              <collision>LeftUpLeg_LeftLeg_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="LeftLeg_LeftFoot_collision" scale="
+          8.0
+          8.0
+          1.0
+        "/>
+          <sensor name='contact_LeftLeg_LeftFoot' type='contact'>
+            <contact>
+              <collision>LeftLeg_LeftFoot_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="LeftFoot_LeftToeBase_collision" scale="
+          4.0
+          4.0
+          1.5
+        "/>
+          <sensor name='contact_LeftFoot_LeftToeBase' type='contact'>
+            <contact>
+              <collision>LeftFoot_LeftToeBase_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="RHipJoint_RightUpLeg_collision" scale="
+          0.01
+          0.001
+          0.001
+        "/>
+          <sensor name='contact_RHipJoint_RightUpLeg' type='contact'>
+            <contact>
+              <collision>RHipJoint_RightUpLeg_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="RightUpLeg_RightLeg_collision" scale="
+          8.0
+          8.0
+          1.0
+        "/>
+          <sensor name='contact_RightUpLeg_RightLeg' type='contact'>
+            <contact>
+              <collision>RightUpLeg_RightLeg_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="RightLeg_RightFoot_collision" scale="
+          8.0
+          8.0
+          1.0
+        "/>
+          <sensor name='contact_RightLeg_RightFoot' type='contact'>
+            <contact>
+              <collision>RightLeg_RightFoot_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="RightFoot_RightToeBase_collision" scale="
+          4.0
+          4.0
+          1.5
+        "/>
+          <sensor name='contact_RightFoot_RightToeBase' type='contact'>
+            <contact>
+              <collision>RightFoot_RightToeBase_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="Spine_Spine1_collision" scale="
+          0.01
+          0.001
+          0.001
+        "/>
+          <sensor name='contact_Spine_Spine1' type='contact'>
+            <contact>
+              <collision>Spine_Spine1_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="Neck_Neck1_collision" scale="
+          0.01
+          0.001
+          0.001
+        "/>
+          <sensor name='contact_Neck_Neck1' type='contact'>
+            <contact>
+              <collision>Neck_Neck1_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="Neck1_Head_collision" scale="
+          5.0
+          5.0
+          3.0
+        "/>
+          <sensor name='contact_Neck1_Head' type='contact'>
+            <contact>
+              <collision>Neck1_Head_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="LeftShoulder_LeftArm_collision" scale="
+          0.01
+          0.001
+          0.001
+        "/>
+          <sensor name='contact_LeftShoulder_LeftArm' type='contact'>
+            <contact>
+              <collision>LeftShoulder_LeftArm_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="LeftArm_LeftForeArm_collision" scale="
+          5.0
+          5.0
+          1.0
+        "/>
+          <sensor name='contact_LeftArm_LeftForeArm' type='contact'>
+            <contact>
+              <collision>LeftArm_LeftForeArm_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="LeftForeArm_LeftHand_collision" scale="
+          5.0
+          5.0
+          1.0
+        "/>
+          <sensor name='contact_LeftForeArm_LeftHand' type='contact'>
+            <contact>
+              <collision>LeftForeArm_LeftHand_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="
+          4.0
+          4.0
+          3.0
+        "/>
+          <sensor name='contact_LeftFingerBase_LeftHandIndex1' type='contact'>
+            <contact>
+              <collision>LeftFingerBase_LeftHandIndex1_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="RightShoulder_RightArm_collision" scale="
+          0.01
+          0.001
+          0.001
+        "/>
+          <sensor name='contact_RightShoulder_RightArm' type='contact'>
+            <contact>
+              <collision>RightShoulder_RightArm_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="RightArm_RightForeArm_collision" scale="
+          5.0
+          5.0
+          1.0
+        "/>
+          <sensor name='contact_RightArm_RightForeArm' type='contact'>
+            <contact>
+              <collision>RightArm_RightForeArm_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="RightForeArm_RightHand_collision" scale="
+          5.0
+          5.0
+          1.0
+        "/>
+          <sensor name='contact_RightForeArm_RightHand' type='contact'>
+            <contact>
+              <collision>RightForeArm_RightHand_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="
+          4.0
+          4.0
+          3.0
+        "/>
+          <sensor name='contact_RightFingerBase_RightHandIndex1' type='contact'>
+            <contact>
+              <collision>RightFingerBase_RightHandIndex1_collision</collision>
+            </contact>
+          </sensor>
+                
+        <scaling collision="LowerBack_Spine_collision" scale="
+          12.0
+          20.0
+          5.0
+        " pose="0.05 0 0 0 -0.2 0"/>
+          <sensor name='contact_LowerBack_Spine' type='contact'>
+            <contact>
+              <collision>LowerBack_Spine_collision</collision>
+            </contact>
+          </sensor>
+                
+      </plugin>
+
+
+      <collision name="collision">
+          <mass>1</mass>
+          <geometry>
+            <box>
+              <size>0.45 0.5 2.0</size>
+            </box>
+          </geometry>
+      </collision>
+
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>0 5 0 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>10</time>
+            <pose>0 -5 0 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>11</time>
+            <pose>0 -5 0 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>21</time>
+            <pose>0 5 0 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>22</time>
+            <pose>0 5 0 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>32</time>
+            <pose>5 5 0 0 0 0</pose>
+          </waypoint>
+          <waypoint>
+            <time>33</time>
+            <pose>5 5 0 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>43</time>
+            <pose>0 5 0 0 0 -3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>44</time>
+            <pose>0 5 0 0 0 -1.57</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
+
+  </world>
+</sdf>
