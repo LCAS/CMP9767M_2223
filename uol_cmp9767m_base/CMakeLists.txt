@@ -118,7 +118,7 @@ endif()
 ## DEPENDS: system dependencies of this project that dependent projects also need
 
 catkin_package(
-  INCLUDE_DIRS include ${GAZEBO_INCLUDE_DIRS}
+  INCLUDE_DIRS ${GAZEBO_INCLUDE_DIRS}
   LIBRARIES  ActorCollisionsPlugin
   CATKIN_DEPENDS roscpp #gazebo_plugins gazebo_ros
 )
