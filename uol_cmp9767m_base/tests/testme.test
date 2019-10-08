@@ -4,9 +4,6 @@
   	<arg name="gui" value="false" />
   </include>
 
-  <!-- launch a map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find uol_cmp9767m_base)/maps/cropped.yaml" />
-
   <!-- a very basic Python unittest -->
   <test pkg="uol_cmp9767m_base" type="simple_test.py" test-name="simpletest" />
 
