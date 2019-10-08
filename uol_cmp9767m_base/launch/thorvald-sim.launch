@@ -18,4 +18,30 @@
     <arg name="x" value="-5.0" />
   </include>
 
+  <group>
+    <node 
+      name="world_tf_thorvald_001"
+      pkg="tf"
+      type= "static_transform_publisher"
+      args="0 0 0 0 0 0 /world /thorvald_001/odom 100" />
+    <node 
+      name="world_tf_thorvald_002"
+      pkg="tf"
+      type= "static_transform_publisher"
+      args="0 0 0 0 0 0 /world /thorvald_002/odom 100" />
+  </group>
+  <group>
+    <node 
+      name="map_server"
+      pkg="map_server"
+      type= "map_server"
+      args="$(find uol_cmp9767m_base)/maps/cropped.yaml" />
+    <node 
+      name="world_tf_map"
+      pkg="tf"
+      type= "static_transform_publisher"
+      args="0 0 0 0 0 0 /world /map 100" />
+  </group>
+
+
 </launch>
