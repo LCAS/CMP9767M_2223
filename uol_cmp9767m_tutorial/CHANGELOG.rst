@@ -2,6 +2,11 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* added tf_listener
+* Contributors: Marc Hanheide
+
 0.4.1 (2019-10-08)
 ------------------
 
