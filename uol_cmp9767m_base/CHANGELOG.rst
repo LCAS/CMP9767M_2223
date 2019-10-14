@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.2 (2019-10-14)
+------------------
 * new cropweed models (`#40 <https://github.com/LCAS/CMP9767M/issues/40>`_)
 * Removed map_server from test
 * Contributors: Marc Hanheide, gcielniak
