@@ -2,6 +2,13 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Assmnt1920 (`#41 <https://github.com/LCAS/CMP9767M/issues/41>`_)
+  * new cropweed models
+  * fixed texture height
+* Contributors: gcielniak
+
 0.4.2 (2019-10-14)
 ------------------
 * new cropweed models (`#40 <https://github.com/LCAS/CMP9767M/issues/40>`_)
