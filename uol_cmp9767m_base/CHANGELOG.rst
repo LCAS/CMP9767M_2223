@@ -2,6 +2,19 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.3 (2019-10-15)
+------------------
+* Assmnt1920 (`#41 <https://github.com/LCAS/CMP9767M/issues/41>`_)
+  * new cropweed models
+  * fixed texture height
+* Contributors: gcielniak
+
+0.4.2 (2019-10-14)
+------------------
+* new cropweed models (`#40 <https://github.com/LCAS/CMP9767M/issues/40>`_)
+* Removed map_server from test
+* Contributors: Marc Hanheide, gcielniak
+
 0.4.1 (2019-10-08)
 ------------------
 * added rviz and fixed frames for rviz (and map)
