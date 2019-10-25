@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2019-10-25)
+------------------
 * adding a walker into the simulation (`#39 <https://github.com/LCAS/CMP9767M/issues/39>`_)
   * actor with plugin
   * Update CMakeLists.txt
