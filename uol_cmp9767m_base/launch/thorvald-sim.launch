@@ -1,11 +1,19 @@
 <?xml version="1.0"?>
 
 <launch>
-  <arg name="gui" default="true"/>
+  <arg name="gui" default="true" doc="run with visible gazebo"/>
+  <arg name="obstacles" default="false" doc="run with human walking around"/>
+  <arg name="second_robot" default="false" doc="launch a second Thorvald" />
   <!-- Launch the Gazebo world.  -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" unless="$(arg obstacles)">
     <arg name="use_sim_time" default="true"/>
     <arg name="world_name" value="$(find uol_cmp9767m_base)/worlds/cmp9767m_2.world"/>
+    <arg name="gui" value="$(arg gui)" />
+  </include>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" if="$(arg obstacles)">
+    <arg name="use_sim_time" default="true"/>
+    <arg name="world_name" value="$(find uol_cmp9767m_base)/worlds/cmp9767m_actor.world"/>
     <arg name="gui" value="$(arg gui)" />
   </include>
 
@@ -13,7 +21,7 @@
     <arg name="robot_name" value="thorvald_001" />
     <arg name="x" value="5.0" />
   </include>
-  <include file="$(find uol_cmp9767m_base)/launch/thorvald.launch">
+  <include file="$(find uol_cmp9767m_base)/launch/thorvald.launch" if="$(arg second_robot)">
     <arg name="robot_name" value="thorvald_002" />
     <arg name="x" value="-5.0" />
   </include>
@@ -28,7 +36,7 @@
       name="world_tf_thorvald_002"
       pkg="tf"
       type= "static_transform_publisher"
-      args="0 0 0 0 0 0 /world /thorvald_002/odom 100" />
+      args="0 0 0 0 0 0 /world /thorvald_002/odom 100"  if="$(arg second_robot)"/>
   </group>
   <group>
     <node 
