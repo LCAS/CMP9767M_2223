@@ -2,6 +2,14 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* adding a walker into the simulation (`#39 <https://github.com/LCAS/CMP9767M/issues/39>`_)
+  * actor with plugin
+  * Update CMakeLists.txt
+  * arguments to launch world with obstacles
+* Contributors: Marc Hanheide
+
 0.4.3 (2019-10-15)
 ------------------
 * Assmnt1920 (`#41 <https://github.com/LCAS/CMP9767M/issues/41>`_)
