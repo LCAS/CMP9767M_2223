@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2019-10-29)
+------------------
 * added switches for fake localisation (`#42 <https://github.com/LCAS/CMP9767M/issues/42>`_)
   * added switches for fake localisation
   * fixed test for new tf switch
