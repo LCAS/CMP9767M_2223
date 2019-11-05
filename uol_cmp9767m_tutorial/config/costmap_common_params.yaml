@@ -11,12 +11,12 @@ global_inflation_layer:
   cost_scaling_factor: 2.0
 
 local_inflation_layer:
-  inflation_radius: 0.7
+  inflation_radius: 2.0
   cost_scaling_factor: 2.0
 
 obstacle_layer:
   max_obstacle_height: 2.0
-  obstacle_range: 2.5
+  obstacle_range: 3.0
   raytrace_range: 3.0
 
   unknown_threshold: 6
