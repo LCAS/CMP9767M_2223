@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="robot_name" default="thorvald_001"/>
+
+    <!-- gmapping -->
+    <node name="gmapping" pkg="gmapping" type="slam_gmapping">
+        <remap from="scan" to="$(arg robot_name)/scan" />
+        <param name="odom_frame" type="string" value="$(arg robot_name)/odom"/>
+        <param name="base_frame" type="string" value="$(arg robot_name)/base_link"/>
+    </node> 
+
+    <!-- localization -->
+    <node name="fake_localization" pkg="fake_localization" type="fake_localization">
+      <remap from="base_pose_ground_truth" to="$(arg robot_name)/odometry/gazebo" />
+      <param name="odom_frame_id" type="string" value="$(arg robot_name)/odom"/>
+      <param name="base_frame_id" type="string" value="$(arg robot_name)/base_link"/>
+    </node> 
+
+    <!-- 
+    <include file="$(find uol_cmp9767m_tutorial)/launch/amcl.launch"/>
+    -->
+
+    <!-- move_base -->
+    <node name="move_base" pkg="move_base" type="move_base" output="screen">
+        <remap from="odom" to="$(arg robot_name)/odometry/base_raw" />
+        <remap from="cmd_vel" to="$(arg robot_name)/nav_vel" />
+
+        <rosparam file="$(find uol_cmp9767m_tutorial)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find uol_cmp9767m_tutorial)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+
+        <rosparam file="$(find uol_cmp9767m_tutorial)/config/global_costmap_params.yaml" command="load"/>
+        <rosparam file="$(find uol_cmp9767m_tutorial)/config/local_costmap_params.yaml" command="load"/>
+
+        <rosparam file="$(find uol_cmp9767m_tutorial)/config/planners.yaml" command="load"/>
+
+    </node> 
+
+</launch>
