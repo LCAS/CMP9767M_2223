@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.2 (2019-11-18)
+------------------
 * Merge pull request `#44 <https://github.com/LCAS/CMP9767M/issues/44>`_ from LCAS/mapping
   Additional files for workshop 8. AMCL launch can now accept robot_name as a parameter.
 * Merge branch 'master' into mapping

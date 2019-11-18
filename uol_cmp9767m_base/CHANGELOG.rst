@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.2 (2019-11-18)
+------------------
 * Merge branch 'master' into mapping
 * Contributors: gcielniak
 
