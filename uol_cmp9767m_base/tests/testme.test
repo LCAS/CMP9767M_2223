@@ -1,7 +1,8 @@
 <launch>
   <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch">
     <env name="DISPLAY" value="" />
-  	<arg name="gui" value="false" />
+    <arg name="gui" value="false" />
+    <arg name="fake_localisation" value="true" />
   </include>
 
   <!-- a very basic Python unittest -->
@@ -30,10 +31,10 @@
 
   <!-- check that odometry is published at around 20Hz -->
   <test test-name="hztest_odom" pkg="rostest" type="hztest" name="hztest_odom">
-	<param name="topic" value="/thorvald_001/odometry/gazebo" />
-	<param name="hz" value="20.0" />
-	<param name="hzerror" value="2" />
-	<param name="test_duration" value="10.0" />
+  <param name="topic" value="/thorvald_001/odometry/gazebo" />
+  <param name="hz" value="20.0" />
+  <param name="hzerror" value="2" />
+  <param name="test_duration" value="10.0" />
   </test>
 
   <!-- a very basic Python unittest -->

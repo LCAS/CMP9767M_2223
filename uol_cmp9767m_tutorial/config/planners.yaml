@@ -13,7 +13,7 @@ TrajectoryPlannerROS:
 #  yaw_goal_tolerance: 0.3 # (double, default: 0.05) The tolerance in radians for the controller in yaw/rotation when achieving its goal
 #  xy_goal_tolerance: 0.15 #  (double, default: 0.10) The tolerance in meters for the controller in the x & y distance when achieving a goal
 #  latch_xy_goal_tolerance: true # (bool, default: false) If goal tolerance is latched, if the robot ever reaches the goal xy location it will simply rotate in place, even if it ends up outside the goal tolerance while it is doing so.
-#  meter_scoring: true # (bool, default: false) Whether the gdist_scale and pdist_scale parameters should assume that goal_distance and path_distance are expressed in units of meters or cells. Cells are assumed by default. 
+  meter_scoring: true # (bool, default: false) Whether the gdist_scale and pdist_scale parameters should assume that goal_distance and path_distance are expressed in units of meters or cells. Cells are assumed by default. 
 
 DWAPlannerROS:
   holonomic_robot: false

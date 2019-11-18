@@ -21,6 +21,7 @@
         </surface>
       </collision>
       <visual name="visual">
+	     <pose>0 0 0.01 0 0 0</pose>
         <cast_shadows>false</cast_shadows>
         <geometry>
           <plane>
@@ -56,6 +57,7 @@
         </surface>
       </collision>
       <visual name="visual">
+	     <pose>0 0 0.01 0 0 0</pose>
         <cast_shadows>false</cast_shadows>
         <geometry>
           <plane>
@@ -91,6 +93,7 @@
         </surface>
       </collision>
       <visual name="visual">
+	     <pose>0 0 0.01 0 0 0</pose>
         <cast_shadows>false</cast_shadows>
         <geometry>
           <plane>

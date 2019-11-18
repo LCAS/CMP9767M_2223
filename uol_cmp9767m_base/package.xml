@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>uol_cmp9767m_base</name>
-  <version>0.4.2</version>
+  <version>0.5.1</version>
   <description>The uol_cmp9767m_base package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
@@ -52,6 +52,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>nav_msgs</build_depend>
   <build_depend>rospy</build_depend>
+  <build_depend>roscpp</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>thorvald_gazebo_plugins</build_depend>
@@ -72,6 +73,7 @@
 
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>rospy</exec_depend>
+  <exec_depend>roscpp</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>thorvald_gazebo_plugins</exec_depend>
