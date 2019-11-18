@@ -2,6 +2,11 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'master' into mapping
+* Contributors: gcielniak
+
 0.5.1 (2019-10-29)
 ------------------
 * added switches for fake localisation (`#42 <https://github.com/LCAS/CMP9767M/issues/42>`_)
