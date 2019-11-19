@@ -2,6 +2,18 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.2 (2019-11-18)
+------------------
+* Merge branch 'master' into mapping
+* Contributors: gcielniak
+
+0.5.1 (2019-10-29)
+------------------
+* added switches for fake localisation (`#42 <https://github.com/LCAS/CMP9767M/issues/42>`_)
+  * added switches for fake localisation
+  * fixed test for new tf switch
+* Contributors: Marc Hanheide
+
 0.5.0 (2019-10-25)
 ------------------
 * adding a walker into the simulation (`#39 <https://github.com/LCAS/CMP9767M/issues/39>`_)

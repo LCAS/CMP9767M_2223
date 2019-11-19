@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>uol_cmp9767m_base</name>
-  <version>0.5.0</version>
+  <version>0.5.2</version>
   <description>The uol_cmp9767m_base package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->

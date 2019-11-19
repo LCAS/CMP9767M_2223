@@ -2,6 +2,21 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.2 (2019-11-18)
+------------------
+* Merge pull request `#44 <https://github.com/LCAS/CMP9767M/issues/44>`_ from LCAS/mapping
+  Additional files for workshop 8. AMCL launch can now accept robot_name as a parameter.
+* Merge branch 'master' into mapping
+* Additional files for workshop 8. AMCL launch can now accept robot_name as a parameter.
+* Merge pull request `#43 <https://github.com/LCAS/CMP9767M/issues/43>`_ from LCAS/w7_1920
+  space fix planners
+* space fix planners
+* warning fix in planners config
+* Contributors: Grzegorz Cielniak, gcielniak
+
+0.5.1 (2019-10-29)
+------------------
+
 0.5.0 (2019-10-25)
 ------------------
 

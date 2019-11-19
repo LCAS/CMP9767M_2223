@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 
 <launch>
+  <arg name="fake_localisation" default="false" doc="fake the localisation, sets map_server and world_tf to true."/>
+  <arg name="world_tf" default="$(arg fake_localisation)" doc="provide a tf link to the world (default: false)"/>
+  <arg name="map_server" default="$(arg fake_localisation)" doc="provide a tf link between map and world and run a map server (default: false)"/>
   <arg name="gui" default="true" doc="run with visible gazebo"/>
   <arg name="obstacles" default="false" doc="run with human walking around"/>
   <arg name="second_robot" default="false" doc="launch a second Thorvald" />
@@ -26,7 +29,7 @@
     <arg name="x" value="-5.0" />
   </include>
 
-  <group>
+  <group if="$(arg world_tf)">
     <node 
       name="world_tf_thorvald_001"
       pkg="tf"
@@ -38,7 +41,7 @@
       type= "static_transform_publisher"
       args="0 0 0 0 0 0 /world /thorvald_002/odom 100"  if="$(arg second_robot)"/>
   </group>
-  <group>
+  <group if="$(arg map_server)">
     <node 
       name="map_server"
       pkg="map_server"
