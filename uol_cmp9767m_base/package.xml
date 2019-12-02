@@ -59,7 +59,7 @@
   <build_depend>thorvald_twist_mux</build_depend>
   <build_depend>velodyne_description</build_depend>
   <build_depend>velodyne_gazebo_plugins</build_depend>
-  <build_depend>kinect2_description</build_depend>
+  <!--<build_depend>kinect2_description</build_depend>-->
 
   <build_export_depend>nav_msgs</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
@@ -69,7 +69,7 @@
   <build_export_depend>thorvald_twist_mux</build_export_depend>
   <build_export_depend>velodyne_description</build_export_depend>
   <build_export_depend>velodyne_gazebo_plugins</build_export_depend>
-  <build_export_depend>kinect2_description</build_export_depend>
+  <!--<build_export_depend>kinect2_description</build_export_depend>-->
 
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>rospy</exec_depend>
@@ -80,7 +80,7 @@
   <exec_depend>thorvald_twist_mux</exec_depend>
   <exec_depend>velodyne_description</exec_depend>
   <exec_depend>velodyne_gazebo_plugins</exec_depend>
-  <exec_depend>kinect2_description</exec_depend>
+  <!--<exec_depend>kinect2_description</exec_depend>-->
   <exec_depend>thorvald_base</exec_depend>
   <exec_depend>thorvald_description</exec_depend>
   
