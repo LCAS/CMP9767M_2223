@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.3 (2019-12-03)
+------------------
 * Merge pull request `#46 <https://github.com/LCAS/CMP9767M/issues/46>`_ from gpdas/tutorial12_fixes
   Merging this. minor changes.
 * remapping some topics
