@@ -48,7 +48,7 @@
 
 
     <actor name="walker">
-      <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+    <!--  <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
         <scaling collision="LHipJoint_LeftUpLeg_collision" scale="
           0.01
           0.001
@@ -279,7 +279,7 @@
               <size>0.45 0.5 2.0</size>
             </box>
           </geometry>
-      </collision>
+      </collision> -->
 
       <skin>
         <filename>walk.dae</filename>
