@@ -2,6 +2,11 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* disable actor collisions
+* Contributors: Marc Hanheide
+
 0.5.2 (2019-11-18)
 ------------------
 * Merge branch 'master' into mapping
