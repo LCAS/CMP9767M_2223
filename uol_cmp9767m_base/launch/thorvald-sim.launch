@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
+  <arg name="world_name" default="$(find uol_cmp9767m_base)/worlds/cmp9767m_2.world"/>
   <arg name="fake_localisation" default="false" doc="fake the localisation, sets map_server and world_tf to true."/>
   <arg name="world_tf" default="$(arg fake_localisation)" doc="provide a tf link to the world (default: false)"/>
   <arg name="map_server" default="$(arg fake_localisation)" doc="provide a tf link between map and world and run a map server (default: false)"/>
@@ -10,7 +11,7 @@
   <!-- Launch the Gazebo world.  -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch" unless="$(arg obstacles)">
     <arg name="use_sim_time" default="true"/>
-    <arg name="world_name" value="$(find uol_cmp9767m_base)/worlds/cmp9767m_2.world"/>
+    <arg name="world_name" value="$(arg world_name)"/>
     <arg name="gui" value="$(arg gui)" />
   </include>
 
