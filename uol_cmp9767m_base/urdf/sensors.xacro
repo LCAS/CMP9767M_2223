@@ -271,7 +271,7 @@
   <link name="$(arg tf_prefix)${kinect2_name}_link">
     <visual>
       <geometry>
-        <!-- DISABLE for NOW: <mesh filename="package://kinect2_description/meshes/sensors/kinect2.dae"/>-->
+        <mesh filename="package://kinect2_description/meshes/sensors/kinect2.dae"/>
       </geometry>
       <origin xyz="0.02 0 0" rpy="0 0 3.141592"/>
     </visual>

@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   thorvald_twist_mux
   velodyne_description
   #velodyne_gazebo_plugins
-  #kinect2_description
+  kinect2_description
 )
 
 find_package (gazebo REQUIRED)
