@@ -5,7 +5,7 @@
   <xacro:arg name="tf_prefix" default=""/>
 
   <!-- Fake Sprayer Laser -->
-  <link name="$(arg tf_prefix)/sprayer">
+  <link name="$(arg tf_prefix)sprayer">
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -24,18 +24,18 @@
       <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />      
     </inertial>
   </link>
-  <gazebo reference="$(arg tf_prefix)/sprayer">
+  <gazebo reference="$(arg tf_prefix)sprayer">
     <material>Gazebo/Orange</material>
   </gazebo>
   <joint name="$(arg robot_name)_base_link_sprayer" type="fixed">
-    <parent link="$(arg tf_prefix)/base_link"/>
-    <child link="$(arg tf_prefix)/sprayer"/>
+    <parent link="$(arg tf_prefix)base_link"/>
+    <child link="$(arg tf_prefix)sprayer"/>
     <axis xyz="1 0 0" />
     <origin xyz="-0.45 0.000 0.5" rpy="0 0 0"/>
   </joint>
 
   <!-- Hokuyo Laser -->
-  <link name="$(arg tf_prefix)/hokuyo">
+  <link name="$(arg tf_prefix)hokuyo">
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -58,14 +58,14 @@
   </link>
 
   <joint name="$(arg robot_name)_base_link_hokuyo" type="fixed">
-    <parent link="$(arg tf_prefix)/base_link"/>
-    <child link="$(arg tf_prefix)/hokuyo"/>
+    <parent link="$(arg tf_prefix)base_link"/>
+    <child link="$(arg tf_prefix)hokuyo"/>
     <axis xyz="0 1 0" />
     <origin xyz="0.7025 0.005 0.66" rpy="0 0 0"/>
   </joint>
 
   <!--hokuyo-->
-  <gazebo reference="$(arg tf_prefix)/hokuyo">
+  <gazebo reference="$(arg tf_prefix)hokuyo">
     <sensor name="$(arg robot_name)hokuyo_sensor" type="ray">
       <pose>0 0 0 0 0 0</pose>
       <visualize>false</visualize>
@@ -123,11 +123,11 @@
 
   <joint name="$(arg robot_name)_${velodyne_name}_base_mount_joint" type="fixed">
     <xacro:insert_block name="velodyne_origin" /> 
-    <parent link="$(arg tf_prefix)/${velodyne_parent}"/>
-    <child link="$(arg tf_prefix)/${velodyne_name}_link"/>
+    <parent link="$(arg tf_prefix)${velodyne_parent}"/>
+    <child link="$(arg tf_prefix)${velodyne_name}_link"/>
   </joint>
 
-  <link name="$(arg tf_prefix)/${velodyne_name}_link">
+  <link name="$(arg tf_prefix)${velodyne_name}_link">
     <inertial>
       <mass value="0.83"/>
       <origin xyz="0 0 0.03585"/>
@@ -155,11 +155,11 @@
 
   <joint name="$(arg robot_name)_${velodyne_name}_base_scan_joint" type="fixed" >
     <origin xyz="0 0 0.0377" rpy="0 0 0" />
-    <parent link="$(arg tf_prefix)/${velodyne_name}_link" />
-    <child link="$(arg tf_prefix)/${velodyne_name}"/>
+    <parent link="$(arg tf_prefix)${velodyne_name}_link" />
+    <child link="$(arg tf_prefix)${velodyne_name}"/>
   </joint>
 
-  <link name="$(arg tf_prefix)/${velodyne_name}">
+  <link name="$(arg tf_prefix)${velodyne_name}">
     <inertial>
       <mass value="0.01"/>
       <origin xyz="0 0 0"/>
@@ -174,7 +174,7 @@
   </link>
 
   <!-- Gazebo requires the velodyne_gazebo_plugins package -->
-  <gazebo reference="$(arg tf_prefix)/${velodyne_name}">
+  <gazebo reference="$(arg tf_prefix)${velodyne_name}">
     <xacro:if value="${velodyne_gpu}">
       <sensor type="gpu_ray" name="$(arg robot_name)_${velodyne_name}-VLP16">
         <pose>0 0 0 0 0 0</pose>
@@ -268,7 +268,7 @@
   <xacro:property name="kinect2_cam_op" value="${M_PI/2}" />
   <xacro:property name="kinect2_cam_oy" value="-${M_PI/2}" />
 
-  <link name="$(arg tf_prefix)/${kinect2_name}_link">
+  <link name="$(arg tf_prefix)${kinect2_name}_link">
     <visual>
       <geometry>
         <!-- DISABLE for NOW: <mesh filename="package://kinect2_description/meshes/sensors/kinect2.dae"/>-->
@@ -291,28 +291,28 @@
   </link>
 
   <joint name="$(arg robot_name)_${kinect2_name}_joint" type="fixed">
-    <parent link="$(arg tf_prefix)/${kinect2_parent}"/>
-    <child link="$(arg tf_prefix)/${kinect2_name}_link"/>
+    <parent link="$(arg tf_prefix)${kinect2_parent}"/>
+    <child link="$(arg tf_prefix)${kinect2_name}_link"/>
     <origin xyz="${kinect2_cam_px} ${kinect2_cam_py} ${kinect2_cam_pz}" rpy="${kinect2_cam_or} ${kinect2_cam_op} ${kinect2_cam_oy}"/>
   </joint>
 
-  <link name="$(arg tf_prefix)/${kinect2_name}_rgb_optical_frame"/>
+  <link name="$(arg tf_prefix)${kinect2_name}_rgb_optical_frame"/>
 
   <joint name="$(arg robot_name)_${kinect2_name}_rgb_joint" type="fixed">
-    <parent link="$(arg tf_prefix)/${kinect2_name}_link"/>
-    <child link="$(arg tf_prefix)/${kinect2_name}_rgb_optical_frame"/>
+    <parent link="$(arg tf_prefix)${kinect2_name}_link"/>
+    <child link="$(arg tf_prefix)${kinect2_name}_rgb_optical_frame"/>
     <origin xyz="0 0.0125 0.016" rpy="-1.57 0 -1.57"/>
   </joint>
 
-  <link name="$(arg tf_prefix)/${kinect2_name}_depth_optical_frame"/>
+  <link name="$(arg tf_prefix)${kinect2_name}_depth_optical_frame"/>
 
   <joint name="$(arg robot_name)_${kinect2_name}_depth_joint" type="fixed">
-    <parent link="$(arg tf_prefix)/${kinect2_name}_link"/>
-    <child link="$(arg tf_prefix)/${kinect2_name}_depth_optical_frame"/>
+    <parent link="$(arg tf_prefix)${kinect2_name}_link"/>
+    <child link="$(arg tf_prefix)${kinect2_name}_depth_optical_frame"/>
     <origin xyz="0 -0.0125 0.016" rpy="-1.57 0 -1.57"/>
   </joint>
 
-  <gazebo reference="$(arg tf_prefix)/${kinect2_name}_link">
+  <gazebo reference="$(arg tf_prefix)${kinect2_name}_link">
     <sensor name="$(arg robot_name)_${kinect2_name}_sensor" type="depth">
       <always_on>true</always_on>
       <update_rate>30.0</update_rate>
@@ -359,7 +359,7 @@
     </sensor>
   </gazebo>
 
-  <gazebo reference="$(arg tf_prefix)/${kinect2_name}_link">
+  <gazebo reference="$(arg tf_prefix)${kinect2_name}_link">
     <sensor name="$(arg robot_name)_${kinect2_name}_camera" type="camera">
       <always_on>true</always_on>
       <update_rate>30.0</update_rate>

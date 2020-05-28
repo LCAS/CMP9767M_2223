@@ -3,6 +3,7 @@
   <arg name="db_path" default="$(optenv HOME)/mongodb" />
   <arg name="tmap" />
   <arg name="robot_name" default="thorvald_001" />
+  <arg name="tf_prefix" default="$(arg robot_name)/"/>
   <arg name="pointset" default="$(arg tmap)" />
   <arg name="mon_nav_config_file"  default="" />
   <arg name="max_bumper_recoveries" default=".inf"/>

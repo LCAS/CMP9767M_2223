@@ -3,6 +3,7 @@
 <launch>
 
 	<arg name="robot_name" default="thorvald_001"/>
+        <arg name="tf_prefix" default="$(arg robot_name)/"/>
 	<arg name="map_file" default="$(find uol_cmp9767m_base)maps/cropped.yaml"/>
 
 	<!-- map server -->
@@ -11,8 +12,8 @@
 	<!-- localization -->
 	<node name="fake_localization" pkg="fake_localization" type="fake_localization">
             <remap from="base_pose_ground_truth" to="$(arg robot_name)/odometry/gazebo" />
-            <param name="odom_frame_id" type="string" value="$(arg robot_name)/odom"/>
-            <param name="base_frame_id" type="string" value="$(arg robot_name)/base_link"/>
+            <param name="odom_frame_id" type="string" value="$(arg tf_prefix)odom"/>
+            <param name="base_frame_id" type="string" value="$(arg tf_prefix)base_link"/>
 	</node> 
 
 	<!-- 
