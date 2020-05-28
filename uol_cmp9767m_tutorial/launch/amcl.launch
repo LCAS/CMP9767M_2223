@@ -3,6 +3,7 @@
 <launch>
 
     <arg name="robot_name" default="thorvald_001"/>
+    <arg name="tf_prefix" default="$(arg robot_name)/"/>
 
     <node pkg="amcl" type="amcl" name="amcl" output="screen">
 
@@ -40,8 +41,8 @@
        <param name="odom_alpha2" value="0.2"/>
        <param name="odom_alpha3" value="0.2"/>
        <param name="odom_alpha4" value="0.2"/>
-       <param name="odom_frame_id" type="string" value="$(arg robot_name)/odom"/>
-       <param name="base_frame_id" type="string" value="$(arg robot_name)/base_link"/>
+       <param name="odom_frame_id" type="string" value="$(arg tf_prefix)odom"/>
+       <param name="base_frame_id" type="string" value="$(arg tf_prefix)base_link"/>
        <param name="global_frame_id" value="map" />
 
        <!-- map -->
