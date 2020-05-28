@@ -4,7 +4,7 @@
   <arg name="robot_name" />
   <arg name="x" default="0.0"/>
   <arg name="y" default="0.0"/>
-  <arg name="tf_prefix" default="$(arg robot_name)" />
+  <arg name="tf_prefix" default="$(arg robot_name)/" />
   <arg name="robot_model" default="$(find uol_cmp9767m_base)/config/robot.yaml"/>
   <arg name="model_extras" default="$(find uol_cmp9767m_base)/urdf/sensors.xacro"/>
   <group ns="$(arg robot_name)">
@@ -23,7 +23,7 @@
       <arg name="robot_model" value="$(arg robot_model)" />
       <arg name="simple_sim" value="true" />
       <arg name="enable_odom_tf" value="false" />
-      <arg name="odom_frame_id" value="$(arg tf_prefix)/odom" />
+      <arg name="odom_frame_id" value="$(arg tf_prefix)odom" />
     </include>
 
     <!-- twist mux bringup -->
