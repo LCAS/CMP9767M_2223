@@ -13,8 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   thorvald_twist_mux
-  velodyne_description8
-  velodyne_gazebo_plugins8
+  velodyne_description
+  velodyne_gazebo_plugins
   kinect2_description
 )
 
