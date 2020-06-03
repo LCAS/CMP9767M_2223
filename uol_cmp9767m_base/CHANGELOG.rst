@@ -2,6 +2,29 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#55 <https://github.com/LCAS/CMP9767M/issues/55>`_ from LCAS/melodic-devel
+  Melodic devel
+* thorvald tf_prefix must have a / at tail end (`#51 <https://github.com/LCAS/CMP9767M/issues/51>`_)
+  * thorvald tf_prefix must have a / at tail end
+  * gazebo model hook fix
+  * re-enabling kinect2
+* Merge branch 'master' into melodic-devel
+* fix gazebo model path hook (`#54 <https://github.com/LCAS/CMP9767M/issues/54>`_)
+  minor fix to `GAZEBO_MODEL_PATH` env hook.
+* New world and materials to simulate non-uniform rows. Usage: roslaunch uol_cmp9767m_base thorvald-sim.launch world_name:=`rospack find uol_cmp9767m_base`/worlds/cmp9767m_paper_4.world (`#49 <https://github.com/LCAS/CMP9767M/issues/49>`_)
+* Merge pull request `#48 <https://github.com/LCAS/CMP9767M/issues/48>`_ from LCAS/paper_sim
+  Additional worlds for running evaluations for the paper.
+* Additional worlds for running evaluations for the paper. thorvald-sim.launch accepts now world_name as a parameter. Example usage: roslaunch uol_cmp9767m_base thorvald-sim.launch world_name:=`rospack find uol_cmp9767m_base`/worlds/cmp9767m_paper_1.world
+* Merge branch 'master' into melodic-devel
+* shifted position (`#47 <https://github.com/LCAS/CMP9767M/issues/47>`_)
+* disable actor collisions
+* removed kinect2 dep for now
+* fixed meshes for melodic
+* fixed for melodic
+* Contributors: Gautham P Das, Grzegorz Cielniak, Marc Hanheide, gcielniak
+
 0.5.3 (2019-12-03)
 ------------------
 * disable actor collisions

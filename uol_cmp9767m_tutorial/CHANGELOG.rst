@@ -2,6 +2,17 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#55 <https://github.com/LCAS/CMP9767M/issues/55>`_ from LCAS/melodic-devel
+  Melodic devel
+* thorvald tf_prefix must have a / at tail end (`#51 <https://github.com/LCAS/CMP9767M/issues/51>`_)
+  * thorvald tf_prefix must have a / at tail end
+  * gazebo model hook fix
+  * re-enabling kinect2
+* Merge branch 'master' into melodic-devel
+* Contributors: Gautham P Das, Marc Hanheide
+
 0.5.3 (2019-12-03)
 ------------------
 * Merge pull request `#46 <https://github.com/LCAS/CMP9767M/issues/46>`_ from gpdas/tutorial12_fixes
