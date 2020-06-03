@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.0 (2020-06-03)
+------------------
 * Merge pull request `#55 <https://github.com/LCAS/CMP9767M/issues/55>`_ from LCAS/melodic-devel
   Melodic devel
 * thorvald tf_prefix must have a / at tail end (`#51 <https://github.com/LCAS/CMP9767M/issues/51>`_)
