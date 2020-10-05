@@ -1,4 +1,4 @@
-global_frame: /map
+global_frame: map
 robot_base_frame: thorvald_001/base_link
 
 footprint: [[0.67, 0.64], [0.67, -0.64], [-0.67, -0.64], [-0.67, 0.64]]
