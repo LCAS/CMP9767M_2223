@@ -12,24 +12,25 @@ if __name__ == '__main__':
     listener = tf.TransformListener()
     pose_pub = rospy.Publisher('test_pose', geometry_msgs.msg.PoseStamped, queue_size=1)
 
-    rate = rospy.Rate(10.0)
+    rate = rospy.Rate(.5)
     while not rospy.is_shutdown():
         try:
             # look up the transform, i.e., get the transform from Thorvald_002 to Thorvald_001,
             # This transform will allow us to transfer 
             (trans, rot) = listener.lookupTransform('thorvald_001/base_link', 'thorvald_002/base_link', rospy.Time())
             
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
             rate.sleep()
+            print(e)
             continue
         yaw_angle = atan2(rot[2], rot[3])*2
         print("the current transformation: ", trans, yaw_angle * 180 / pi)
         
         # here is an exmaple pose, with a given frame of reference, e.g. somethng detected in the camera
         p1 = geometry_msgs.msg.PoseStamped()
-        p1.header.frame_id = "thorvald_002/kinect2_rgb_optical_frame"
+        p1.header.frame_id = "thorvald_001/kinect2_rgb_optical_frame"
         p1.pose.orientation.w = 1.0  # Neutral orientation 
-        p1.pose.position.z = .5  # half a metre away from the from frame centre
+        p1.pose.position.z = 0.5  # half a metre away from the from frame centre
         # we publish this so we can see it in rviz:   
         pose_pub.publish(p1)
 
