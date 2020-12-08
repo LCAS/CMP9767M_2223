@@ -86,10 +86,11 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-## For DoDishesAction: uncomment the following lines
 generate_messages(
   DEPENDENCIES
   std_msgs
+## For DoDishesAction: uncomment the following line
+# actionlib_msgs
 )
 
 ################################################
