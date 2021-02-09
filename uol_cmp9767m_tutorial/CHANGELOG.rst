@@ -2,6 +2,34 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#60 <https://github.com/LCAS/CMP9767M/issues/60>`_ from gcielniak/master
+  Corrected cmake file configuration for its use with actionlib
+* Merge pull request `#3 <https://github.com/LCAS/CMP9767M/issues/3>`_ from gcielniak/work9_actions
+  missing actionlib_msgs in CMakeLists.txt
+* missing actionlib_msgs in CMakeLists.txt
+* Merge pull request `#59 <https://github.com/LCAS/CMP9767M/issues/59>`_ from gcielniak/master
+  additional rviz config files
+* Merge pull request `#1 <https://github.com/LCAS/CMP9767M/issues/1>`_ from gcielniak/work6_ekf_rviz
+  Work6 ekf rviz
+* acml rviz config file
+* Merge pull request `#57 <https://github.com/LCAS/CMP9767M/issues/57>`_ from gcielniak/work6_ekf_rviz
+  tutorial 6: rviz config for ekf
+* tutorial 6: rviz config for ekf
+* added simple opencv code
+* more documentation
+* added the publishing of a PoseStamped
+* made it OOP and added documentation
+* some adjustments to the tf listener
+* added documentation
+* changed forward speed to 2.0
+* added two OOP examples
+* Create freemem.sh
+* Create freemem.py
+* minor fixes for frame namespacing (`#56 <https://github.com/LCAS/CMP9767M/issues/56>`_)
+* Contributors: Gautham P Das, Marc Hanheide, gcielniak
+
 0.6.0 (2020-06-03)
 ------------------
 * Merge pull request `#55 <https://github.com/LCAS/CMP9767M/issues/55>`_ from LCAS/melodic-devel

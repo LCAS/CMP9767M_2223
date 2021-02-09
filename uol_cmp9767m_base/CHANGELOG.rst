@@ -2,6 +2,9 @@
 Changelog for package uol_cmp9767m_base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.6.0 (2020-06-03)
 ------------------
 * Merge pull request `#55 <https://github.com/LCAS/CMP9767M/issues/55>`_ from LCAS/melodic-devel
