@@ -2,8 +2,8 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.1 (2021-02-09)
+------------------
 * Merge pull request `#60 <https://github.com/LCAS/CMP9767M/issues/60>`_ from gcielniak/master
   Corrected cmake file configuration for its use with actionlib
 * Merge pull request `#3 <https://github.com/LCAS/CMP9767M/issues/3>`_ from gcielniak/work9_actions
