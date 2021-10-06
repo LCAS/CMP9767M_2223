@@ -60,6 +60,8 @@
   <build_depend>velodyne_description</build_depend>
   <build_depend>velodyne_gazebo_plugins</build_depend>
   <build_depend>kinect2_description</build_depend>
+  <build_depend>bacchus_gazebo</build_depend>
+  <build_depend>bacchus_move_base</build_depend>
 
   <build_export_depend>nav_msgs</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
@@ -83,6 +85,8 @@
   <exec_depend>kinect2_description</exec_depend>
   <exec_depend>thorvald_base</exec_depend>
   <exec_depend>thorvald_description</exec_depend>
+  <exec_depend>bacchus_gazebo</exec_depend>
+  <exec_depend>bacchus_move_base</exec_depend>
   
   <exec_depend>map_server</exec_depend>
 
