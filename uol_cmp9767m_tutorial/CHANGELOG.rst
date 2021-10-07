@@ -2,6 +2,9 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.6.1 (2021-02-09)
 ------------------
 * Merge pull request `#60 <https://github.com/LCAS/CMP9767M/issues/60>`_ from gcielniak/master
