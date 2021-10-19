@@ -24,7 +24,7 @@ class Mover:
         self.publisher = rospy.Publisher(
             '/thorvald_001/teleop_joy/cmd_vel',
             Twist, queue_size=1)
-        rospy.Subscriber("/thorvald_001/scan", LaserScan, self.callback)
+        rospy.Subscriber("/thorvald_001/front_scan", LaserScan, self.callback)
         self.pose_pub = rospy.Publisher(
             '/nearest_obstacle',
             PoseStamped,queue_size=1
@@ -47,13 +47,13 @@ class Mover:
         # publish it later. All initialised to 0!
         t = Twist()
 
-        # If anything is closer than 3 metres anywhere in the
+        # If anything is closer than 4 metres anywhere in the
         # scan, we turn away
-        if min_dist < 3:
+        if min_dist < 4:
             t.angular.z = 1.0
         else:  # if all obstacles are far away, let's keep 
-            # moving forward at 2 m/s
-            t.linear.x = 2.0
+            # moving forward at 0.8 m/s
+            t.linear.x = 0.8
         # publish to the topic that makes the robot actually move
         self.publisher.publish(t)
 
