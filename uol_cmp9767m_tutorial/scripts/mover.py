@@ -21,7 +21,7 @@ class Mover:
         self.publisher = rospy.Publisher(
             '/thorvald_001/teleop_joy/cmd_vel',
             Twist, queue_size=1)
-        rospy.Subscriber("/thorvald_001/scan", LaserScan, self.callback)
+        rospy.Subscriber("/thorvald_001/front_scan", LaserScan, self.callback)
 
     def callback(self, data):
         """
@@ -32,10 +32,10 @@ class Mover:
             rospy.get_caller_id() + "I heard %s", data.header.seq)
         min_dist = min(data.ranges)
         t = Twist()
-        if min_dist < 3:
+        if min_dist < 4:
             t.angular.z = 1.0
         else:
-            t.linear.x = 2.0
+            t.linear.x = 0.8
         self.publisher.publish(t)
 
 if __name__ == '__main__':
