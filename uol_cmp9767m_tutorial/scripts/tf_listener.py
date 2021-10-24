@@ -25,9 +25,9 @@ class MyTFListener:
     def run(self):
         while not rospy.is_shutdown():
             try:
-                # look up the transform, i.e., get the transform from Thorvald_002 to Thorvald_001,
+                # look up the transform, i.e., get the transform from Thorvald_001/base_link to the world,
                 # This transform will allow us to transfer 
-                (trans, rot) = self.listener.lookupTransform('thorvald_001/base_link', 'thorvald_002/base_link', rospy.Time())
+                (trans, rot) = self.listener.lookupTransform('world', 'thorvald_001/base_link', rospy.Time())
                 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
                 self.rate.sleep()
@@ -41,11 +41,11 @@ class MyTFListener:
             # here is an exmaple pose, with a given frame of reference, e.g. somethng detected in the camera
             p1 = geometry_msgs.msg.PoseStamped()
             # every pose is given in relation to a frame, indicated here as frame_id
-            p1.header.frame_id = "thorvald_001/kinect2_rgb_optical_frame"
+            p1.header.frame_id = "thorvald_001/kinect2_left_rgb_optical_frame"
             # Remember the quaternion (0,0,0,1) is no rotation.
             p1.pose.orientation.w = 1.0  # Neutral orientation 
 
-            p1.pose.position.z = 0.5  # half a metre away from the from frame centre (half a metre in front of camera)
+            p1.pose.position.z = 1  # a metre away from the frame centre (a metre in front of camera)
             # we publish this so we can see it in rviz:   
             self.pose_pub.publish(p1)
 
