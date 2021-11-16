@@ -21,10 +21,10 @@ class image_projection:
 
         self.bridge = CvBridge()
 
-        self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/camera_info', 
+        self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_front_camera/hd/camera_info', 
             CameraInfo, self.camera_info_callback)
 
-        rospy.Subscriber("/thorvald_001/kinect2_camera/hd/image_color_rect",
+        rospy.Subscriber("/thorvald_001/kinect2_front_camera/hd/image_color_rect",
             Image, self.image_callback)
 
     def image_callback(self, data):
@@ -32,7 +32,7 @@ class image_projection:
             return
 
         #project a point in camera coordinates into the pixel coordinates
-        uv = self.camera_model.project3dToPixel((0,0,0.5))
+        uv = self.camera_model.project3dToPixel((0,0,1.0))
 
         print 'Pixel coordinates: ', uv
         print ''

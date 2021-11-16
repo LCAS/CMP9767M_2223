@@ -21,10 +21,10 @@ class image_projection:
 
         self.bridge = CvBridge()
 
-        self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_camera/hd/camera_info', 
+        self.camera_info_sub = rospy.Subscriber('/thorvald_001/kinect2_front_camera/hd/camera_info', 
             CameraInfo, self.camera_info_callback)
 
-        rospy.Subscriber("/thorvald_001/kinect2_camera/hd/image_color_rect",
+        rospy.Subscriber("/thorvald_001/kinect2_front_camera/hd/image_color_rect",
             Image, self.image_callback)
 
         self.tf_listener = tf.TransformListener()
@@ -35,18 +35,18 @@ class image_projection:
 
         #show the camera pose with respect to the robot's pose (base_link)
         (trans, rot) = self.tf_listener.lookupTransform('thorvald_001/base_link', 
-            'thorvald_001/kinect2_rgb_optical_frame', rospy.Time())
+            'thorvald_001/kinect2_front_rgb_optical_frame', rospy.Time())
         print 'Robot to camera transform:', 'T ', trans, 'R ', rot
 
         #define a point in robot (base_link) coordinates
         p_robot = PoseStamped()
         p_robot.header.frame_id = "thorvald_001/base_link"
         p_robot.pose.orientation.w = 1.0
-        #specify a point on the ground just below the camera
-        p_robot.pose.position.x = 0.45
+        #specify a point 5 m in front of the robot (centre, ground)
+        p_robot.pose.position.x = 5.0
         p_robot.pose.position.y = 0.0
         p_robot.pose.position.z = 0.0
-        p_camera = self.tf_listener.transformPose('thorvald_001/kinect2_rgb_optical_frame', p_robot)
+        p_camera = self.tf_listener.transformPose('thorvald_001/kinect2_front_rgb_optical_frame', p_robot)
         print 'Point in the camera coordinates'
         print p_camera.pose.position        
 
