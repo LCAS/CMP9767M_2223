@@ -4,8 +4,8 @@ base_global_planner: navfn/NavfnROS #default
 base_local_planner: base_local_planner/TrajectoryPlannerROS #default
 #base_local_planner: dwa_local_planner/DWAPlannerROS
 
-#controller_frequency: 2.0 # (double, default: 20.0) The rate in Hz at which to run the control loop and send velocity commands to the base.
 planner_frequency: 0.0 # (double, default: 0.0) The rate in Hz at which to run the global planning loop. If the frequency is set to 0.0, the global planner will only run when a new goal is received or the local planner reports that its path is blocked.
+controller_frequency: 5.0 # (double, default: 20.0) The rate in Hz at which to run the control loop and send velocity commands to the base.
 
 TrajectoryPlannerROS:
   holonomic_robot: false
@@ -21,7 +21,7 @@ DWAPlannerROS:
 
 NavfnROS:
   visualize_potential: true # (bool, default: false) Specifies whether or not to visualize the potential area computed via a PointCloud2.
-  use_dijkstra: true # (bool, default: true) If true, use dijkstra's algorithm. Otherwise, A*.
+  use_dijkstra: false # (bool, default: true) If true, use dijkstra's algorithm. Otherwise, A*.
 
 #recovery_behaviors:
 #  - {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
