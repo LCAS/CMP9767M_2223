@@ -1,9 +1,12 @@
 global_costmap:
   update_frequency: 5.0
   publish_frequency: 2.0
-  rolling_window: false
+  rolling_window: true
   static_map: true
-  plugins:  
+  width: 100.0
+  height: 100.0
+  resolution: 0.05
+plugins:  
     - {name: map_layer, type: "costmap_2d::StaticLayer"}
     - {name: global_obstacle_layer, type: "costmap_2d::ObstacleLayer"}
     - {name: global_inflation_layer, type: "costmap_2d::InflationLayer"}

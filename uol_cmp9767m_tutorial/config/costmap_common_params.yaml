@@ -6,26 +6,16 @@ footprint: [[0.67, 0.64], [0.67, -0.64], [-0.67, -0.64], [-0.67, 0.64]]
 map_layer:
   map_topic: /map
 
+#no_go_layer:
+#  map_topic: /no_go_map
+
 global_inflation_layer:
-  inflation_radius: 0.7
-  cost_scaling_factor: 2.0
+  inflation_radius: 1.75
+  cost_scaling_factor: 2.58
 
 local_inflation_layer:
-  inflation_radius: 0.7
-  cost_scaling_factor: 2.0
-
-obstacle_layer:
-  max_obstacle_height: 2.0
-  obstacle_range: 2.5
-  raytrace_range: 3.0
-
-  unknown_threshold: 6
-  mark_threshold: 0
-  
-  track_unknown_space: true
-  
-  observation_sources: laser_scan_sensor
-  laser_scan_sensor: {sensor_frame: thorvald_001/hokuyo, data_type: LaserScan, topic: thorvald_001/scan, marking: true, clearing: true}
+  inflation_radius: 1.5
+  cost_scaling_factor: 5.0
 
 global_obstacle_layer:
   max_obstacle_height: 2.0
@@ -37,7 +27,22 @@ global_obstacle_layer:
 
   track_unknown_space: true
 
-  observation_sources: laser_scan_sensor
-  laser_scan_sensor: {sensor_frame: thorvald_001/hokuyo, data_type: LaserScan, topic: thorvald_001/scan, marking: false, clearing: false}
+  observation_sources: merged_laser_scan
+  merged_laser_scan: {sensor_frame: thorvald_001/base_link, data_type: LaserScan, topic: /thorvald_001/scan, marking: false, clearing: false}
 
-
+obstacle_layer:
+  obstacle_range: 2.5
+  raytrace_range: 5.5
+  observation_sources: front_laser rear_laser
+  front_laser: 
+    sensor_frame: thorvald_001/hokuyo_front
+    data_type: LaserScan
+    topic: /thorvald_001/front_scan
+    marking: true
+    clearing: true
+  rear_laser: 
+    sensor_frame: thorvald_001/hokuyo_back
+    data_type: LaserScan
+    topic: /thorvald_001/back_scan
+    marking: true
+    clearing: true
