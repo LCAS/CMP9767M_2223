@@ -6,7 +6,8 @@ global_costmap:
   width: 100.0
   height: 100.0
   resolution: 0.05
-plugins:  
+
+  plugins:  
     - {name: map_layer, type: "costmap_2d::StaticLayer"}
     - {name: global_obstacle_layer, type: "costmap_2d::ObstacleLayer"}
     - {name: global_inflation_layer, type: "costmap_2d::InflationLayer"}
