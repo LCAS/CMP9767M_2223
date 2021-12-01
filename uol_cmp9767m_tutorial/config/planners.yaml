@@ -1,10 +1,12 @@
 base_global_planner: navfn/NavfnROS #default
+#base_global_planner: global_planner/GlobalPlanner 
 #base_global_planner: carrot_planner/CarrotPlanner
 
-base_local_planner: base_local_planner/TrajectoryPlannerROS #default
+#base_local_planner: base_local_planner/TrajectoryPlannerROS #default
 #base_local_planner: dwa_local_planner/DWAPlannerROS
+base_local_planner: eband_local_planner/EBandPlannerROS
 
-planner_frequency: 0.0 # (double, default: 0.0) The rate in Hz at which to run the global planning loop. If the frequency is set to 0.0, the global planner will only run when a new goal is received or the local planner reports that its path is blocked.
+planner_frequency: 10.0 # (double, default: 0.0) The rate in Hz at which to run the global planning loop. If the frequency is set to 0.0, the global planner will only run when a new goal is received or the local planner reports that its path is blocked.
 controller_frequency: 5.0 # (double, default: 20.0) The rate in Hz at which to run the control loop and send velocity commands to the base.
 
 TrajectoryPlannerROS:
@@ -16,12 +18,20 @@ TrajectoryPlannerROS:
   meter_scoring: true # (bool, default: false) Whether the gdist_scale and pdist_scale parameters should assume that goal_distance and path_distance are expressed in units of meters or cells. Cells are assumed by default. 
 
 DWAPlannerROS:
-  holonomic_robot: false
-#  sim_time: 5.0 # (double, default: 1.0) The amount of time to forward-simulate trajectories in seconds
+  holonomic_robot: true 
+  sim_time: 5.0 # (double, default: 1.0) The amount of time to forward-simulate trajectories in seconds
 
 NavfnROS:
   visualize_potential: true # (bool, default: false) Specifies whether or not to visualize the potential area computed via a PointCloud2.
   use_dijkstra: false # (bool, default: true) If true, use dijkstra's algorithm. Otherwise, A*.
+  cost_factor: 1.1
+  cost_neutral: 0
+  lethal_cost: 180
+
+global_planner:
+  use_dijkstra: false
+  visalize_potential: true
+  cost_factor: 1.1
 
 #recovery_behaviors:
 #  - {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
