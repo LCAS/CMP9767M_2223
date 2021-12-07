@@ -53,6 +53,7 @@
     </node>
 
     <node pkg="topological_navigation" name="topological_localisation" type="localisation.py" output="screen" respawn="true">
+      <param name="base_frame" value="$(arg robot_name)/base_link" />
       <remap from="/robot_pose" to="robot_pose" />
       <remap from="/closest_node" to="closest_node" />
       <remap from="/current_node" to="current_node" />
