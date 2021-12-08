@@ -17,6 +17,7 @@
 
   <include file="$(find mongodb_store)/launch/mongodb_store.launch" >
     <arg name="db_path" value="$(arg db_path)" />
+    <arg name="bind_to_host" value="true" />
   </include>
 
   <node pkg="topological_navigation" type="map_manager.py" name="topological_map_manager" args="$(arg tmap)" respawn="true" if="$(arg launch_manager)"/>
