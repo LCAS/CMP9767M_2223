@@ -2,6 +2,28 @@
 Changelog for package uol_cmp9767m_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.1 (2021-12-08)
+------------------
+* bind to host
+* Update topo_nav.launch
+  topo_localisation fix
+* Merge pull request `#65 <https://github.com/LCAS/CMP9767M/issues/65>`_ from gcielniak/master
+  workshop 7 - further fixes
+* workshop 7 global_costmap_params fix
+* Merge pull request `#64 <https://github.com/LCAS/CMP9767M/issues/64>`_ from gcielniak/master
+  workshop 7 updates
+* workshop 7 updates
+* Merge pull request `#63 <https://github.com/LCAS/CMP9767M/issues/63>`_ from gcielniak/master
+  workshop 6 scan topic fix
+* workshop 6 scan topic fix
+* workshop 5 update
+* simple opencv test
+* reduce min distance
+* minor correction for new simulation
+* changed for new env
+* adapted for new environment
+* Contributors: Grzegorz Cielniak, Marc, Marc Hanheide, gcielniak
+
 0.7.0 (2021-10-07)
 ------------------
 
