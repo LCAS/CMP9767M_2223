@@ -58,14 +58,14 @@
       recovery_behaviours_config: ''
       top_vel: 0.55
     - action: move_base
-      edge_id: WayPoint0_WayPoint4
+      edge_id: WayPoint1_WayPoint4
       inflation_radius: 0.0
       map_2d: cropped
       node: WayPoint4
       recovery_behaviours_config: ''
       top_vel: 0.55
     - action: move_base
-      edge_id: WayPoint0_WayPoint5
+      edge_id: WayPoint1_WayPoint5
       inflation_radius: 0.0
       map_2d: cropped
       node: WayPoint5
