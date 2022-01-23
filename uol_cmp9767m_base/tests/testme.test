@@ -1,5 +1,5 @@
 <launch>
-  <include file="$(find uol_cmp9767m_base)/launch/thorvald-sim.launch">
+  <include file="$(find bacchus_gazebo)/launch/vineyard_demo.launch">
     <env name="DISPLAY" value="" />
     <arg name="gui" value="false" />
     <arg name="fake_localisation" value="true" />
@@ -23,7 +23,10 @@
         - name: /thorvald_001/velodyne_points
           timeout: 10
           negative: False
-        - name: /thorvald_001/scan
+        - name: /thorvald_001/front_scan
+          timeout: 10
+          negative: False
+        - name: /thorvald_001/back_scan
           timeout: 10
           negative: False
     </rosparam>
