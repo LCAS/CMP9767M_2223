@@ -4,10 +4,6 @@
 
   <arg name="robot_name" default="thorvald_001"/>
   <arg name="tf_prefix" default="$(arg robot_name)/"/>
-  <arg name="map_file" default="$(find uol_cmp9767m_base)maps/cropped.yaml"/>
-
-  <!-- map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
 
   <group ns="$(arg robot_name)">
     <remap from="map" to="/map" />
@@ -29,6 +25,7 @@
     <node name="move_base" pkg="move_base" type="move_base" output="screen">
       <remap from="odom" to="odometry/base_raw" />
       <remap from="cmd_vel" to="nav_vel" />
+      <remap from="/scan" to="scan" />
 
       <rosparam file="$(find uol_cmp9767m_tutorial)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
       <rosparam file="$(find uol_cmp9767m_tutorial)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
