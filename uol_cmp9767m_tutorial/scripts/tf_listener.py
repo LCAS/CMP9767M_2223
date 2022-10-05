@@ -36,7 +36,7 @@ class MyTFListener:
 
             # the quick hack to go from quaternions to 2D angles:
             yaw_angle = atan2(rot[2], rot[3])*2
-            print("the current transformation: ", trans, yaw_angle * 180 / pi)
+            print(("the current transformation: ", trans, yaw_angle * 180 / pi))
             
             # here is an exmaple pose, with a given frame of reference, e.g. somethng detected in the camera
             p1 = geometry_msgs.msg.PoseStamped()
@@ -51,8 +51,8 @@ class MyTFListener:
 
             # here we directly transform the pose into another pose for the given frame of reference:
             p_in_base = self.listener.transformPose("thorvald_001/base_link", p1)
-            print "Position of the object in the new frame of reference:"
-            print p_in_base
+            print("Position of the object in the new frame of reference:")
+            print(p_in_base)
 
             self.rate.sleep()
 

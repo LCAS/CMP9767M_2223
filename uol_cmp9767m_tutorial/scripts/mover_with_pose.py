@@ -67,7 +67,7 @@ class Mover:
         # function on the range. Can also be done with a 
         # classic for loop
         index_min = min(
-            range(len(data.ranges)),
+            list(range(len(data.ranges))),
             key=data.ranges.__getitem__)
         
         # convert the obtained index to angle, using the 

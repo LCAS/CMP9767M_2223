@@ -62,7 +62,7 @@ class image_projection:
             image_color = self.bridge.imgmsg_to_cv2(data, "bgr8")
             image_depth = self.bridge.imgmsg_to_cv2(self.image_depth_ros, "32FC1")
         except CvBridgeError as e:
-            print e
+            print(e)
 
 
         # detect a red blob in the color image
@@ -72,7 +72,7 @@ class image_projection:
         M = cv2.moments(image_mask)
 
         if M["m00"] == 0:
-            print 'No object detected.'
+            print('No object detected.')
             return
 
         # calculate the y,x centroid
@@ -83,9 +83,9 @@ class image_projection:
         # get the depth reading at the centroid location
         depth_value = image_depth[int(depth_coords[0]), int(depth_coords[1])] # you might need to do some boundary checking first!
 
-        print 'image coords: ', image_coords
-        print 'depth coords: ', depth_coords
-        print 'depth value: ', depth_value
+        print('image coords: ', image_coords)
+        print('depth coords: ', depth_coords)
+        print('depth value: ', depth_value)
 
 
         # calculate object's 3d location in camera coords
@@ -93,7 +93,7 @@ class image_projection:
         camera_coords = [x/camera_coords[2] for x in camera_coords] # adjust the resulting vector so that z = 1
         camera_coords = [x*depth_value for x in camera_coords] # multiply the vector by depth
 
-        print 'camera coords: ', camera_coords
+        print('camera coords: ', camera_coords)
 
         #define a point in camera coordinates
         object_location = PoseStamped()
@@ -110,8 +110,8 @@ class image_projection:
         # print out the coordinates in the map frame
         p_camera = self.tf_listener.transformPose('map', object_location)
 
-        print 'map coords: ', p_camera.pose.position
-        print ''
+        print('map coords: ', p_camera.pose.position)
+        print('')
 
 
         if self.visualisation:
@@ -134,7 +134,7 @@ def main(args):
     try:
         rospy.spin()
     except KeyboardInterrupt:
-        print "Shutting down"
+        print("Shutting down")
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':

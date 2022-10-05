@@ -34,8 +34,8 @@ class image_projection:
         #project a point in camera coordinates into the pixel coordinates
         uv = self.camera_model.project3dToPixel((0,0,1.0))
 
-        print 'Pixel coordinates: ', uv
-        print ''
+        print('Pixel coordinates: ', uv)
+        print('')
 
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -62,7 +62,7 @@ def main(args):
     try:
         rospy.spin()
     except KeyboardInterrupt:
-        print "Shutting down"
+        print("Shutting down")
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':

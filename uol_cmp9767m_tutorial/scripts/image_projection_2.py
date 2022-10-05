@@ -36,7 +36,7 @@ class image_projection:
         #show the camera pose with respect to the robot's pose (base_link)
         (trans, rot) = self.tf_listener.lookupTransform('thorvald_001/base_link', 
             'thorvald_001/kinect2_front_rgb_optical_frame', rospy.Time())
-        print 'Robot to camera transform:', 'T ', trans, 'R ', rot
+        print('Robot to camera transform:', 'T ', trans, 'R ', rot)
 
         #define a point in robot (base_link) coordinates
         p_robot = PoseStamped()
@@ -47,14 +47,14 @@ class image_projection:
         p_robot.pose.position.y = 0.0
         p_robot.pose.position.z = 0.0
         p_camera = self.tf_listener.transformPose('thorvald_001/kinect2_front_rgb_optical_frame', p_robot)
-        print 'Point in the camera coordinates'
-        print p_camera.pose.position        
+        print('Point in the camera coordinates')
+        print(p_camera.pose.position)        
 
         uv = self.camera_model.project3dToPixel((p_camera.pose.position.x,p_camera.pose.position.y,
             p_camera.pose.position.z))
 
-        print 'Pixel coordinates: ', uv
-        print ''
+        print('Pixel coordinates: ', uv)
+        print('')
 
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -81,7 +81,7 @@ def main(args):
     try:
         rospy.spin()
     except KeyboardInterrupt:
-        print "Shutting down"
+        print("Shutting down")
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
