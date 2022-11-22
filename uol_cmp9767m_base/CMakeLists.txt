@@ -119,7 +119,7 @@ endif()
 
 catkin_package(
   INCLUDE_DIRS ${GAZEBO_INCLUDE_DIRS}
-  LIBRARIES  ActorCollisionsPlugin
+#  LIBRARIES  ActorCollisionsPlugin
   CATKIN_DEPENDS roscpp #gazebo_plugins gazebo_ros
 )
 
@@ -139,7 +139,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 
 link_directories(${GAZEBO_LIBRARY_DIRS})
-add_library(ActorCollisionsPlugin src/ActorCollisionsPlugin.cc)
+#add_library(ActorCollisionsPlugin src/ActorCollisionsPlugin.cc)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -191,11 +191,11 @@ install(PROGRAMS
 # )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS ActorCollisionsPlugin
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+#install(TARGETS ActorCollisionsPlugin
+#  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
