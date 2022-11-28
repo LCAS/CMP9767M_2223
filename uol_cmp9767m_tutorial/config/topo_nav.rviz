@@ -435,7 +435,7 @@ Visualization Manager:
       Displays:
         - Class: rviz/MarkerArray
           Enabled: true
-          Marker Topic: /topological_map_visualisation
+          Marker Topic: /thorvald_001/topological_map_visualisation
           Name: topo_map
           Namespaces:
             /edges: true

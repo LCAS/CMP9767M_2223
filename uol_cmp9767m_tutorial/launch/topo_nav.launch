@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<launch>
+
+  <arg name="robot_name" default="thorvald_001" />
+
+  <!-- Filename of the topological map. -->
+  <arg name="file" default="$(find uol_cmp9767m_tutorial)/maps/test.tmap2"/>
+  <!-- Robot base frame. -->
+  <arg name="base_frame" default="$(arg robot_name)/base_link" />
+  <!-- The action being used for move_base -->
+  <arg name="move_base_name" default="$(arg robot_name)/move_base"/>
+  <!-- The planner being used by move_base. STRANDS systems tend to use DWAPlannerROS Jackal and HSR TrajectoryPlannerROS.  -->
+  <arg name="move_base_planner" default="move_base/DWAPlannerROS"/>
+
+
+  <node pkg="topological_navigation" type="map_manager2.py" name="topological_map_manager" args="$(arg file)" respawn="true"/>
+
+  <group ns="$(arg robot_name)">
+
+    <node pkg="topological_navigation" name="topological_localisation" type="localisation.py" output="screen" respawn="true">
+      <param name="base_frame" value="$(arg base_frame)"/>
+      <remap from="topological_map_2" to="/topological_map_2"/>
+    </node>
+    
+    <node pkg="topological_navigation" name="topological_navigation" type="navigation.py" output="screen" respawn="true">
+      <param name="move_base_name" type="str" value="$(arg move_base_name)"/>
+      <param name="move_base_planner" type="str" value="$(arg move_base_planner)"/>
+      <remap from="topological_map_2" to="/topological_map_2"/>
+      <remap from="/closest_edges" to="closest_edges"/>
+    </node>
+
+    <node pkg="topological_navigation" type="visualise_map.py" name="visualise_map" respawn="true">
+      <remap from="topological_map_2" to="/topological_map_2"/>
+      <remap from="topological_map" to="/topological_map"/>
+      <remap from="/topological_navigation/Route" to="topological_navigation/Route"/>
+    </node>
+  </group>
+
+</launch>
