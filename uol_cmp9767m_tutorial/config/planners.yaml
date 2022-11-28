@@ -1,8 +1,8 @@
 base_global_planner: navfn/NavfnROS #default
 #base_global_planner: carrot_planner/CarrotPlanner
 
-base_local_planner: base_local_planner/TrajectoryPlannerROS #default
-#base_local_planner: dwa_local_planner/DWAPlannerROS
+#base_local_planner: base_local_planner/TrajectoryPlannerROS #default
+base_local_planner: dwa_local_planner/DWAPlannerROS
 
 planner_frequency: 0.0 # (double, default: 0.0) The rate in Hz at which to run the global planning loop. If the frequency is set to 0.0, the global planner will only run when a new goal is received or the local planner reports that its path is blocked.
 controller_frequency: 5.0 # (double, default: 20.0) The rate in Hz at which to run the control loop and send velocity commands to the base.
